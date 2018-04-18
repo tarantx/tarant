@@ -9,5 +9,16 @@ describe("TimeMachine", () => {
 
         let lastSavedState = machine.lastState();
         expect(lastSavedState.copy).toBe(true);
+    });
+
+    test("should return a list of saved states", () => {
+        let first = { a: 1 };
+        let second = { a: 2 };
+
+        let machine = new TimeMachine();
+        machine.save(first).save(second);
+
+        let history = machine.retrieveHistory();
+        expect(history).toEqual([ first, second ]);
     })
 });
