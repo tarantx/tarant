@@ -15,10 +15,26 @@ describe("TimeMachine", () => {
         let first = { a: 1 };
         let second = { a: 2 };
 
-        let machine = new TimeMachine();
-        machine.save(first).save(second);
-
+        let machine = new TimeMachine([first, second]);
         let history = machine.retrieveHistory();
+
         expect(history).toEqual([ first, second ]);
-    })
+    });
+
+    test("should return an item from the history", () => {
+        let first = { a: 1 };
+        let second = { a: 2 };
+
+        let machine = new TimeMachine([first, second]);
+        let firstState = machine.retrieve(0);
+
+        expect(firstState).toEqual(first);
+    });
+
+    test("should return undefined if the item is not in the history", () => {
+        let machine = new TimeMachine();
+        let state = machine.retrieve(0);
+
+        expect(state).toEqual(undefined);
+    });
 });
