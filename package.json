@@ -1,0 +1,26 @@
+{
+  "name": "wind.js",
+  "version": "0.0.1",
+  "description": "Reactive, actor based framework that can be used in client and server side.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeInBrackets/wind.js.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CodeInBrackets/wind.js/issues"
+  },
+  "contributors": [
+    "Kevin Mas Ruiz <masruizkevin@gmail.com> (https://github.com/kmruiz)"
+  ],
+  "homepage": "https://github.com/CodeInBrackets/wind.js#readme",
+  "devDependencies": {
+    "rollup": "^0.58.1"
+  }
+}
