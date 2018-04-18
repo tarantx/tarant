@@ -80,4 +80,20 @@ describe("Actor", () => {
 
         expect(promise).rejects.toThrow("error");
     });
+
+    test("should store the current state in case of a success synchronous pull", () => {
+        let actor = createActor(function () { this.color = "blue" });
+        actor.receiveMessage("");
+
+        actor.pull();
+        expect(actor.history()).toEqual([{ color: "blue", mailbox: [] }]);
+    });
+
+    test("should not store the current state in case of an failing pull", () => {
+        let actor = createActor(function () { throw "lol" });
+        actor.receiveMessage("");
+
+        actor.pull();
+        expect(actor.history()).toEqual([]);
+    })
 });
