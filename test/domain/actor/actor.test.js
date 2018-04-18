@@ -28,4 +28,16 @@ describe("Actor", () => {
         expect(actor.mailbox).toEqual([]);
         expect(actor.onReceive.mock.calls[0][0]).toBe(1);
     });
+
+    test("should tell a message to another actors mailbox", () => {
+        let sender = createActor();
+        let receiver = createActor();
+
+        sender.tell(receiver, "message");
+
+        let [ { origin, message } ] = receiver.mailbox;
+
+        expect(origin).toEqual(sender);
+        expect(message).toBe("message");
+    });
 });
