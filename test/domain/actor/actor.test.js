@@ -1,11 +1,11 @@
 import Actor from "../../../lib/domain/actor/actor";
 
-let createActor = () => {
+let createActor = (cb) => {
     return new (class extends Actor {
         constructor() {
             super();
 
-            this.onReceive = jest.fn();
+            this.onReceive = cb || jest.fn();
         }
     })();
 };
@@ -39,5 +39,25 @@ describe("Actor", () => {
 
         expect(origin).toEqual(sender);
         expect(message).toBe("message");
+    });
+
+    test("ask should use the return value of an actor onReceive call", () => {
+        let sender = createActor();
+        let receiver = createActor(() => 1);
+
+        let promise = sender.ask(receiver, "whatever");
+        receiver.pull();
+
+        expect(promise).resolves.toBe(1);
+    });
+
+    test("ask should return a failed promise in case of an error in the target actor", () => {
+        let sender = createActor();
+        let receiver = createActor(() => { throw "error" });
+
+        let promise = sender.ask(receiver, "whatever");
+        receiver.pull();
+
+        expect(promise).rejects.toThrow("error");
     });
 });
