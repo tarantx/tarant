@@ -60,4 +60,24 @@ describe("Actor", () => {
 
         expect(promise).rejects.toThrow("error");
     });
+
+    test("ask should use the return value of an actor onReceive call for async result", () => {
+        let sender = createActor();
+        let receiver = createActor(() => new Promise((resolve) => resolve(1)));
+
+        let promise = sender.ask(receiver, "whatever");
+        receiver.pull();
+
+        expect(promise).resolves.toBe(1);
+    });
+
+    test("ask should return a failed promise in case of an error in the target actor for async result", () => {
+        let sender = createActor();
+        let receiver = createActor(() => new Promise((_, reject) => reject("error")));
+
+        let promise = sender.ask(receiver, "whatever");
+        receiver.pull();
+
+        expect(promise).rejects.toThrow("error");
+    });
 });
