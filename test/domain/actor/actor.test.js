@@ -41,42 +41,48 @@ describe("Actor", () => {
         expect(message).toBe("message");
     });
 
-    test("ask should use the return value of an actor onReceive call", () => {
+    test("ask should use the return value of an actor onReceive call", async () => {
         let sender = createActor();
         let receiver = createActor(() => 1);
 
         let promise = sender.ask(receiver, "whatever");
-        receiver.pull();
+        await receiver.pull();
 
         expect(promise).resolves.toBe(1);
     });
 
-    test("ask should return a failed promise in case of an error in the target actor", () => {
+    test("ask should return a failed promise in case of an error in the target actor", async () => {
         let sender = createActor();
         let receiver = createActor(() => { throw "error" });
 
         let promise = sender.ask(receiver, "whatever");
-        receiver.pull();
+        try {
+            await receiver.pull();
+        } catch (e) {
+        }
 
         expect(promise).rejects.toThrow("error");
     });
 
-    test("ask should use the return value of an actor onReceive call for async result", () => {
+    test("ask should use the return value of an actor onReceive call for async result", async () => {
         let sender = createActor();
-        let receiver = createActor(() => new Promise((resolve) => resolve(1)));
+        let receiver = createActor(() => Promise.resolve(1));
 
         let promise = sender.ask(receiver, "whatever");
-        receiver.pull();
+        await receiver.pull();
 
         expect(promise).resolves.toBe(1);
     });
 
     test("ask should return a failed promise in case of an error in the target actor for async result", () => {
         let sender = createActor();
-        let receiver = createActor(() => new Promise((_, reject) => reject("error")));
+        let receiver = createActor(() => Promise.reject("error"));
 
         let promise = sender.ask(receiver, "whatever");
-        receiver.pull();
+        try {
+            receiver.pull();
+        } catch (e) {
+        }
 
         expect(promise).rejects.toThrow("error");
     });
@@ -89,11 +95,41 @@ describe("Actor", () => {
         expect(actor.history()).toEqual([{ color: "blue", mailbox: [] }]);
     });
 
-    test("should not store the current state in case of an failing pull", () => {
-        let actor = createActor(function () { throw "lol" });
+    test("should not store the current state in case of an failing pull", async () => {
+        let actor = createActor(() => { throw "lol" });
         actor.receiveMessage("");
 
-        actor.pull();
+        try {
+            await actor.pull();
+        } catch (e) {
+        }
+
         expect(actor.history()).toEqual([]);
-    })
+    });
+
+    test("should store the current state in case of a successful asynchronous pull", async () => {
+        let actor = createActor(function () {
+            return new Promise((resolve) => {
+                this.color = "blue";
+                resolve(this.color);
+            });
+        });
+
+        actor.receiveMessage("");
+
+        await actor.pull();
+        expect(actor.history()).toEqual([{color: "blue", mailbox: []}]);
+    });
+
+    test("should not store the current state in case of a failing asynchronous pull", async () => {
+        let actor = createActor(function () { return Promise.reject("X"); });
+        actor.receiveMessage("");
+
+        try {
+            await actor.pull();
+        } catch (e) {
+
+        }
+        expect(actor.history()).toEqual([]);
+    });
 });
