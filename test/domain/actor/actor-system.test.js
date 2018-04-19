@@ -34,7 +34,7 @@ describe("ActorSystem", () => {
         });
 
         actor.receiveMessage("");
-        await sleep(5);
+        await sleep(15);
         system.stop();
 
         expect(actor.onReceive.mock.calls.length).toBe(1);
