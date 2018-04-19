@@ -10,6 +10,11 @@ let createActor = (cb) => {
     })();
 };
 
+let receiveAndPull = async (actor, message) => {
+    actor.receiveMessage(message);
+    return await actor.pull();
+};
+
 describe("Actor", () => {
     test("should put the received message at the end of the mailbox", () => {
         let actor = createActor();
@@ -131,5 +136,16 @@ describe("Actor", () => {
 
         }
         expect(actor.history()).toEqual([]);
+    });
+
+    test("should be able to navigate to a known status", async () => {
+        let actor = createActor(function (message) { this.color = message });
+        await receiveAndPull(actor, "red");
+        await receiveAndPull(actor, "green");
+        await receiveAndPull(actor, "blue");
+
+        actor.navigateTo(1);
+
+        expect(actor.color).toBe('green');
     });
 });
