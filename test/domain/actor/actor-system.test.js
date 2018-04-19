@@ -29,15 +29,37 @@ describe("ActorSystem", () => {
             constructor() {
                 super();
 
+                this.onReceive = jest.fn().mockImplementation(c => console.log("=====>", c));
+            }
+        });
+
+        actor.receiveMessage("some message");
+        await sleep(15);
+
+        expect(actor.onReceive.mock.calls.length).toBe(1);
+        await system.stop();
+    });
+
+    test("should wait until all messages have been processed", async () => {
+        let system = new ActorSystem();
+
+        let actor = new (class extends system.Actor {
+            constructor() {
+                super();
+
                 this.onReceive = jest.fn();
             }
         });
 
         actor.receiveMessage("");
-        await sleep(15);
-        system.stop();
+        actor.receiveMessage("");
+        actor.receiveMessage("");
+        actor.receiveMessage("");
+        actor.receiveMessage("");
 
-        expect(actor.onReceive.mock.calls.length).toBe(1);
+        system.start();
+        await system.stop();
 
+        expect(actor.onReceive.mock.calls.length).toBe(5);
     });
 });
