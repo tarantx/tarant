@@ -9,7 +9,7 @@ describe("ActorSystem", () => {
         let system = new ActorSystem();
         let actor = new system.Actor();
 
-        expect(system.actors[actor.id]).toBe(actor);
+        expect(system.getActor(actor.id)).toBe(actor);
     });
 
     test("should deregister an actor", () => {
