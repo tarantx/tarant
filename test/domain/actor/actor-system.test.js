@@ -62,4 +62,19 @@ describe("ActorSystem", () => {
 
         expect(actor.onReceive.mock.calls.length).toBe(5);
     });
+
+    test("stopping a system will kill all actors", async () => {
+        let system = new ActorSystem();
+
+        let actor = new (class extends system.Actor {
+            constructor() {
+                super();
+
+                this.kill = jest.fn();
+            }
+        });
+
+        await system.stop();
+        expect(actor.kill.mock.calls.length).toBe(1);
+    });
 });
