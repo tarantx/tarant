@@ -156,4 +156,14 @@ describe("Actor", () => {
         actor.receiveMessage("whatever");
         expect(actor.mailbox).toEqual([]);
     });
+
+    test("ask should not do anything when the actor has been killed", () => {
+        let sender = createActor();
+        let receiver = createActor(() => Promise.reject("error"));
+
+        sender.kill();
+        sender.ask(receiver, "whatever");
+
+        expect(receiver.mailbox).toEqual([]);
+    });
 });
