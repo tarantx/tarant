@@ -148,4 +148,12 @@ describe("Actor", () => {
 
         expect(actor.color).toBe('green');
     });
+
+    test("should not receive more messages when killed", () => {
+        let actor = createActor();
+        actor.kill();
+
+        actor.receiveMessage("whatever");
+        expect(actor.mailbox).toEqual([]);
+    });
 });
