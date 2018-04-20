@@ -108,4 +108,19 @@ describe("ActorSystem", () => {
 
         expect(actor.mailbox[0]).toEqual({ origin: system, message: "hello" });
     });
+
+    test("should ask an actor", async () => {
+        let system = new ActorSystem();
+        let actor = new (class extends system.Actor {
+            onReceive() {
+                return 1;
+            }
+        });
+
+        system.start();
+        let promise = system.ask(actor.id, "what?");
+        await system.stop();
+
+        expect(await promise).toEqual(1);
+    });
 });
