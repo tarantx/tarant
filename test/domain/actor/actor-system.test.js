@@ -1,4 +1,5 @@
 import ActorSystem from "../../../lib/domain/actor/actor-system";
+import drop from "../../../lib/domain/actor/supervisor/drop";
 
 let sleep = async (ms) => {
     return new Promise(r => setTimeout(r, ms));
@@ -76,5 +77,25 @@ describe("ActorSystem", () => {
 
         await system.stop();
         expect(actor.kill.mock.calls.length).toBe(1);
+    });
+
+    test("should call the supervisor when an unhandled exception", async () => {
+        let fn = jest.fn();
+        fn.mockReturnValue(drop);
+
+        let system = new ActorSystem(undefined, fn);
+        let actor = new (class extends system.Actor {
+            constructor() {
+                super();
+
+                this.onReceive = () => Promise.reject("foo");
+            }
+        });
+
+        actor.receiveMessage("");
+        system.start();
+        await system.stop();
+
+        expect(fn.mock.calls[0]).toEqual([system, actor, "foo"]);
     });
 });
