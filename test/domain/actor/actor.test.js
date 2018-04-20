@@ -218,4 +218,24 @@ describe("Actor", () => {
 
         expect(await answer).toEqual([1, 2]);
     });
+
+    test("request response in a topic should timeout", async () => {
+        let eventBus = new EventBus();
+        let requester = createActor();
+        requester.system = { eventBus };
+
+        let a = createActor(() => 1);
+        a.system = { eventBus };
+
+        a.subscribe("topic");
+        let answer = requester.request("topic", "whatever", 0);
+        await a.pull();
+
+        try {
+            await answer;
+            fail("Expected timeout exception, but it succeed");
+        } catch (ex) {
+            expect(ex).toEqual("timeout");
+        }
+    });
 });
