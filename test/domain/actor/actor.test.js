@@ -197,4 +197,25 @@ describe("Actor", () => {
 
         expect(actor.mailbox).toEqual([]);
     });
+
+    test("request response in a topic", async () => {
+        let eventBus = new EventBus();
+        let requester = createActor();
+        requester.system = { eventBus };
+
+        let a = createActor(() => 1);
+        a.system = { eventBus };
+
+        let b = createActor(() => 2);
+        b.system = { eventBus };
+
+        a.subscribe("topic");
+        b.subscribe("topic");
+
+        let answer = requester.request("topic", "whatever");
+        await a.pull();
+        await b.pull();
+
+        expect(await answer).toEqual([1, 2]);
+    });
 });
