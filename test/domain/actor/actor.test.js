@@ -166,4 +166,12 @@ describe("Actor", () => {
 
         expect(receiver.mailbox).toEqual([]);
     });
+
+    test("onReceive should fail if not implemented", () => {
+        expect(() => (new Actor()).onReceive()).toThrow();
+    });
+
+    test("pull should return an undefined promise", () => {
+        expect((new Actor()).pull()).resolves.toEqual(undefined);
+    });
 });
