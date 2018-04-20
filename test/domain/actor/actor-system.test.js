@@ -1,5 +1,6 @@
 import ActorSystem from "../../../lib/domain/actor/actor-system";
 import drop from "../../../lib/domain/actor/supervisor/drop";
+import Actor from "../../../lib/domain/actor/actor";
 
 let sleep = async (ms) => {
     return new Promise(r => setTimeout(r, ms));
@@ -97,5 +98,14 @@ describe("ActorSystem", () => {
         await system.stop();
 
         expect(fn.mock.calls[0]).toEqual([system, actor, "foo"]);
+    });
+
+    test("should tell a message to an actor", () => {
+        let system = new ActorSystem();
+        let actor = new system.Actor();
+
+        system.tell(actor.id, "hello");
+
+        expect(actor.mailbox[0]).toEqual({ origin: system, message: "hello" });
     });
 });
