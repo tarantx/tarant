@@ -1,4 +1,5 @@
 import Actor from "../../../lib/domain/actor/actor";
+import EventBus from "../../../lib/domain/actor/event-bus";
 
 let createActor = (cb) => {
     return new (class extends Actor {
@@ -173,5 +174,27 @@ describe("Actor", () => {
 
     test("pull should return an undefined promise", () => {
         expect((new Actor()).pull()).resolves.toEqual(undefined);
+    });
+
+    test("subscribes to a topic and puts received messages in the mailbox", () => {
+        let actor = createActor();
+        actor.system = { eventBus: new EventBus() };
+
+        actor.subscribe("topic");
+        actor.publish("topic", "message");
+
+        expect(actor.mailbox[0].message).toEqual("message");
+    });
+
+    test("unsubscribes from a topic ", () => {
+        let actor = createActor();
+        actor.system = { eventBus: new EventBus() };
+
+        actor.subscribe("topic");
+        actor.unsubscribe("topic");
+
+        actor.publish("topic", "message");
+
+        expect(actor.mailbox).toEqual([]);
     });
 });
