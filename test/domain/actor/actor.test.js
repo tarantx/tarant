@@ -276,4 +276,13 @@ describe("Actor", () => {
 
         expect(onBeforePullingMessage.mock.calls[0]).toEqual([ actor, "" ]);
     });
+
+    test("should not call onBeforePullingMessage when the mailbox is empty", () => {
+        let onBeforePullingMessage = jest.fn();
+        let actor = createActor(undefined, { onBeforePullingMessage });
+
+        actor.pull();
+
+        expect(onBeforePullingMessage.mock.calls).toEqual([ ]);
+    });
 });
