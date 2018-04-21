@@ -248,7 +248,7 @@ describe("Actor", () => {
         let actor = createActor(undefined, { onActivate });
 
         await sleep(0);
-        expect(onActivate.mock.calls[0][0]).toEqual(actor);
+        expect(onActivate.mock.calls[0]).toEqual([actor]);
     });
 
     test("should call onDeactivate when an actor is killed", () => {
@@ -256,6 +256,14 @@ describe("Actor", () => {
         let actor = createActor(undefined, { onDeactivate });
 
         actor.kill();
-        expect(onDeactivate.mock.calls[0][0]).toEqual(actor);
+        expect(onDeactivate.mock.calls[0]).toEqual([actor]);
+    });
+
+    test("should call onReceiveMessage when an actor receives a message on the mailbox", () => {
+        let onReceiveMessage = jest.fn();
+        let actor = createActor(undefined, { onReceiveMessage });
+
+        actor.receiveMessage("");
+        expect(onReceiveMessage.mock.calls[0]).toEqual([actor, ""]);
     });
 });
