@@ -285,4 +285,13 @@ describe("Actor", () => {
 
         expect(onBeforePullingMessage.mock.calls).toEqual([ ]);
     });
+
+    test("should call onAfterMessageProcessed when the message has been processed successfully", async () => {
+        let onAfterMessageProcessed = jest.fn();
+        let actor = createActor(() => 1, { onAfterMessageProcessed });
+
+        await receiveAndPull(actor, 0);
+
+        expect(onAfterMessageProcessed.mock.calls[0]).toEqual([actor, 0, 1]);
+    });
 });
