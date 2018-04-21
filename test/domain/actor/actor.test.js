@@ -1,10 +1,10 @@
 import Actor from "../../../lib/domain/actor/actor";
 import EventBus from "../../../lib/domain/actor/event-bus";
 
-let createActor = (cb) => {
+let createActor = (cb, materializer) => {
     return new (class extends Actor {
         constructor() {
-            super();
+            super(undefined, undefined, materializer);
 
             this.onReceive = cb || jest.fn();
         }
@@ -14,6 +14,10 @@ let createActor = (cb) => {
 let receiveAndPull = async (actor, message) => {
     actor.receiveMessage(message);
     return await actor.pull();
+};
+
+let sleep = async (ms) => {
+    return new Promise(r => setTimeout(r, ms));
 };
 
 describe("Actor", () => {
@@ -237,5 +241,13 @@ describe("Actor", () => {
         } catch (ex) {
             expect(ex).toEqual("timeout");
         }
+    });
+
+    test("should eventually call the materializer onActivate method when constructed", async () => {
+        let onActivate = jest.fn();
+        let actor = createActor(undefined, { onActivate });
+
+        await sleep(0);
+        expect(onActivate.mock.calls[0][0]).toEqual(actor);
     });
 });
