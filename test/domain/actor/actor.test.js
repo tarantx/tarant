@@ -250,4 +250,12 @@ describe("Actor", () => {
         await sleep(0);
         expect(onActivate.mock.calls[0][0]).toEqual(actor);
     });
+
+    test("should call onDeactivate when an actor is killed", () => {
+        let onDeactivate = jest.fn();
+        let actor = createActor(undefined, { onDeactivate });
+
+        actor.kill();
+        expect(onDeactivate.mock.calls[0][0]).toEqual(actor);
+    });
 });
