@@ -318,4 +318,16 @@ describe("Actor", () => {
 
         expect(onError.mock.calls[0]).toEqual([actor, 0, "expected" ]);
     });
+
+    test("should call onSubscribe when the actor subscribes to a topic", () => {
+        let eventBus = new EventBus();
+        let onSubscribe = jest.fn();
+
+        let actor = createActor(undefined, { onSubscribe });
+        actor.system = { eventBus };
+
+        let subscription = actor.subscribe("topic");
+
+        expect(onSubscribe.mock.calls[0]).toEqual([actor, "topic", subscription]);
+    });
 });
