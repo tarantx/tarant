@@ -330,4 +330,17 @@ describe("Actor", () => {
 
         expect(onSubscribe.mock.calls[0]).toEqual([actor, "topic", subscription]);
     });
+
+    test("should call onUnsubscribe when the actor unsubscribes from a topic", () => {
+        let eventBus = new EventBus();
+        let onUnsubscribe = jest.fn();
+
+        let actor = createActor(undefined, { onUnsubscribe });
+        actor.system = { eventBus };
+
+        let subscription = actor.subscribe("topic");
+        actor.unsubscribe("topic");
+
+        expect(onUnsubscribe.mock.calls[0]).toEqual([actor, "topic", subscription]);
+    });
 });
