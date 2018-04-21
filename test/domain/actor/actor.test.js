@@ -266,4 +266,14 @@ describe("Actor", () => {
         actor.receiveMessage("");
         expect(onReceiveMessage.mock.calls[0]).toEqual([actor, ""]);
     });
+
+    test("should call onBeforePullingMessage when an actor is going to pull a message and the mailbox is not empty", () => {
+        let onBeforePullingMessage = jest.fn();
+        let actor = createActor(undefined, { onBeforePullingMessage });
+
+        actor.receiveMessage("");
+        actor.pull();
+
+        expect(onBeforePullingMessage.mock.calls[0]).toEqual([ actor, "" ]);
+    });
 });
