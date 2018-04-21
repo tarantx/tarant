@@ -294,4 +294,28 @@ describe("Actor", () => {
 
         expect(onAfterMessageProcessed.mock.calls[0]).toEqual([actor, 0, 1]);
     });
+
+    test("should not call onAfterMessageProcessed when the message has been failed to process", async () => {
+        let onAfterMessageProcessed = jest.fn();
+        let actor = createActor(() => { throw "expected" }, { onAfterMessageProcessed });
+
+        try {
+            await receiveAndPull(actor, 0);
+        } catch (e) {
+        }
+
+        expect(onAfterMessageProcessed.mock.calls).toEqual([]);
+    });
+
+    test("should call onError when the message has been failed to process", async () => {
+        let onError = jest.fn();
+        let actor = createActor(() => { throw "expected" }, { onError });
+
+        try {
+            await receiveAndPull(actor, 0);
+        } catch (e) {
+        }
+
+        expect(onError.mock.calls[0]).toEqual([actor, 0, "expected" ]);
+    });
 });

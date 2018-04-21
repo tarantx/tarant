@@ -80,7 +80,7 @@ describe("ActorSystem", () => {
         expect(actor.kill.mock.calls.length).toBe(1);
     });
 
-    test("should call the supervisor when an unhandled exception", async () => {
+    test("should call the supervisor when an unhandled exception happens", async () => {
         let fn = jest.fn();
         fn.mockReturnValue(drop);
 
