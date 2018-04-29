@@ -18,7 +18,7 @@ describe("ActorSystem", () => {
         let system = new ActorSystem();
         let actor = new system.Actor();
 
-        system.killActor(actor);
+        system.killActor(actor.id);
 
         expect(system.actors[actor.id]).toBe(undefined);
     });

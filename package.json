@@ -4,6 +4,7 @@
   "main": "dist/wind.cjs.js",
   "description": "Reactive, actor based framework that can be used in client and server side.",
   "scripts": {
+    "docs": "jsdoc2md lib/**/*.js > docs/reference.md",
     "build": "rollup -c",
     "test": "jest",
     "test:coverage": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
@@ -35,6 +36,8 @@
     "babel-preset-env": "^1.6.1",
     "coveralls": "^3.0.0",
     "jest": "^22.4.3",
+    "jsdoc": "^3.5.5",
+    "precommit-hook": "^3.0.0",
     "rollup": "^0.58.1",
     "rollup-plugin-babel": "^3.0.4"
   },
@@ -56,5 +59,6 @@
         }
       ]
     ]
-  }
+  },
+  "pre-commit": [ "test", "docs" ]
 }

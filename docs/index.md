@@ -2,6 +2,7 @@ Welcome!
 =======
 
 If you want to check a fast overview on how to setup your first application using wind.js, check out [here](/README.md).
+You can also check the reference [here](reference.md).
 
 Architecture
 --------------------------
