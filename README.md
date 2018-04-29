@@ -27,7 +27,7 @@ First you must install the package:
 Then create your first ActorSystem
 
 ```js
-import ActorSystem from "wind.js/lib/domain/actor/actor-system";
+import ActorSystem from "wind.js";
 
 let system = new ActorSystem();
 system.start();
