@@ -2,7 +2,6 @@
   "name": "wind.js",
   "version": "1.0.0",
   "description": "Reactive, actor based framework that can be used in client and server side.",
-  "main": "lib/index.js",
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
@@ -48,5 +47,8 @@
   },
   "dependencies": {
     "uuid": "^3.2.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
