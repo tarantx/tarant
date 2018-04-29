@@ -239,11 +239,13 @@ describe("Actor", () => {
         a.subscribe("topic");
         let answer = requester.request("topic", "whatever", 0);
 
+        let r = sleep(1)
+            .then(async _ => await a.pull())
+            .then(async _ => await answer);
+
         try {
-            await a.pull();
-            await sleep(1);
-            await answer;
-            fail("Expected timeout exception, but it succeed");
+            await r;
+            fail("Expected timeout");
         } catch (ex) {
             expect(ex).toEqual("timeout");
         }
@@ -253,7 +255,7 @@ describe("Actor", () => {
         let onActivate = jest.fn();
         let actor = createActor(undefined, { onActivate });
 
-        await sleep(0);
+        await sleep(1);
         expect(onActivate.mock.calls[0]).toEqual([actor]);
     });
 
