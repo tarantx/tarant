@@ -97,6 +97,11 @@ describe("Actor", () => {
         expect(promise).rejects.toThrow("error");
     });
 
+    test("should throw an exception if onReceive not implemented", async () => {
+        let promise = new Actor([ 1 ]).pull();
+        expect(promise).rejects.toThrow();
+    });
+
     test("should store the current state in case of a success synchronous pull", () => {
         let actor = createActor(function () { this.color = "blue" });
         actor.receiveMessage("");
@@ -233,9 +238,10 @@ describe("Actor", () => {
 
         a.subscribe("topic");
         let answer = requester.request("topic", "whatever", 0);
-        await a.pull();
 
         try {
+            await a.pull();
+            await sleep(1);
             await answer;
             fail("Expected timeout exception, but it succeed");
         } catch (ex) {
