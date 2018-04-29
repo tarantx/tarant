@@ -60,7 +60,6 @@ typings/
 # next.js build output
 .next
 
-# Our dist directory
 /dist
 
 # If you use IDEA

@@ -1,7 +1,7 @@
 {
   "name": "wind.js",
-  "version": "1.0.2",
-  "main": "lib/index.js",  
+  "version": "1.0.2.1",
+  "main": "dist/wind.cjs.js",
   "description": "Reactive, actor based framework that can be used in client and server side.",
   "scripts": {
     "build": "rollup -c",
@@ -20,32 +20,23 @@
   "contributors": [
     "Kevin Mas Ruiz <masruizkevin@gmail.com> (https://github.com/kmruiz)"
   ],
-  "keywords": [ "actors", "async", "wind.js", "server" ],
+  "keywords": [
+    "actors",
+    "async",
+    "wind.js",
+    "server"
+  ],
   "homepage": "https://github.com/CodeInBrackets/wind.js#readme",
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-jest": "^22.4.3",
-    "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-plugin-transform-jsx": "^2.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "coveralls": "^3.0.0",
     "jest": "^22.4.3",
-    "rollup": "^0.58.1"
-  },
-  "babel": {
-    "presets": [
-      "env"
-    ],
-    "plugins": [
-      [
-        "transform-object-rest-spread",
-        {
-          "useBuiltIns": true
-        }
-      ],
-      "transform-jsx"
-    ]
+    "rollup": "^0.58.1",
+    "rollup-plugin-babel": "^3.0.4"
   },
   "dependencies": {
     "uuid": "^3.2.1"

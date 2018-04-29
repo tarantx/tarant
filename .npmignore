@@ -1,0 +1,9 @@
+/.idea
+/coverage
+/docs
+/lib/
+/node_modules
+/test
+.gitignore
+.travis.yml
+rollup.config.js
