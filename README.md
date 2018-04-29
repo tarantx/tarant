@@ -1,7 +1,11 @@
 # ![logomakr_01gz5x](https://user-images.githubusercontent.com/3071208/38959874-9addaa8e-4362-11e8-9904-38fba6503ae2.png)
+![GitHub release](https://img.shields.io/github/release/codeinbrackets/wind.js.svg)
 [![Build Status](https://travis-ci.org/CodeInBrackets/wind.js.svg?branch=master)](https://travis-ci.org/CodeInBrackets/wind.js)
 [![Coverage Status](https://coveralls.io/repos/github/CodeInBrackets/wind.js/badge.svg?branch=master)](https://coveralls.io/github/CodeInBrackets/wind.js?branch=master)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+![MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)
+![GitHub issues](https://img.shields.io/github/issues/codeinbrackets/wind.js.svg)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/codeinbrackets/wind.js.svg)
 
 Wind is a JavaScript library for building software using the actor system model.
 
