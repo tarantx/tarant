@@ -90,8 +90,8 @@ navigate through the TimeMachine and see all the states in time for a given Acto
 
 #### Subscriptions
 
-Actors can subscribe to topics on the parent Actor System. All messages sent to any of the subscribed topics will be enqueued to the actor's mailbox and processed as a normal messages. Actors can also publish messages to topics without
-the need of subscribing to them.
+Actors can subscribe to topics on the parent Actor System. All messages sent to any of the subscribed topics will be enqueued to the actor's mailbox and processed as normal messages. 
+Actors can also publish messages to topics without the need of subscribing to them.
 
 #### State
 
