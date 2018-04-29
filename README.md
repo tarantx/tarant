@@ -48,7 +48,7 @@ let myPinger = new Ping();
 system.tell(myPinger.id, "ping");
 ```
 
-The application will continue running and processing messages antes you stop the actor system:
+The application will continue running and processing messages until you stop the actor system:
 
 ```js
 system.stop();
@@ -58,6 +58,10 @@ If you run the application you will see the following output:
 ```
 PING
 ```
+
+## Documentation
+
+If you want deeper documentation on how to use the actor system, take a look at [here](docs/index.md).
 
 ### Logo
 Check out the new logo that I created on <a href="http://logomakr.com" title="Logo Makr">LogoMakr.com</a> https://logomakr.com/01Gz5x
