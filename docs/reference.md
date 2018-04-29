@@ -263,7 +263,7 @@ Publishes a message to a topic. Messages in a topic will be eventually processed
 <a name="Actor+request"></a>
 
 ### actor.request(topic, message, timeout) ⇒ <code>Promise.&lt;any&gt;</code>
-Request a response from all actors subscribed to a topic for a given message.For example, let's imagine that we have the following two actors subscribed to the topic 'ops':Actor1 => given a number :: returns number + 1Actor2 => given a number :: returns number + 2If we request a message like:MyActor.request('ops', 1);It will return a Promise, that eventually will return [2, 3] (the order may differ).If any of the actors doesn't respond in the given timeout, the promise will be rejected, ignoring anyresponse. The state of other actors will not rollback.
+Request a response from all actors subscribed to a topic for a given message.For example, let's imagine that we have the following two actors subscribed to the topic 'ops':<pre>Actor1 => given a number :: returns number + 1Actor2 => given a number :: returns number + 2</pre> If we request a message like:<pre><code>MyActor.request('ops', 1);</code></pre>It will return a Promise, that eventually will return [2, 3] (the order may differ).If any of the actors doesn't respond in the given timeout, the promise will be rejected, ignoring anyresponse. The state of other actors will not rollback.
 
 **Kind**: instance method of [<code>Actor</code>](#Actor)  
 
