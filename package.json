@@ -5,9 +5,9 @@
   "description": "Reactive, actor based framework that can be used in client and server side.",
   "scripts": {
     "docs": "jsdoc2md lib/**/*.js > docs/reference.md",
-    "build": "rollup -c",
-    "test": "jest",
-    "test:coverage": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "build": "cross-env BABEL_ENV=production rollup -c",
+    "test": "cross-env BABEL_ENV=development jest",
+    "test:coverage": "cross-env BABEL_ENV=development jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
@@ -35,11 +35,13 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "coveralls": "^3.0.0",
+    "cross-env": "^5.1.4",
     "jest": "^22.4.3",
     "jsdoc": "^3.5.5",
     "precommit-hook": "^3.0.0",
     "rollup": "^0.58.1",
-    "rollup-plugin-babel": "^3.0.4"
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-uglify": "^3.0.0"
   },
   "dependencies": {
     "uuid": "^3.2.1"
@@ -47,18 +49,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "babel": {
-    "presets": [
-      "env"
-    ],
-    "plugins": [
-      [
-        "transform-object-rest-spread",
-        {
-          "useBuiltIns": false
-        }
-      ]
-    ]
-  },
-  "pre-commit": [ "test", "docs" ]
+  "pre-commit": [
+    "test",
+    "build",
+    "docs"
+  ]
 }
