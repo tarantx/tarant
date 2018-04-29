@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "babel-plugin-transform-jsx": "^2.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "coveralls": "^3.0.0",
     "jest": "^22.4.3",
     "rollup": "^0.58.1"
   },
