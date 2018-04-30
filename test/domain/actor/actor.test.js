@@ -25,7 +25,7 @@ describe("Actor", () => {
         let actor = createActor();
         actor.receiveMessage(1);
 
-        let [ message ] = actor.mailbox;
+        let [message] = actor.mailbox;
         expect(message).toBe(1);
     });
 
@@ -45,7 +45,7 @@ describe("Actor", () => {
 
         sender.tell(receiver, "message");
 
-        let [ { origin, message } ] = receiver.mailbox;
+        let [{origin, message}] = receiver.mailbox;
 
         expect(origin).toEqual(sender);
         expect(message).toBe("message");
@@ -63,7 +63,9 @@ describe("Actor", () => {
 
     test("ask should return a failed promise in case of an error in the target actor", async () => {
         let sender = createActor();
-        let receiver = createActor(() => { throw "error" });
+        let receiver = createActor(() => {
+            throw "error"
+        });
 
         let promise = sender.ask(receiver, "whatever");
         try {
@@ -98,20 +100,24 @@ describe("Actor", () => {
     });
 
     test("should throw an exception if onReceive not implemented", async () => {
-        let promise = new Actor([ 1 ]).pull();
+        let promise = new Actor([1]).pull();
         expect(promise).rejects.toThrow();
     });
 
     test("should store the current state in case of a success synchronous pull", () => {
-        let actor = createActor(function () { this.color = "blue" });
+        let actor = createActor(function () {
+            this.color = "blue"
+        });
         actor.receiveMessage("");
 
         actor.pull();
-        expect(actor.history()).toEqual([{ color: "blue", mailbox: [] }]);
+        expect(actor.history()).toEqual([{color: "blue", mailbox: []}]);
     });
 
     test("should not store the current state in case of an failing pull", async () => {
-        let actor = createActor(() => { throw "lol" });
+        let actor = createActor(() => {
+            throw "lol"
+        });
         actor.receiveMessage("");
 
         try {
@@ -137,7 +143,9 @@ describe("Actor", () => {
     });
 
     test("should not store the current state in case of a failing asynchronous pull", async () => {
-        let actor = createActor(function () { return Promise.reject("X"); });
+        let actor = createActor(function () {
+            return Promise.reject("X");
+        });
         actor.receiveMessage("");
 
         try {
@@ -149,7 +157,9 @@ describe("Actor", () => {
     });
 
     test("should be able to navigate to a known status", async () => {
-        let actor = createActor(function (message) { this.color = message });
+        let actor = createActor(function (message) {
+            this.color = message
+        });
         await receiveAndPull(actor, "red");
         await receiveAndPull(actor, "green");
         await receiveAndPull(actor, "blue");
@@ -187,7 +197,7 @@ describe("Actor", () => {
 
     test("subscribes to a topic and puts received messages in the mailbox", () => {
         let actor = createActor();
-        actor.system = { eventBus: new EventBus() };
+        actor.system = {eventBus: new EventBus()};
 
         actor.subscribe("topic");
         actor.publish("topic", "message");
@@ -197,7 +207,7 @@ describe("Actor", () => {
 
     test("unsubscribes from a topic ", () => {
         let actor = createActor();
-        actor.system = { eventBus: new EventBus() };
+        actor.system = {eventBus: new EventBus()};
 
         actor.subscribe("topic");
         actor.unsubscribe("topic");
@@ -210,13 +220,13 @@ describe("Actor", () => {
     test("request response in a topic", async () => {
         let eventBus = new EventBus();
         let requester = createActor();
-        requester.system = { eventBus };
+        requester.system = {eventBus};
 
         let a = createActor(() => 1);
-        a.system = { eventBus };
+        a.system = {eventBus};
 
         let b = createActor(() => 2);
-        b.system = { eventBus };
+        b.system = {eventBus};
 
         a.subscribe("topic");
         b.subscribe("topic");
@@ -228,32 +238,26 @@ describe("Actor", () => {
         expect(await answer).toEqual([1, 2]);
     });
 
-    test("request response in a topic should timeout", async () => {
+    test("request response in a topic should timeout", () => {
         let eventBus = new EventBus();
         let requester = createActor();
-        requester.system = { eventBus };
+        requester.system = {eventBus};
 
         let a = createActor(() => 1);
-        a.system = { eventBus };
+        a.system = {eventBus};
 
         a.subscribe("topic");
-        let answer = requester.request("topic", "whatever", 0);
 
-        let r = sleep(1)
-            .then(async _ => await a.pull())
-            .then(async _ => await answer);
+        let answer = requester.request("topic", "whatever", 0).catch(_ => console.error("timeout"));
 
-        try {
-            await r;
-            fail("Expected timeout");
-        } catch (ex) {
-            expect(ex).toEqual("timeout");
-        }
+        let r = sleep(5).then(a.pull()).then(answer);
+
+        expect(r).rejects.toThrow("timeout");
     });
 
     test("should eventually call the materializer onActivate method when constructed", async () => {
         let onActivate = jest.fn();
-        let actor = createActor(undefined, { onActivate });
+        let actor = createActor(undefined, {onActivate});
 
         await sleep(1);
         expect(onActivate.mock.calls[0]).toEqual([actor]);
@@ -261,7 +265,7 @@ describe("Actor", () => {
 
     test("should call onDeactivate when an actor is killed", () => {
         let onDeactivate = jest.fn();
-        let actor = createActor(undefined, { onDeactivate });
+        let actor = createActor(undefined, {onDeactivate});
 
         actor.kill();
         expect(onDeactivate.mock.calls[0]).toEqual([actor]);
@@ -269,7 +273,7 @@ describe("Actor", () => {
 
     test("should call onReceiveMessage when an actor receives a message on the mailbox", () => {
         let onReceiveMessage = jest.fn();
-        let actor = createActor(undefined, { onReceiveMessage });
+        let actor = createActor(undefined, {onReceiveMessage});
 
         actor.receiveMessage("");
         expect(onReceiveMessage.mock.calls[0]).toEqual([actor, ""]);
@@ -277,26 +281,26 @@ describe("Actor", () => {
 
     test("should call onBeforePullingMessage when an actor is going to pull a message and the mailbox is not empty", () => {
         let onBeforePullingMessage = jest.fn();
-        let actor = createActor(undefined, { onBeforePullingMessage });
+        let actor = createActor(undefined, {onBeforePullingMessage});
 
         actor.receiveMessage("");
         actor.pull();
 
-        expect(onBeforePullingMessage.mock.calls[0]).toEqual([ actor, "" ]);
+        expect(onBeforePullingMessage.mock.calls[0]).toEqual([actor, ""]);
     });
 
     test("should not call onBeforePullingMessage when the mailbox is empty", () => {
         let onBeforePullingMessage = jest.fn();
-        let actor = createActor(undefined, { onBeforePullingMessage });
+        let actor = createActor(undefined, {onBeforePullingMessage});
 
         actor.pull();
 
-        expect(onBeforePullingMessage.mock.calls).toEqual([ ]);
+        expect(onBeforePullingMessage.mock.calls).toEqual([]);
     });
 
     test("should call onAfterMessageProcessed when the message has been processed successfully", async () => {
         let onAfterMessageProcessed = jest.fn();
-        let actor = createActor(() => 1, { onAfterMessageProcessed });
+        let actor = createActor(() => 1, {onAfterMessageProcessed});
 
         await receiveAndPull(actor, 0);
 
@@ -305,7 +309,9 @@ describe("Actor", () => {
 
     test("should not call onAfterMessageProcessed when the message has been failed to process", async () => {
         let onAfterMessageProcessed = jest.fn();
-        let actor = createActor(() => { throw "expected" }, { onAfterMessageProcessed });
+        let actor = createActor(() => {
+            throw "expected"
+        }, {onAfterMessageProcessed});
 
         try {
             await receiveAndPull(actor, 0);
@@ -317,22 +323,24 @@ describe("Actor", () => {
 
     test("should call onError when the message has been failed to process", async () => {
         let onError = jest.fn();
-        let actor = createActor(() => { throw "expected" }, { onError });
+        let actor = createActor(() => {
+            throw "expected"
+        }, {onError});
 
         try {
             await receiveAndPull(actor, 0);
         } catch (e) {
         }
 
-        expect(onError.mock.calls[0]).toEqual([actor, 0, "expected" ]);
+        expect(onError.mock.calls[0]).toEqual([actor, 0, "expected"]);
     });
 
     test("should call onSubscribe when the actor subscribes to a topic", () => {
         let eventBus = new EventBus();
         let onSubscribe = jest.fn();
 
-        let actor = createActor(undefined, { onSubscribe });
-        actor.system = { eventBus };
+        let actor = createActor(undefined, {onSubscribe});
+        actor.system = {eventBus};
 
         let subscription = actor.subscribe("topic");
 
@@ -343,8 +351,8 @@ describe("Actor", () => {
         let eventBus = new EventBus();
         let onUnsubscribe = jest.fn();
 
-        let actor = createActor(undefined, { onUnsubscribe });
-        actor.system = { eventBus };
+        let actor = createActor(undefined, {onUnsubscribe});
+        actor.system = {eventBus};
 
         let subscription = actor.subscribe("topic");
         actor.unsubscribe("topic");
