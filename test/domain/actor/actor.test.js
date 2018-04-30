@@ -29,6 +29,22 @@ describe("Actor", () => {
         expect(message).toBe(1);
     });
 
+    test("should not pull a new message until the current one is not processed", async () => {
+        let resolvePromise = null;
+        let actor = createActor(() => new Promise(r => resolvePromise = r));
+        actor.receiveMessage(1);
+        actor.receiveMessage(2);
+        let firstMessage = actor.pull(); // The actor hangs until we call resolvePromise
+        await actor.pull(); // should not do anything so it returns
+        expect(actor.mailbox).toEqual([2]);
+        resolvePromise();
+        await firstMessage;
+        let secondMessage = actor.pull();
+        resolvePromise();
+        await secondMessage;
+        expect(actor.mailbox).toEqual([]);
+    });
+
     test("should pull a message and call onReceive with that message", () => {
         let actor = createActor();
         actor.receiveMessage(1);
