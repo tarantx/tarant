@@ -43,6 +43,7 @@
     "rollup-plugin-uglify": "^3.0.0"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "uuid": "^3.2.1"
   },
   "publishConfig": {
