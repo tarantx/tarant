@@ -32,6 +32,8 @@ can be handled at any time.
 * The Actor System is highly extensive. You can add your own supervisor and materializer to add new features like
 implicit persistence or rendering of actors.
 
+**You can see some of the features [in the showcase folder](./docs/showcase).**
+
 ## Quick start
 
 Creating your first actor system is easy and you don't need to understand everything that is happening under the hood.
