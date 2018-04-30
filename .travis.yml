@@ -1,7 +1,9 @@
 language: node_js
 node_js:
 - node
-script: npm run test:coverage
+script:
+- npm run test:coverage
+- npm run build
 deploy:
   provider: npm
   email: masruizkevin@gmail.com
