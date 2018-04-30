@@ -32,7 +32,7 @@ The Actor System is the class responsible of managing actors and their lifecycle
 **Kind**: global class  
 
 * [ActorSystem](#ActorSystem)
-    * [new ActorSystem(scheduler, supervisor, materializer, eventBus)](#new_ActorSystem_new)
+    * [new ActorSystem(scheduler, supervisor, materializer, eventBus, defaultTicks)](#new_ActorSystem_new)
     * [.Actor](#ActorSystem+Actor)
         * [new ActorSystem#Actor()](#new_ActorSystem+Actor_new)
     * [.getActor(id)](#ActorSystem+getActor) ⇒ [<code>Actor</code>](#Actor)
@@ -44,7 +44,7 @@ The Actor System is the class responsible of managing actors and their lifecycle
 
 <a name="new_ActorSystem_new"></a>
 
-### new ActorSystem(scheduler, supervisor, materializer, eventBus)
+### new ActorSystem(scheduler, supervisor, materializer, eventBus, defaultTicks)
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -52,6 +52,7 @@ The Actor System is the class responsible of managing actors and their lifecycle
 | supervisor | <code>Supervisor</code> | Custom supervisor, defaults to () => drop |
 | materializer | <code>Materializer</code> | Custom materializer, defaults to noop. |
 | eventBus | <code>EventBus</code> | Custom event bus, defaults to a new Event Bus. |
+| defaultTicks | <code>number</code> | Default tick interval for the default scheduler. |
 
 <a name="ActorSystem+Actor"></a>
 
