@@ -1,4 +1,4 @@
-# ![logomakr_01gz5x](https://user-images.githubusercontent.com/3071208/38959874-9addaa8e-4362-11e8-9904-38fba6503ae2.png)
+# ![logomakr_8cwvt1](https://user-images.githubusercontent.com/3071208/42311453-254a1474-803e-11e8-957a-5c1c8d157b31.png)
 ![GitHub release](https://img.shields.io/github/release/codeinbrackets/wind.js.svg)
 [![npm](https://img.shields.io/npm/v/wind.js.svg)](https://www.npmjs.com/package/wind.js)
 [![Build Status](https://travis-ci.org/CodeInBrackets/wind.js.svg?branch=master)](https://travis-ci.org/CodeInBrackets/wind.js)
@@ -91,4 +91,4 @@ If you want to be a long-term contributor and participate actively on the design
 us! Check the package.json to see who you need to contact.
 
 ### Logo
-Check out the new logo that I created on <a href="http://logomakr.com" title="Logo Makr">LogoMakr.com</a> https://logomakr.com/01Gz5x
+Player graphic by <a href="http://www.flaticon.com/authors/pixel-perfect">pixel_perfect</a> from <a href="http://www.flaticon.com/">Flaticon</a> is licensed under <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>. Check out the new logo that I created on <a href="http://logomakr.com" title="Logo Makr">LogoMakr.com</a> https://logomakr.com/8CWVt1
