@@ -36,6 +36,11 @@ describe("Actor", () => {
         expect(actor.mailbox[0].message).toBe("hi!");
     });
 
+    test("should not ask to itself", () => {
+        let actor = createActor();
+        expect(() => actor.ask(actor, "asd")).toThrow();
+    });
+
     test("should not pull a new message until the current one is not processed", async () => {
         let resolvePromise = null;
         let actor = createActor(() => new Promise(r => resolvePromise = r));
@@ -134,7 +139,7 @@ describe("Actor", () => {
         actor.receiveMessage("");
 
         actor.pull();
-        expect(actor.history()).toEqual([{color: "blue", mailbox: []}]);
+        expect(actor.history()).toEqual([{color: "blue", mailbox: [], id: actor.id }]);
     });
 
     test("should not store the current state in case of an failing pull", async () => {
@@ -162,7 +167,7 @@ describe("Actor", () => {
         actor.receiveMessage("");
 
         await actor.pull();
-        expect(actor.history()).toEqual([{color: "blue", mailbox: []}]);
+        expect(actor.history()).toEqual([{color: "blue", mailbox: [], id: actor.id }]);
     });
 
     test("should not store the current state in case of a failing asynchronous pull", async () => {
