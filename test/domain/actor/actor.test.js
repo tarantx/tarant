@@ -29,6 +29,13 @@ describe("Actor", () => {
         expect(message).toBe(1);
     });
 
+    test("should support recursive messages in the same actor", async () => {
+        let actor = createActor(function () { this.tell(this, "hi!") });
+        await receiveAndPull(actor, 1);
+
+        expect(actor.mailbox[0].message).toBe("hi!");
+    });
+
     test("should not pull a new message until the current one is not processed", async () => {
         let resolvePromise = null;
         let actor = createActor(() => new Promise(r => resolvePromise = r));
