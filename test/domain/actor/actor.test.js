@@ -1,32 +1,60 @@
 import Actor from "../../../lib/domain/actor/actor";
 import EventBus from "../../../lib/domain/actor/event-bus";
 
-let createActor = (cb, materializer) => {
-    return new (class extends Actor {
-        constructor() {
-            super(undefined, undefined, materializer);
-
-            this.onReceive = cb || jest.fn();
-        }
-    })();
-};
-
-let receiveAndPull = async (actor, message) => {
-    actor.receiveMessage(message);
-    return await actor.pull();
-};
-
-let sleep = async (ms) => {
-    return new Promise(r => setTimeout(r, ms));
-};
-
 describe("Actor", () => {
+    let createActorFactory = system => (cb, materializer) => {
+        return new (class extends Actor {
+            constructor() {
+                super(undefined, undefined, materializer, {}, undefined, system);
+
+                this.onReceive = cb || jest.fn();
+            }
+        })();
+    };
+
+    let receiveAndPull = async (actor, message) => {
+        actor.receiveMessage(message);
+        return await actor.pull();
+    };
+
+    let sleep = async (ms) => {
+        return new Promise(r => setTimeout(r, ms));
+    };
+
+    let createActor = undefined;
+
+    beforeEach(() => {
+        createActor = createActorFactory({ requestTime: jest.fn() });
+    });
+
     test("should put the received message at the end of the mailbox", () => {
         let actor = createActor();
         actor.receiveMessage(1);
 
         let [message] = actor.mailbox;
         expect(message).toBe(1);
+        expect(actor.system.requestTime).toHaveBeenCalledWith(actor.id);
+    });
+
+    test("if the mailbox is empty after pulling, it should not ask for time to the system", async () => {
+        let actor = createActor();
+        actor.receiveMessage(1);
+
+        actor.system.requestTime.mockClear();
+        await actor.pull();
+
+        expect(actor.system.requestTime).not.toHaveBeenCalledWith(actor.id);
+    });
+
+    test("if the mailbox is not empty after pulling, it should ask for time to the system", async () => {
+        let actor = createActor();
+        actor.receiveMessage(1);
+        actor.receiveMessage(1);
+
+        actor.system.requestTime.mockClear();
+        await actor.pull();
+
+        expect(actor.system.requestTime).toHaveBeenCalledWith(actor.id);
     });
 
     test("should support recursive messages in the same actor", async () => {
@@ -139,7 +167,7 @@ describe("Actor", () => {
         actor.receiveMessage("");
 
         actor.pull();
-        expect(actor.history()).toEqual([{color: "blue", mailbox: [], id: actor.id }]);
+        expect(actor.history()).toMatchObject([{color: "blue", mailbox: [], id: actor.id }]);
     });
 
     test("should not store the current state in case of an failing pull", async () => {
@@ -167,7 +195,7 @@ describe("Actor", () => {
         actor.receiveMessage("");
 
         await actor.pull();
-        expect(actor.history()).toEqual([{color: "blue", mailbox: [], id: actor.id }]);
+        expect(actor.history()).toMatchObject([{color: "blue", mailbox: [], id: actor.id }]);
     });
 
     test("should not store the current state in case of a failing asynchronous pull", async () => {
@@ -225,7 +253,7 @@ describe("Actor", () => {
 
     test("subscribes to a topic and puts received messages in the mailbox", () => {
         let actor = createActor();
-        actor.system = {eventBus: new EventBus()};
+        actor.system.eventBus = new EventBus();
 
         actor.subscribe("topic");
         actor.publish("topic", "message");
@@ -235,7 +263,7 @@ describe("Actor", () => {
 
     test("unsubscribes from a topic ", () => {
         let actor = createActor();
-        actor.system = {eventBus: new EventBus()};
+        actor.system.eventBus = new EventBus();
 
         actor.subscribe("topic");
         actor.unsubscribe("topic");
@@ -248,13 +276,13 @@ describe("Actor", () => {
     test("request response in a topic", async () => {
         let eventBus = new EventBus();
         let requester = createActor();
-        requester.system = {eventBus};
+        requester.system.eventBus = eventBus;
 
         let a = createActor(() => 1);
-        a.system = {eventBus};
+        a.system.eventBus = eventBus;
 
         let b = createActor(() => 2);
-        b.system = {eventBus};
+        b.system.eventBus = eventBus;
 
         a.subscribe("topic");
         b.subscribe("topic");
@@ -266,18 +294,17 @@ describe("Actor", () => {
         expect(await answer).toEqual([1, 2]);
     });
 
-    test("request response in a topic should timeout", () => {
+    test("request response in a topic should timeout", async () => {
         let eventBus = new EventBus();
         let requester = createActor();
-        requester.system = {eventBus};
+        requester.system.eventBus = eventBus;
 
         let a = createActor(() => 1);
-        a.system = {eventBus};
+        a.system.eventBus = eventBus;
 
         a.subscribe("topic");
 
         let answer = requester.request("topic", "whatever", 0).catch(_ => console.error("timeout"));
-
         let r = sleep(5).then(a.pull()).then(answer);
 
         expect(r).rejects.toThrow("timeout");
@@ -368,7 +395,7 @@ describe("Actor", () => {
         let onSubscribe = jest.fn();
 
         let actor = createActor(undefined, {onSubscribe});
-        actor.system = {eventBus};
+        actor.system.eventBus = eventBus;
 
         let subscription = actor.subscribe("topic");
 
@@ -380,7 +407,7 @@ describe("Actor", () => {
         let onUnsubscribe = jest.fn();
 
         let actor = createActor(undefined, {onUnsubscribe});
-        actor.system = {eventBus};
+        actor.system.eventBus = eventBus;
 
         let subscription = actor.subscribe("topic");
         actor.unsubscribe("topic");
