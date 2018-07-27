@@ -132,6 +132,6 @@ describe("ActorSystem", () => {
         system.__pullAllActorMailboxes();
         system.__pullAllActorMailboxes();
 
-        expect(system.scheduler.stop)
+        expect(system.scheduler.stop).toHaveBeenCalledTimes(1);
     });
 });
