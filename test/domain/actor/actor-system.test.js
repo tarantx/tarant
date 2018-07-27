@@ -123,4 +123,15 @@ describe("ActorSystem", () => {
 
         expect(await promise).toEqual(1);
     });
+
+    test("should stop the scheduler in case of three idle ticks", () => {
+        let system = new ActorSystem();
+        system.scheduler.stop = jest.fn();
+
+        system.__pullAllActorMailboxes();
+        system.__pullAllActorMailboxes();
+        system.__pullAllActorMailboxes();
+
+        expect(system.scheduler.stop)
+    });
 });
