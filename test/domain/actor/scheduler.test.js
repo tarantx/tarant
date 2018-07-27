@@ -15,4 +15,17 @@ describe("Scheduler", () => {
 
         expect(dispatcher.mock.calls.length).toBeGreaterThanOrEqual(1);
     });
+
+    test("that start is be idempotent", () => {
+        let scheduler = new Scheduler(jest.fn());
+        scheduler.start();
+
+        let id = scheduler.id;
+        scheduler.start();
+
+        let sameId = scheduler.id;
+        scheduler.stop();
+
+        expect(id).toEqual(sameId);
+    });
 });
