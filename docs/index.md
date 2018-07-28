@@ -75,14 +75,14 @@ The lifecycle of the actor is the following:
 
 ![lifecycle](https://user-images.githubusercontent.com/1822138/39409919-1d49c2b6-4bef-11e8-8016-78650cd9d326.png)
 
-* **OnActivate**: When the actor is instantiated for the first time and ready to start pulling messages.
+* **onActivate**: When the actor is instantiated for the first time and ready to start pulling messages.
 * **onReceiveMessage**: When a new message arrives to the mailbox.
-* **OnBeforePullingMessage**: When an actor is ready to pull a message.
-* **OnAfterMessageProcessed**: When the current message has been processed without errors
-* **OnError**: When the actor failed to process the pulled message. _OnError_ is not a supervisor, it can not change the state of the current actor and can not recover from the error.
-* **OnDeactive**: When the actor is freed.
-* **OnSubscribe**: When an actor subscribes to a topic.
-* **OnUnsubscribe**: When an actor unsubscribes from a topic.
+* **onBeforePullingMessage**: When an actor is ready to pull a message.
+* **onAfterMessageProcessed**: When the current message has been processed without errors
+* **onError**: When the actor failed to process the pulled message. _OnError_ is not a supervisor, it can not change the state of the current actor and can not recover from the error.
+* **onDeactivate**: When the actor is freed.
+* **onSubscribe**: When an actor subscribes to a topic.
+* **onUnsubscribe**: When an actor unsubscribes from a topic.
 
 #### TimeMachine
 
