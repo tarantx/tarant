@@ -1,5 +1,4 @@
 # ![logomakr_8cwvt1](https://user-images.githubusercontent.com/3071208/42311453-254a1474-803e-11e8-957a-5c1c8d157b31.png)
-![GitHub release](https://img.shields.io/github/release/codeinbrackets/wind.js.svg)
 [![npm](https://img.shields.io/npm/v/wind.js.svg)](https://www.npmjs.com/package/wind.js)
 [![Build Status](https://travis-ci.org/CodeInBrackets/wind.js.svg?branch=master)](https://travis-ci.org/CodeInBrackets/wind.js)
 [![Coverage Status](https://coveralls.io/repos/github/CodeInBrackets/wind.js/badge.svg?branch=master)](https://coveralls.io/github/CodeInBrackets/wind.js?branch=master)
