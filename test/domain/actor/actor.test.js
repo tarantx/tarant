@@ -1,11 +1,12 @@
 import Actor from "../../../lib/domain/actor/actor";
 import EventBus from "../../../lib/domain/actor/event-bus";
+import uuid from "uuid/v4";
 
 describe("Actor", () => {
     let createActorFactory = system => (cb, materializer) => {
         return new (class extends Actor {
             constructor() {
-                super(undefined, undefined, materializer, {}, undefined, system);
+                super(uuid(), {}, { materializer, system });
 
                 this.onReceive = cb || jest.fn();
             }
@@ -31,7 +32,7 @@ describe("Actor", () => {
         let actor = createActor();
         actor.receiveMessage(1);
 
-        let [message] = actor.mailbox;
+        let [message] = actor.mailbox.queue;
         expect(message).toBe(1);
         expect(actor.system.requestTime).toHaveBeenCalledWith(actor.id);
     });
@@ -61,7 +62,7 @@ describe("Actor", () => {
         let actor = createActor(function () { this.tell(this, "hi!") });
         await receiveAndPull(actor, 1);
 
-        expect(actor.mailbox[0].message).toBe("hi!");
+        expect(actor.mailbox.queue[0].message).toBe("hi!");
     });
 
     test("should not ask to itself", () => {
@@ -76,22 +77,20 @@ describe("Actor", () => {
         actor.receiveMessage(2);
         let firstMessage = actor.pull(); // The actor hangs until we call resolvePromise
         await actor.pull(); // should not do anything so it returns
-        expect(actor.mailbox).toEqual([2]);
+        expect(actor.mailbox.queue).toEqual([1, 2]);
         resolvePromise();
         await firstMessage;
         let secondMessage = actor.pull();
         resolvePromise();
         await secondMessage;
-        expect(actor.mailbox).toEqual([]);
+        expect(actor.mailbox.queue).toEqual([]);
     });
 
-    test("should pull a message and call onReceive with that message", () => {
+    test("should pull a message and call onReceive with that message", async () => {
         let actor = createActor();
-        actor.receiveMessage(1);
+        await receiveAndPull(actor, 1);
 
-        actor.pull();
-
-        expect(actor.mailbox).toEqual([]);
+        expect(actor.mailbox.queue).toEqual([]);
         expect(actor.onReceive.mock.calls[0][0]).toBe(1);
     });
 
@@ -101,7 +100,7 @@ describe("Actor", () => {
 
         sender.tell(receiver, "message");
 
-        let [{origin, message}] = receiver.mailbox;
+        let [{origin, message}] = receiver.mailbox.queue;
 
         expect(origin).toEqual(sender);
         expect(message).toBe("message");
@@ -160,14 +159,13 @@ describe("Actor", () => {
         expect(promise).rejects.toThrow();
     });
 
-    test("should store the current state in case of a success synchronous pull", () => {
+    test("should store the current state in case of a success synchronous pull", async () => {
         let actor = createActor(function () {
             this.color = "blue"
         });
-        actor.receiveMessage("");
 
-        actor.pull();
-        expect(actor.history()).toMatchObject([{color: "blue", mailbox: [], id: actor.id }]);
+        await receiveAndPull(actor, "");
+        expect(actor.history()).toMatchObject([{color: "blue", mailbox: { queue: [] }, id: actor.id }]);
     });
 
     test("should not store the current state in case of an failing pull", async () => {
@@ -195,7 +193,7 @@ describe("Actor", () => {
         actor.receiveMessage("");
 
         await actor.pull();
-        expect(actor.history()).toMatchObject([{color: "blue", mailbox: [], id: actor.id }]);
+        expect(actor.history()).toMatchObject([{color: "blue", mailbox: { queue: [] }, id: actor.id }]);
     });
 
     test("should not store the current state in case of a failing asynchronous pull", async () => {
@@ -230,7 +228,7 @@ describe("Actor", () => {
         actor.kill();
 
         actor.receiveMessage("whatever");
-        expect(actor.mailbox).toEqual([]);
+        expect(actor.mailbox.queue).toEqual([]);
     });
 
     test("ask should not do anything when the actor has been killed", () => {
@@ -240,7 +238,7 @@ describe("Actor", () => {
         sender.kill();
         sender.ask(receiver, "whatever");
 
-        expect(receiver.mailbox).toEqual([]);
+        expect(receiver.mailbox.queue).toEqual([]);
     });
 
     test("onReceive should fail if not implemented", () => {
@@ -258,7 +256,7 @@ describe("Actor", () => {
         actor.subscribe("topic");
         actor.publish("topic", "message");
 
-        expect(actor.mailbox[0].message).toEqual("message");
+        expect(actor.mailbox.queue[0].message).toEqual("message");
     });
 
     test("unsubscribes from a topic ", () => {
@@ -270,7 +268,7 @@ describe("Actor", () => {
 
         actor.publish("topic", "message");
 
-        expect(actor.mailbox).toEqual([]);
+        expect(actor.mailbox.queue).toEqual([]);
     });
 
     test("request response in a topic", async () => {
@@ -291,7 +289,7 @@ describe("Actor", () => {
         await a.pull();
         await b.pull();
 
-        expect(await answer).toEqual([1, 2]);
+        expect(answer).resolves.toEqual([1, 2]);
     });
 
     test("request response in a topic should timeout", async () => {
@@ -314,7 +312,6 @@ describe("Actor", () => {
         let onActivate = jest.fn();
         let actor = createActor(undefined, {onActivate});
 
-        await sleep(1);
         expect(onActivate.mock.calls[0]).toEqual([actor]);
     });
 

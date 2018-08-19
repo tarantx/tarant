@@ -35,7 +35,7 @@ describe("ActorSystem", () => {
             }
         });
 
-        actor.receiveMessage("some message");
+        system.tell(actor.id, "some message");
         await sleep(15);
 
         expect(actor.onReceive.mock.calls.length).toBe(1);
@@ -106,7 +106,7 @@ describe("ActorSystem", () => {
 
         system.tell(actor.id, "hello");
 
-        expect(actor.mailbox[0]).toEqual({ origin: system, message: "hello" });
+        expect(actor.mailbox.queue[0]).toEqual({ origin: system, message: "hello" });
     });
 
     test("should ask an actor", async () => {
