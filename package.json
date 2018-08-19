@@ -1,6 +1,6 @@
 {
   "name": "wind.js",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "dist/wind.cjs.js",
   "description": "Reactive, actor based framework that can be used in client and server side.",
   "scripts": {
@@ -32,15 +32,15 @@
   "homepage": "https://github.com/CodeInBrackets/wind.js#readme",
   "devDependencies": {
     "babel": "^6.23.0",
-    "babel-jest": "^22.4.3",
+    "babel-jest": "^23.4.2",
     "babel-plugin-transform-jsx": "^2.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "coveralls": "^3.0.0",
-    "jest": "^22.4.3",
+    "jest": "^23.5.0",
     "jsdoc-to-markdown": "^4.0.1",
     "precommit-hook": "^3.0.0",
-    "rollup": "^0.58.1",
+    "rollup": "^0.64.1",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-uglify": "^4.0.0"
   },
