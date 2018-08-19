@@ -45,7 +45,7 @@ Then create your first ActorSystem
 ```js
 import ActorSystem from "wind.js";
 
-let system = new ActorSystem();
+let system = (new ActorSystem.Builder()).build();
 system.start();
 ```
 
