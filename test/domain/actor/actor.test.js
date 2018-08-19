@@ -308,7 +308,7 @@ describe("Actor", () => {
         expect(r).rejects.toThrow("timeout");
     });
 
-    test("should eventually call the materializer onActivate method when constructed", async () => {
+    test("should eventually call the materializer onActivate method when constructed", () => {
         let onActivate = jest.fn();
         let actor = createActor(undefined, {onActivate});
 

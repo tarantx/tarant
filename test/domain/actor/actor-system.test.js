@@ -84,7 +84,7 @@ describe("ActorSystem", () => {
         let fn = jest.fn();
         fn.mockReturnValue(drop);
 
-        let system = new ActorSystem(undefined, fn);
+        let system = new ActorSystem({ supervisor: fn });
         let actor = new (class extends system.Actor {
             constructor() {
                 super();
@@ -133,5 +133,20 @@ describe("ActorSystem", () => {
         system.__pullAllActorMailboxes();
 
         expect(system.scheduler.stop).toHaveBeenCalledTimes(1);
+    });
+
+    test("that composition of materializers work", () => {
+        let fn1 = jest.fn();
+        let fn2 = jest.fn();
+
+        let system = ActorSystem.Builder()
+            .withMaterializer( { onActivate: fn1 })
+            .withMaterializer( { onActivate: fn2 })
+            .build();
+
+        new system.Actor();
+
+        expect(fn1.mock.calls.length).toEqual(1);
+        expect(fn2.mock.calls.length).toEqual(1);
     });
 });
