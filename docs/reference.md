@@ -7,6 +7,11 @@
 <dt><a href="#Actor">Actor</a></dt>
 <dd><p>An Actor is the unit of state and logic of an Actor System.</p>
 </dd>
+<dt><a href="#Mailbox">Mailbox</a></dt>
+<dd><p>Copyright (c) 2018-present, Code In Brackets</p>
+<p>This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.</p>
+</dd>
 </dl>
 
 ## Functions
@@ -32,7 +37,6 @@ The Actor System is the class responsible of managing actors and their lifecycle
 **Kind**: global class  
 
 * [ActorSystem](#ActorSystem)
-    * [new ActorSystem(scheduler, supervisor, materializer, eventBus, defaultTicks)](#new_ActorSystem_new)
     * [.Actor](#ActorSystem+Actor)
         * [new ActorSystem#Actor()](#new_ActorSystem+Actor_new)
     * [.getActor(id)](#ActorSystem+getActor) ⇒ [<code>Actor</code>](#Actor)
@@ -41,18 +45,6 @@ The Actor System is the class responsible of managing actors and their lifecycle
     * [.stop()](#ActorSystem+stop) ⇒ <code>Promise.&lt;any&gt;</code>
     * [.tell(id, message)](#ActorSystem+tell)
     * [.ask(id, message)](#ActorSystem+ask) ⇒ <code>Promise.&lt;any&gt;</code>
-
-<a name="new_ActorSystem_new"></a>
-
-### new ActorSystem(scheduler, supervisor, materializer, eventBus, defaultTicks)
-
-| Param | Type | Description |
-| --- | --- | --- |
-| scheduler | <code>Scheduler</code> | Custom Scheduler, undefined for default. |
-| supervisor | <code>Supervisor</code> | Custom supervisor, defaults to () => drop |
-| materializer | <code>Materializer</code> | Custom materializer, defaults to noop. |
-| eventBus | <code>EventBus</code> | Custom event bus, defaults to a new Event Bus. |
-| defaultTicks | <code>number</code> | Default tick interval for the default scheduler. |
 
 <a name="ActorSystem+Actor"></a>
 
@@ -274,6 +266,12 @@ Request a response from all actors subscribed to a topic for a given message.Fo
 | message | <code>string</code> |  |  |
 | timeout | <code>number</code> | <code>1000</code> | in milliseconds |
 
+<a name="Mailbox"></a>
+
+## Mailbox
+Copyright (c) 2018-present, Code In BracketsThis source code is licensed under the MIT license found in theLICENSE file in the root directory of this source tree.
+
+**Kind**: global class  
 <a name="drop"></a>
 
 ## drop(system, actor) ⇒ [<code>Actor</code>](#Actor)
