@@ -34,7 +34,7 @@ implicit persistence or rendering of actors.
 * [Actors support asynchronous messaging](./docs/showcase/delay.js) and answering through Promises. Slow actors will not block fast actors.
 * [Actors can communicate through an event bus](./docs/showcase/subscriptions.js) to improve extensibility. You can also [requests answers
 through an event bus](./docs/showcase/request.js).
-* [Actors are safe and can be recovered with a supervisor](./docs/showcase/request.js)
+* [Actors are safe and can be recovered with a supervisor](./docs/showcase/custom-supervisor.js)
 
 ## Quick start
 
