@@ -16,7 +16,7 @@ let supervisor = (actorSystem, actor, error) => {
     }
 };
 
-let system = new ActorSystem(undefined, supervisor);
+let system = ActorSystem.Builder().withSupervisor(supervisor).build();
 system.start();
 
 let rand = (min, max) => {
@@ -36,7 +36,7 @@ class FailingActor extends system.Actor {
 
 let actor = new FailingActor();
 for (let i = 0; i < 10; i++) {
-    system.tell(actor.id, i);
+    system.tell(actor, i);
 }
 
 system.stop();

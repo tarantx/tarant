@@ -19,8 +19,7 @@ composed and injected.
 
 ## Features
 
-Wind.js doesn't have any fancy feature (yet) but it has a strong architectural conventions and foundation that can be
-used for different types of applications.
+Wind.js is in a point that contains several features that are really useful for modeling an application.
 
 * Actors are reliable because they are transactional. You don't need to bother yourself with error recovery.
 * Actors are performant, as they are pull-based and decoupled from other actors lifecycle.
@@ -31,7 +30,11 @@ can be handled at any time.
 * The Actor System is highly extensive. You can add your own supervisor and materializer to add new features like
 implicit persistence or rendering of actors.
 
-**You can see some of the features [in the showcase folder](./docs/showcase).**
+### Showcase
+* [Actors support asynchronous messaging](./docs/showcase/delay.js) and answering through Promises. Slow actors will not block fast actors.
+* [Actors can communicate through an event bus](./docs/showcase/subscriptions.js) to improve extensibility. You can also [requests answers
+through an event bus](./docs/showcase/request.js).
+* [Actors are safe and can be recovered with a supervisor](./docs/showcase/request.js)
 
 ## Quick start
 
@@ -43,9 +46,9 @@ First you must install the package:
 Then create your first ActorSystem
 
 ```js
-import ActorSystem from "wind.js";
+const ActorSystem = require("wind.js");
 
-let system = (new ActorSystem.Builder()).build();
+let system = ActorSystem.Builder().build();
 system.start();
 ```
 
@@ -63,7 +66,7 @@ Then you only need to instantiate your actor and send messages to it:
 
 ```js
 let myPinger = new Ping();
-system.tell(myPinger.id, "ping");
+system.tell(myPinger, "ping");
 ```
 
 The application will continue running and processing messages until you stop the actor system:

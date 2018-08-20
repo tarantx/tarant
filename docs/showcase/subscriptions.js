@@ -1,6 +1,6 @@
 let ActorSystem = require("../../dist/wind.cjs");
 
-let system = new ActorSystem();
+let system = ActorSystem.Builder().build();
 system.start();
 
 class PrintPlus1Actor extends system.Actor {

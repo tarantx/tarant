@@ -1,11 +1,11 @@
 let ActorSystem = require("../../dist/wind.cjs");
 
-let system = new ActorSystem();
+let system = ActorSystem.Builder().build();
 system.start();
 
 class Person extends system.Actor {
     constructor(name) {
-        super({name});
+        super(name, {name});
         this.subscribe("names");
     }
 
@@ -26,7 +26,7 @@ class Manager extends system.Actor {
 }
 
 let manager = new Manager();
-system.tell(manager.id);
+system.tell(manager);
 
 // Subscriptions are not atomic, so we need to wait at least to the end of the event loop to stop the actor system.
 setTimeout(() => system.stop(), 0);

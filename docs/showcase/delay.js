@@ -1,6 +1,6 @@
 let ActorSystem = require("../../dist/wind.cjs");
 
-let system = new ActorSystem();
+let system = ActorSystem.Builder().build();
 system.start();
 
 let sleep = async (time) => await new Promise(r => setTimeout(r, time));
@@ -10,7 +10,7 @@ let point = () => ((+new Date()) - startTime) / 1000;
 
 class DelayedPrint extends system.Actor {
     constructor(name, delay) {
-        super({name, delay});
+        super(name, {name, delay});
         this.subscribe("messages");
     }
 
