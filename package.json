@@ -1,6 +1,6 @@
 {
   "name": "@wind-js/wind.js",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "dist/wind.cjs.js",
   "description": "Reactive, actor based framework that can be used in client and server side.",
   "scripts": {
