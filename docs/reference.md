@@ -96,7 +96,7 @@ It will delay until all actors has been killed and all mailboxes processed.
 <a name="ActorSystem+tell"></a>
 
 ### actorSystem.tell(id, message)
-Tels a message to an actor.
+Sends a message to an actor.
 
 **Kind**: instance method of [<code>ActorSystem</code>](#ActorSystem)  
 
