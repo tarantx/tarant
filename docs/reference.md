@@ -8,7 +8,7 @@
 <dd><p>An Actor is the unit of state and logic of an Actor System.</p>
 </dd>
 <dt><a href="#Mailbox">Mailbox</a></dt>
-<dd><p>Copyright (c) 2018-present, Code In Brackets</p>
+<dd><p>Copyright (c) 2018-present, wind-js</p>
 <p>This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.</p>
 </dd>
@@ -70,7 +70,8 @@ Gets an Actor instance by Id
 <a name="ActorSystem+killActor"></a>
 
 ### actorSystem.killActor(id)
-Kills an actor and unregisters it from the Actor System. This actor will not receiver further messages,but will eventually process the current mailbox.
+Kills an actor and unregisters it from the Actor System. This actor will not receiver further messages,
+but will eventually process the current mailbox.
 
 **Kind**: instance method of [<code>ActorSystem</code>](#ActorSystem)  
 
@@ -87,7 +88,8 @@ Starts the ActorSystem, so it schedules messages. This is mandatory.
 <a name="ActorSystem+stop"></a>
 
 ### actorSystem.stop() ⇒ <code>Promise.&lt;any&gt;</code>
-Stops gracefully the ActorSystem and all actors.It will delay until all actors has been killed and all mailboxes processed.
+Stops gracefully the ActorSystem and all actors.
+It will delay until all actors has been killed and all mailboxes processed.
 
 **Kind**: instance method of [<code>ActorSystem</code>](#ActorSystem)  
 **Returns**: <code>Promise.&lt;any&gt;</code> - Resolved when all actors has been killed.  
@@ -163,7 +165,8 @@ Pulls a new message from the mailbox (if any).
 <a name="Actor+tell"></a>
 
 ### actor.tell(actor, message)
-Tells a message to another actor. The new message will be processed eventually by the receiver. If thereceiver is dead, the message is ignored but this method will not fail.
+Tells a message to another actor. The new message will be processed eventually by the receiver. If the
+receiver is dead, the message is ignored but this method will not fail.
 
 **Kind**: instance method of [<code>Actor</code>](#Actor)  
 **See**: kill  
@@ -176,7 +179,11 @@ Tells a message to another actor. The new message will be processed eventually b
 <a name="Actor+ask"></a>
 
 ### actor.ask(actor, message) ⇒ <code>Promise.&lt;any&gt;</code>
-Asks for a response to another actor. The message will be processed eventually and the promise resolved withthe return value of the receiver's onReceive.If any of the actors are dead, the message will not be delivered, thus returning a new Promise ofundefined.
+Asks for a response to another actor. The message will be processed eventually and the promise resolved with
+the return value of the receiver's onReceive.
+
+If any of the actors are dead, the message will not be delivered, thus returning a new Promise of
+undefined.
 
 **Kind**: instance method of [<code>Actor</code>](#Actor)  
 **Returns**: <code>Promise.&lt;any&gt;</code> - The response of the receiver actor  
@@ -256,7 +263,24 @@ Publishes a message to a topic. Messages in a topic will be eventually processed
 <a name="Actor+request"></a>
 
 ### actor.request(topic, message, timeout) ⇒ <code>Promise.&lt;any&gt;</code>
-Request a response from all actors subscribed to a topic for a given message.For example, let's imagine that we have the following two actors subscribed to the topic 'ops':<pre>Actor1 => given a number :: returns number + 1Actor2 => given a number :: returns number + 2</pre> If we request a message like:<pre><code>MyActor.request('ops', 1);</code></pre>It will return a Promise, that eventually will return [2, 3] (the order may differ).If any of the actors doesn't respond in the given timeout, the promise will be rejected, ignoring anyresponse. The state of other actors will not rollback.
+Request a response from all actors subscribed to a topic for a given message.
+For example, let's imagine that we have the following two actors subscribed to the topic 'ops':
+
+<pre>
+Actor1 => given a number :: returns number + 1
+Actor2 => given a number :: returns number + 2
+</pre>
+
+ If we request a message like:
+
+<pre><code>
+MyActor.request('ops', 1);
+</code></pre>
+
+It will return a Promise, that eventually will return [2, 3] (the order may differ).
+
+If any of the actors doesn't respond in the given timeout, the promise will be rejected, ignoring any
+response. The state of other actors will not rollback.
 
 **Kind**: instance method of [<code>Actor</code>](#Actor)  
 
@@ -269,13 +293,17 @@ Request a response from all actors subscribed to a topic for a given message.Fo
 <a name="Mailbox"></a>
 
 ## Mailbox
-Copyright (c) 2018-present, Code In BracketsThis source code is licensed under the MIT license found in theLICENSE file in the root directory of this source tree.
+Copyright (c) 2018-present, wind-js
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
 
 **Kind**: global class  
 <a name="drop"></a>
 
 ## drop(system, actor) ⇒ [<code>Actor</code>](#Actor)
-Drops the offending message and rollbacks the provided actorto the last known state.
+Drops the offending message and rollbacks the provided actor
+to the last known state.
 
 **Kind**: global function  
 **Returns**: [<code>Actor</code>](#Actor) - The expected actor state  
