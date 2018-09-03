@@ -7,7 +7,7 @@
 ![npm](https://img.shields.io/npm/l/@wind-js/wind.js.svg)
 ![GitHub issues](https://img.shields.io/github/issues/wind-js/wind.js.svg)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/wind-js/wind.js.svg)
-![Downloads](https://img.shields.io/npm/dw/@wind-js/wind.js.svg)
+![Downloads](https://img.shields.io/npm/dt/@wind-js/wind.js.svg)
 
 Wind is a JavaScript library for building software using the actor system model.
 
