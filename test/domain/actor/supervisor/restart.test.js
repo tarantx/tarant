@@ -4,7 +4,7 @@ import TimeMachine from "../../../../lib/domain/actor/time-machine";
 
 describe("Restart strategy", () => {
     test("should restart the actor and retry the message", () => {
-        let actor = new Actor(undefined, undefined, { mailbox: [1, 2], timeMachine: new TimeMachine([{state: 'initial'}, {state: 1}, {state: 2}]) });
+        let actor = Actor.create(undefined, undefined, { mailbox: [1, 2], timeMachine: new TimeMachine([{state: 'initial'}, {state: 1}, {state: 2}]) });
         let result = restart(undefined, actor);
 
         expect(result.state).toEqual('initial');

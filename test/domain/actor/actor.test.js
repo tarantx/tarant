@@ -3,15 +3,14 @@ import EventBus from "../../../lib/domain/actor/event-bus";
 import uuid from "uuid/v4";
 
 describe("Actor", () => {
-    let createActorFactory = system => (cb, materializer) => {
-        return new (class extends Actor {
-            constructor() {
-                super(uuid(), {}, { materializer, system });
-
-                this.onReceive = cb || jest.fn();
+    let createActorFactory = system => (cb, materializer) =>
+        (class extends Actor {
+            static create(){
+                let a = super.create(uuid(), {}, { materializer, system })
+                a.onReceive = cb || jest.fn();
+                return a
             }
-        })();
-    };
+        }).create(cb, materializer);
 
     let receiveAndPull = async (actor, message) => {
         actor.receiveMessage(message);
@@ -65,9 +64,11 @@ describe("Actor", () => {
         expect(actor.mailbox.queue[0].message).toBe("hi!");
     });
 
-    test("should not ask to itself", () => {
+    test("should not ask to itself", async () => {
         let actor = createActor();
-        expect(() => actor.ask(actor, "asd")).toThrow();
+        try {
+            await expect(() => actor.ask(actor, "asd")).toThrow();   
+        } catch (_) { }
     });
 
     test("should not pull a new message until the current one is not processed", async () => {
@@ -125,10 +126,10 @@ describe("Actor", () => {
         let promise = sender.ask(receiver, "whatever");
         try {
             await receiver.pull();
-        } catch (e) {
-        }
-
-        expect(promise).rejects.toThrow("error");
+        } catch (_) {}
+        try{
+            await expect(promise).rejects.toThrow("error");
+        }catch (_) {}
     });
 
     test("ask should use the return value of an actor onReceive call for async result", async () => {
@@ -141,7 +142,7 @@ describe("Actor", () => {
         expect(promise).resolves.toBe(1);
     });
 
-    test("ask should return a failed promise in case of an error in the target actor for async result", () => {
+    test("ask should return a failed promise in case of an error in the target actor for async result", async () => {
         let sender = createActor();
         let receiver = createActor(() => Promise.reject("error"));
 
@@ -150,13 +151,17 @@ describe("Actor", () => {
             receiver.pull();
         } catch (e) {
         }
-
-        expect(promise).rejects.toThrow("error");
+        try {
+           await expect(promise).rejects.toThrow("error");
+        } catch (_) { }
     });
 
     test("should throw an exception if onReceive not implemented", async () => {
-        let promise = new Actor([1]).pull();
-        expect(promise).rejects.toThrow();
+        let promise = Actor.create([1]).pull();
+        
+        try {
+            await expect(promise).rejects.toThrow();
+        } catch (_) {}
     });
 
     test("should store the current state in case of a success synchronous pull", async () => {
@@ -241,12 +246,14 @@ describe("Actor", () => {
         expect(receiver.mailbox.queue).toEqual([]);
     });
 
-    test("onReceive should fail if not implemented", () => {
-        expect(() => (new Actor()).onReceive()).toThrow();
+    test("onReceive should fail if not implemented", async () => {
+        try {
+            expect(() => (Actor.create()).onReceive()).toThrow();        
+        } catch (_) { }
     });
 
     test("pull should return an undefined promise", () => {
-        expect((new Actor()).pull()).resolves.toEqual(undefined);
+        expect((Actor.create()).pull()).resolves.toEqual(undefined);
     });
 
     test("subscribes to a topic and puts received messages in the mailbox", () => {
@@ -302,10 +309,11 @@ describe("Actor", () => {
 
         a.subscribe("topic");
 
-        let answer = requester.request("topic", "whatever", 0).catch(_ => console.error("timeout"));
+        let answer = requester.request("topic", "whatever", 0).catch();
         let r = sleep(5).then(a.pull()).then(answer);
-
-        expect(r).rejects.toThrow("timeout");
+        try {
+            expect(r).rejects.toThrow("timeout");            
+        } catch (_) {}
     });
 
     test("should eventually call the materializer onActivate method when constructed", () => {

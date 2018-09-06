@@ -9,14 +9,14 @@ let sleep = async (ms) => {
 describe("ActorSystem", () => {
     test("should register an actor", () => {
         let system = new ActorSystem();
-        let actor = new system.Actor();
+        let actor = system.Actor.create();
 
         expect(system.getActor(actor.id)).toBe(actor);
     });
 
     test("should deregister an actor", () => {
         let system = new ActorSystem();
-        let actor = new system.Actor();
+        let actor = system.Actor.create();
 
         system.killActor(actor.id);
 
@@ -27,13 +27,13 @@ describe("ActorSystem", () => {
         let system = new ActorSystem();
         system.start();
 
-        let actor = new (class extends system.Actor {
-            constructor() {
-                super();
-
-                this.onReceive = jest.fn().mockImplementation(c => console.log("=====>", c));
+        let actor = (class extends system.Actor {
+            static create() {
+                let instance = super.create();
+                instance.onReceive = jest.fn();
+                return instance
             }
-        });
+        }).create();
 
         system.tell(actor.id, "some message");
         await sleep(15);
@@ -45,13 +45,13 @@ describe("ActorSystem", () => {
     test("should wait until all messages have been processed", async () => {
         let system = new ActorSystem();
 
-        let actor = new (class extends system.Actor {
-            constructor() {
-                super();
-
-                this.onReceive = jest.fn();
+        let actor = (class extends system.Actor {
+            static create() {
+                let instance = super.create();
+                instance.onReceive = jest.fn();
+                return instance
             }
-        });
+        }).create();
 
         actor.receiveMessage("");
         actor.receiveMessage("");
@@ -68,13 +68,13 @@ describe("ActorSystem", () => {
     test("stopping a system will kill all actors", async () => {
         let system = new ActorSystem();
 
-        let actor = new (class extends system.Actor {
-            constructor() {
-                super();
-
-                this.kill = jest.fn();
+        let actor = (class extends system.Actor {
+            static create() {
+                let instance = super.create();
+                instance.kill = jest.fn();
+                return instance
             }
-        });
+        }).create();
 
         await system.stop();
         expect(actor.kill.mock.calls.length).toBe(1);
@@ -85,13 +85,13 @@ describe("ActorSystem", () => {
         fn.mockReturnValue(drop);
 
         let system = new ActorSystem({ supervisor: fn });
-        let actor = new (class extends system.Actor {
-            constructor() {
-                super();
-
-                this.onReceive = () => Promise.reject("foo");
+        let actor = (class extends system.Actor {
+            static create() {
+                let instance = super.create();
+                instance.onReceive = () => Promise.reject("foo");
+                return instance
             }
-        });
+        }).create();
 
         actor.receiveMessage("");
         system.start();
@@ -102,7 +102,7 @@ describe("ActorSystem", () => {
 
     test("should tell a message to an actor", () => {
         let system = new ActorSystem();
-        let actor = new system.Actor();
+        let actor = system.Actor.create();
 
         system.tell(actor.id, "hello");
 
@@ -111,11 +111,11 @@ describe("ActorSystem", () => {
 
     test("should ask an actor", async () => {
         let system = new ActorSystem();
-        let actor = new (class extends system.Actor {
+        let actor = (class extends system.Actor {
             onReceive() {
                 return 1;
             }
-        });
+        }).create();
 
         system.start();
         let promise = system.ask(actor.id, "what?");
@@ -144,7 +144,7 @@ describe("ActorSystem", () => {
             .withMaterializer( { onActivate: fn2 })
             .build();
 
-        new system.Actor();
+        system.Actor.create();
 
         expect(fn1.mock.calls.length).toEqual(1);
         expect(fn2.mock.calls.length).toEqual(1);

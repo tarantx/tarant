@@ -4,7 +4,7 @@ import TimeMachine from "../../../../lib/domain/actor/time-machine";
 
 describe("Drop strategy", () => {
     test("should drop the latest message and return to the latest known state", () => {
-        let actor = new Actor(undefined, undefined, { mailbox: [1, 2], timeMachine: new TimeMachine([{state: 1}, {state: 2}]) });
+        let actor = Actor.create(undefined, undefined, { mailbox: [1, 2], timeMachine: new TimeMachine([{state: 1}, {state: 2}]) });
         let result = drop(undefined, actor);
 
         expect(result.state).toEqual(1);

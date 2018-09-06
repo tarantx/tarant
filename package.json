@@ -7,6 +7,7 @@
     "docs": "jsdoc2md lib/**/*.js > docs/reference.md",
     "build": "rollup -c",
     "test": "jest",
+    "test:dev": "jest --watchAll",
     "test:coverage": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "lint": "jshint .",
     "validate": "npm ls"
@@ -48,6 +49,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "faker": "^4.1.0",
     "uuid": "^3.2.1"
   },
   "publishConfig": {
