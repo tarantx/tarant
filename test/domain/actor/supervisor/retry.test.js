@@ -2,11 +2,11 @@ import Actor from "../../../../lib/domain/actor/actor";
 import TimeMachine from "../../../../lib/domain/actor/time-machine";
 import retry from "../../../../lib/domain/actor/supervisor/retry";
 
-const system = {maxRetries: 2};
+const system = {maxRetries: 2, getActor: jest.fn() };
 describe("Retry strategy", () => {
     test("should retry the latest message with the old state", () => {
         let _retry = retry();
-        let actor = Actor.create(undefined, undefined, { mailbox: [{ message: 1 }, { message: 2 }], timeMachine: new TimeMachine([{state: 1}, {state: 2}]) });
+        let actor = Actor.create(undefined, undefined, { mailbox: [{ message: 1 }, { message: 2 }], timeMachine: new TimeMachine([{state: 1}, {state: 2}]), system });
 
         let result = _retry(system, actor);
 
@@ -17,7 +17,7 @@ describe("Retry strategy", () => {
     test("should retry at most the maximum times specified in the system and drop the message", () => {
         let _retry = retry();
 
-        let actor = Actor.create(undefined, undefined, { mailbox: [{ message: 1 }, { message: 2 }], timeMachine: new TimeMachine([{state: 1}, {state: 2}]) });
+        let actor = Actor.create(undefined, undefined, { mailbox: [{ message: 1 }, { message: 2 }], timeMachine: new TimeMachine([{state: 1}, {state: 2}]), system });
         _retry(system, actor);
         _retry(system, actor);
         let result = _retry(system, actor);
@@ -29,7 +29,7 @@ describe("Retry strategy", () => {
     test("should use the number of retries specified in the constructor, and then drop the message", () => {
         let _retry = retry(1);
 
-        let actor = Actor.create(undefined, undefined, { mailbox: [{ message: 1 }, { message: 2 }], timeMachine: new TimeMachine([{state: 1}, {state: 2}]) });
+        let actor = Actor.create(undefined, undefined, { mailbox: [{ message: 1 }, { message: 2 }], timeMachine: new TimeMachine([{state: 1}, {state: 2}]), system });
         _retry(system, actor);
         let result = _retry(system, actor);
 
@@ -38,10 +38,10 @@ describe("Retry strategy", () => {
     });
 
     test("should default to 3 if there is no configuration of maxRetries", () => {
-        let system = {};
+        let system = { getActor: jest.fn() };
         let _retry = retry();
 
-        let actor = Actor.create(undefined, undefined, { mailbox: [{ message: 1 }, { message: 2 }], timeMachine: new TimeMachine([{state: 1}, {state: 2}]) });
+        let actor = Actor.create(undefined, undefined, { mailbox: [{ message: 1 }, { message: 2 }], timeMachine: new TimeMachine([{state: 1}, {state: 2}]), system });
         _retry(system, actor);
         _retry(system, actor);
         _retry(system, actor);

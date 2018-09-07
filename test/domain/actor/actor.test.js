@@ -24,7 +24,7 @@ describe("Actor", () => {
     let createActor = undefined;
 
     beforeEach(() => {
-        createActor = createActorFactory({ requestTime: jest.fn() });
+        createActor = createActorFactory({ requestTime: jest.fn(), getActor: jest.fn() });
     });
 
     test("should put the received message at the end of the mailbox", () => {
@@ -157,7 +157,7 @@ describe("Actor", () => {
     });
 
     test("should throw an exception if onReceive not implemented", async () => {
-        let promise = Actor.create([1]).pull();
+        let promise = Actor.create([1], {}, {system: {getActor: jest.fn()}}).pull();
         
         try {
             await expect(promise).rejects.toThrow();
@@ -253,7 +253,7 @@ describe("Actor", () => {
     });
 
     test("pull should return an undefined promise", () => {
-        expect((Actor.create()).pull()).resolves.toEqual(undefined);
+        expect(createActor().pull()).resolves.toEqual(undefined);
     });
 
     test("subscribes to a topic and puts received messages in the mailbox", () => {
