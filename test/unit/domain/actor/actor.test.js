@@ -13,10 +13,14 @@ describe("Actor Initializers", () => {
     class coolActor extends Actor{}
     class notCoolActor extends Actor{}
 
+    test("calling constructor directly should throw", () => {
+        expect(() => new coolActor(faker.random.uuid(), {}, {})).toThrow(`private constructor`)
+    })
+
     test("should have get method that retrieves existing actor from system", () => {
         let id = faker.random.uuid()
         let context = { system: {getActor : jest.fn() } }
-        let instanceCoolActor = coolActor.create('id', {}, context)
+        let instanceCoolActor = coolActor.create(id, {}, context)
         context.system.getActor.mockReturnValue(instanceCoolActor)
         let result = coolActor.get(id, context)
         expect(result).toEqual(instanceCoolActor)
