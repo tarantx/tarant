@@ -1,6 +1,5 @@
 import ActorSystem from "../../../lib/domain/actor/actor-system";
 import drop from "../../../lib/domain/actor/supervisor/drop";
-import Actor from "../../../lib/domain/actor/actor";
 
 let sleep = async (ms) => {
     return new Promise(r => setTimeout(r, ms));
@@ -148,5 +147,10 @@ describe("ActorSystem", () => {
 
         expect(fn1.mock.calls.length).toEqual(1);
         expect(fn2.mock.calls.length).toEqual(1);
+    });
+
+    test("that it returns the same actor class", () => {
+        let system = ActorSystem.Builder().build();
+        expect(system.Actor).toEqual(system.Actor);
     });
 });
