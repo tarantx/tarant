@@ -4,10 +4,11 @@ import Mailbox from '../mailbox/mailbox'
 import Actor from './actor'
 import ActorMessage from './actor-message'
 import ActorProxy from './actor-proxy'
+import IMaterializer from './materializer/materializer'
 
 export default class ActorSystem implements IProcessor {
-  public static default(): ActorSystem {
-    return new ActorSystem()
+  public static default(materializer: IMaterializer): ActorSystem {
+    return new ActorSystem(materializer)
   }
 
   public readonly requirements: [string] = ['default']
@@ -15,13 +16,15 @@ export default class ActorSystem implements IProcessor {
   private readonly fiber: Fiber
   private readonly actors: Map<string, Actor>
   private readonly subscriptions: Map<string, string>
+  private readonly materializer: IMaterializer
 
-  private constructor() {
+  private constructor(materializer: IMaterializer) {
     this.mailbox = Mailbox.empty()
     this.fiber = Fiber.with({ resources: ['default'], tickInterval: 1 })
     this.fiber.acquire(this)
     this.actors = new Map()
     this.subscriptions = new Map()
+    this.materializer = materializer
   }
 
   public process(): void {
@@ -58,5 +61,7 @@ export default class ActorSystem implements IProcessor {
   private setupInstance(instance: any, proxy: any): void {
     instance.self = proxy
     instance.system = this
+    instance.materializer = this.materializer
+    this.materializer.onInitialize(instance)
   }
 }

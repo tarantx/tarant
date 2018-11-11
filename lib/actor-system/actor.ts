@@ -2,12 +2,14 @@ import Message from '../mailbox/message'
 import ISubscriber from '../mailbox/subscriber'
 import ActorMessage from './actor-message'
 import ActorSystem from './actor-system'
+import IMaterializer from './materializer/materializer';
 
 export default abstract class Actor implements ISubscriber<ActorMessage> {
   public readonly id: string
   public readonly partitions: [string]
-  public readonly self: this
-  public readonly system: ActorSystem
+  protected readonly self: this
+  protected readonly system: ActorSystem
+  private readonly materializer: IMaterializer
   private busy: boolean
 
   protected constructor(id: string) {
@@ -16,6 +18,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
     this.busy = false
     this.self = this
     this.system = (null as unknown) as ActorSystem
+    this.materializer = (null as unknown) as IMaterializer
   }
 
   public onReceiveMessage(message: Message<ActorMessage>): boolean {
@@ -35,7 +38,8 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
 
     try {
       setBusy()
-
+      this.materializer.onBeforeMessage(this, actorMessage)
+      
       const r: any = (this as any)[actorMessage.methodName](...actorMessage.arguments)
 
       if (r && r.then && r.catch) {
