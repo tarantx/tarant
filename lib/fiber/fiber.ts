@@ -2,7 +2,7 @@ import IProcessor from './processor'
 
 interface IFiberConfiguration {
   resources: [string]
-  pollInterval: number
+  tickInterval: number
 }
 
 export default class Fiber {
@@ -12,17 +12,30 @@ export default class Fiber {
 
   public readonly name: string
   private readonly configuration: IFiberConfiguration
+  private readonly interval: any
+  private readonly processors: [IProcessor]
 
   private constructor(configuration: IFiberConfiguration) {
     this.name = 'fiber-with' + configuration.resources.reduce((aggr, current) => aggr + '-' + current, '')
     this.configuration = configuration
+    this.interval = setInterval(this.tick.bind(this), this.configuration.tickInterval)
+    this.processors = ([] as unknown) as [IProcessor]
   }
 
   public free(): void {
-    return
+    clearInterval(this.interval)
   }
 
   public acquire(processor: IProcessor): boolean {
-    return processor.requirements.every(req => this.configuration.resources.indexOf(req) !== -1)
+    if (processor.requirements.every(req => this.configuration.resources.indexOf(req) !== -1)) {
+        this.processors.push(processor)
+        return true
+    }
+
+    return false
+  }
+
+  private tick(): void {
+    this.processors.forEach(p => p.process())
   }
 }

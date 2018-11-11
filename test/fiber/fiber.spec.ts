@@ -2,10 +2,11 @@ import Fiber from '../../lib/fiber/fiber'
 import IProcessor from '../../lib/fiber/processor'
 
 describe('Fiber', () => {
-  let fiber: Fiber
+    jest.useFakeTimers()
+    let fiber: Fiber
 
   beforeEach(() => {
-    fiber = Fiber.with({ resources: ['my-resource'], pollInterval: 1 })
+    fiber = Fiber.with({ resources: ['my-resource'], tickInterval: 1 })
   })
 
   afterEach(() => {
@@ -22,8 +23,16 @@ describe('Fiber', () => {
     const processor = dummyProcessor(['another-resource'])
     expect(fiber.acquire(processor)).toBeFalsy()
   })
+
+  test('should call an acquired processor on tick', () => {
+    const processor = dummyProcessor(['my-resource'])
+    fiber.acquire(processor)
+
+    jest.advanceTimersByTime(1)
+    expect(processor.process).toBeCalled()
+  })
 })
 
 function dummyProcessor(requirements: [string]): IProcessor {
-  return { process: () => null, requirements }
+  return { process: jest.fn(), requirements }
 }
