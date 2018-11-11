@@ -2,7 +2,7 @@
   "name": "actor",
   "version": "1.0.0",
   "description": "Actor model for reactive and scalable applications.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write \"**/*.ts\"",
