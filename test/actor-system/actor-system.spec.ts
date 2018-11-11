@@ -22,6 +22,17 @@ describe('Actor System', () => {
 
     expect(name).toStrictEqual('myName')
   })
+
+  test('should get an actor based on it\'s id', async () => {
+    const actor: PingActor = actorSystem.new(PingActor, ['myName'])
+    const foundActor: PingActor = actorSystem.find('myName') as PingActor
+
+    const name = await waitFor(() => {
+      return foundActor.sayHi()
+    })
+
+    expect(name).toStrictEqual('myName')
+  })
 })
 
 async function waitFor<T>(fn: () => Promise<T>): Promise<T> {

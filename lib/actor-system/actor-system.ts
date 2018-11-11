@@ -42,4 +42,14 @@ export default class ActorSystem implements IProcessor {
     this.subscriptions.set(instance.id, subscription)
     return proxy
   }
+
+  public find<T extends Actor>(id: string): T | undefined {
+    const instance = this.actors.get(id)
+    if (instance === undefined) {
+      return undefined
+    }
+
+    return ActorProxy.of(this.mailbox, instance as T)
+  }
+
 }
