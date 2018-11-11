@@ -15,8 +15,10 @@ describe('Actor System', () => {
   })
 
   test('should build a new actor based on constructor parameters', async () => {
-    const actor = actorSystem.new(PingActor, ['myName'])
-    const name = await waitFor(() => actor.sayHi())
+    const actor: PingActor = actorSystem.new(PingActor, ['myName'])
+    const name = await waitFor(() => {
+      return actor.sayHi()
+    })
 
     expect(name).toStrictEqual('myName')
   })
@@ -32,7 +34,7 @@ class PingActor extends Actor {
   private readonly name: string
 
   public constructor(name: string) {
-    super()
+    super(name)
 
     this.name = name
   }
