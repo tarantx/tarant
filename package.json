@@ -1,0 +1,25 @@
+{
+  "name": "actor",
+  "version": "1.0.0",
+  "description": "Actor model for reactive and scalable applications.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"**/*.ts\"",
+    "lint": "tslint -p tsconfig.json",
+    "test": "jest --config jestconfig.json",
+    "test:coverage": "jest --config jestconfig.json --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^23.3.9",
+    "coveralls": "^3.0.2",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.2",
+    "ts-jest": "^23.10.4",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "typescript": "^3.1.6"
+  }
+}
