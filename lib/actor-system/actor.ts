@@ -14,9 +14,9 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
   }
 
   public onReceiveMessage(message: Message<ActorMessage>): boolean {
-    // if (this.busy) {
-      // return false
-    // }
+    if (this.busy) {
+      return false
+    }
 
     const setBusy = () => {
       this.busy = true
