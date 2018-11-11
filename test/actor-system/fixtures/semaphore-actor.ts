@@ -17,6 +17,5 @@ export default class SemaphoreActor extends Actor {
     this.callback(this.current)
     await sleep(ms)
     this.current--
-
   }
 }

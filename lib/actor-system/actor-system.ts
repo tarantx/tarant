@@ -38,8 +38,11 @@ export default class ActorSystem implements IProcessor {
     const instance = new classFn(...values)
     const proxy = ActorProxy.of(this.mailbox, instance)
     const subscription = this.mailbox.addSubscriber(instance)
+
     this.actors.set(instance.id, instance)
     this.subscriptions.set(instance.id, subscription)
+
+    this.setupInstance(instance, proxy)
     return proxy
   }
 
@@ -50,5 +53,10 @@ export default class ActorSystem implements IProcessor {
     }
 
     return ActorProxy.of(this.mailbox, instance as T)
+  }
+
+  private setupInstance(instance: any, proxy: any): void {
+    instance.self = proxy
+    instance.system = this
   }
 }
