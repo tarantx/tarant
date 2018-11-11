@@ -3,5 +3,11 @@
         "semicolon": [true, "never"],
         "only-arrow-functions": false
     },
-    "extends": ["tslint:recommended", "tslint-config-prettier"]
+    "extends": ["tslint:recommended", "tslint-config-prettier"],
+    "linterOptions": {
+        "exclude": [
+            "examples/**/*.ts",
+            "dist/**/*.js"
+        ]
+    }
 }
