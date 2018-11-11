@@ -29,6 +29,17 @@ export default class Mailbox<T> {
     return id
   }
 
+  public removeSubscription(subscription: string): void {
+    const partitions = this.subscribedPartitions[subscription]
+    partitions.forEach(partition => {
+      this.subscriptions[partition] = this.subscriptions[partition].filter(s => s.id !== subscription) as [
+        Subscription<T>
+      ]
+    })
+
+    delete this.subscribedPartitions[subscription]
+  }
+
   public push(message: Message<T>): void {
     this.subscriptions[message.partition].forEach(subscription => {
       subscription.messages.push(message)
@@ -37,6 +48,10 @@ export default class Mailbox<T> {
 
   public poll(subscription: string): void {
     const partitions = this.subscribedPartitions[subscription]
+    if (partitions === undefined) {
+      return
+    }
+
     partitions.forEach(partition => {
       this.subscriptions[partition]
         .filter(managedSubscription => managedSubscription.id === subscription)

@@ -8,7 +8,7 @@ interface IMessageHolder {
 }
 
 describe('Mailbox', () => {
-  test('should poll messages from producers and offer them to consumers', () => {
+  test('should poll messages from producers and offer them to subscribers', () => {
     const partition = '1'
     const message = Message.ofJson(partition, { test: true })
     const mailbox = Mailbox.empty()
@@ -20,6 +20,20 @@ describe('Mailbox', () => {
 
     const [outcome] = subscriber.messages
     expect(outcome).toStrictEqual(message)
+  })
+
+  test('should not poll messages after an unsubscription', () => {
+    const partition = '1'
+    const message = Message.ofJson(partition, { test: true })
+    const mailbox = Mailbox.empty()
+    const subscriber = dummySubscriber(partition)
+
+    const subscription = mailbox.addSubscriber(subscriber)
+    mailbox.push(message)
+    mailbox.removeSubscription(subscription)
+    mailbox.poll(subscription)
+
+    expect(subscriber.messages).toStrictEqual([])
   })
 })
 
