@@ -13,13 +13,13 @@ export default class Fiber {
   public readonly name: string
   private readonly configuration: IFiberConfiguration
   private readonly interval: any
-  private readonly processors: [IProcessor]
+  private readonly processors: IProcessor[]
 
   private constructor(configuration: IFiberConfiguration) {
     this.name = 'fiber-with' + configuration.resources.reduce((aggr, current) => aggr + '-' + current, '')
     this.configuration = configuration
     this.interval = setInterval(this.tick.bind(this), this.configuration.tickInterval)
-    this.processors = ([] as unknown) as [IProcessor]
+    this.processors = []
   }
 
   public free(): void {
