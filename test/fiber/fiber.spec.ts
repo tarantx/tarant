@@ -2,8 +2,8 @@ import Fiber from '../../lib/fiber/fiber'
 import IProcessor from '../../lib/fiber/processor'
 
 describe('Fiber', () => {
-    jest.useFakeTimers()
-    let fiber: Fiber
+  jest.useFakeTimers()
+  let fiber: Fiber
 
   beforeEach(() => {
     fiber = Fiber.with({ resources: ['my-resource'], tickInterval: 1 })

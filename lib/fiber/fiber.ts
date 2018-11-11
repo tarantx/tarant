@@ -28,8 +28,8 @@ export default class Fiber {
 
   public acquire(processor: IProcessor): boolean {
     if (processor.requirements.every(req => this.configuration.resources.indexOf(req) !== -1)) {
-        this.processors.push(processor)
-        return true
+      this.processors.push(processor)
+      return true
     }
 
     return false
