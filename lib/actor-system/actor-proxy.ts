@@ -20,7 +20,15 @@ export default class ActorProxy {
 
     return props
       .filter(e => e !== 'constructor')
-      .map(member => [member, () => sendAndReturn(mailbox, actor.id, member, arguments)] as [string, any])
+      .map(
+        member =>
+          [
+            member,
+            function() {
+              return sendAndReturn(mailbox, actor.id, member, arguments)
+            },
+          ] as [string, any],
+      )
       .reduce((result, [member, method]) => ({ ...result, [member]: method }), {}) as T
   }
 }

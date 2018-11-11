@@ -51,5 +51,4 @@ export default class ActorSystem implements IProcessor {
 
     return ActorProxy.of(this.mailbox, instance as T)
   }
-
 }
