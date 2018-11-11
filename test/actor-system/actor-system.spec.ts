@@ -64,4 +64,11 @@ describe('Actor System', () => {
 
     expect(materializer.onBeforeMessage).toHaveBeenCalled()
   })
+
+  test('should call materializer after the message is processed', async () => {
+    const actor: SemaphoreActor = actorSystem.new(SemaphoreActor, ['mySemaphore', jest.fn()])
+    await waitFor(() => actor.runFor(5))
+
+    expect(materializer.onAfterMessage).toHaveBeenCalled()
+  })
 })

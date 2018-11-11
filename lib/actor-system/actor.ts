@@ -31,6 +31,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
     }
 
     const freeAgain = () => {
+      this.materializer.onAfterMessage(this, actorMessage)
       this.busy = false
     }
 
@@ -39,7 +40,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
     try {
       setBusy()
       this.materializer.onBeforeMessage(this, actorMessage)
-      
+
       const r: any = (this as any)[actorMessage.methodName](...actorMessage.arguments)
 
       if (r && r.then && r.catch) {
