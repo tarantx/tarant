@@ -1,6 +1,6 @@
 import Actor from '../../../lib/actor-system/actor'
 
-export default class PingActor extends Actor {
+export default class NamedActor extends Actor {
   private readonly name: string
 
   public constructor(name: string) {

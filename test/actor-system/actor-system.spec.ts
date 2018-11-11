@@ -1,6 +1,6 @@
 import Actor from '../../lib/actor-system/actor'
 import ActorSystem from '../../lib/actor-system/actor-system'
-import PingActor from './fixtures/ping-actor'
+import NamedActor from './fixtures/named-actor'
 import SemaphoreActor from './fixtures/semaphore-actor'
 import waitFor from './fixtures/wait-for'
 
@@ -18,15 +18,15 @@ describe('Actor System', () => {
   })
 
   test('should build a new actor based on constructor parameters', async () => {
-    const actor: PingActor = actorSystem.new(PingActor, ['myName'])
+    const actor: NamedActor = actorSystem.new(NamedActor, ['myName'])
     const name = await waitFor(() => actor.sayHi())
 
     expect(name).toStrictEqual('myName')
   })
 
   test("should get an actor based on it's id", async () => {
-    const actor: PingActor = actorSystem.new(PingActor, ['myName'])
-    const foundActor: PingActor = actorSystem.find('myName') as PingActor
+    const actor: NamedActor = actorSystem.new(NamedActor, ['myName'])
+    const foundActor: NamedActor = actorSystem.find('myName') as NamedActor
 
     const name = await waitFor(() => foundActor.sayHi())
 
