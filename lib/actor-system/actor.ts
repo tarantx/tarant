@@ -1,7 +1,6 @@
 import Message from '../mailbox/message'
 import ISubscriber from '../mailbox/subscriber'
 import ActorMessage from './actor-message'
-import ActorProxy from './actor-proxy'
 import ActorSystem from './actor-system'
 
 export default abstract class Actor implements ISubscriber<ActorMessage> {
