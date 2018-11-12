@@ -71,4 +71,16 @@ describe('Actor System', () => {
 
     expect(materializer.onAfterMessage).toHaveBeenCalled()
   })
+  
+  test('should call materializer when errored', async () => {
+    const actor: SemaphoreActor = actorSystem.new(SemaphoreActor, ['mySemaphore', () => { throw "something" }])
+    
+    try {
+      await waitFor(() => actor.runFor(5))
+    } catch (e) {
+      // expected
+    }
+    
+    expect(materializer.onError).toHaveBeenCalled()
+  })
 })

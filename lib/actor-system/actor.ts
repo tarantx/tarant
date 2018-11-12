@@ -45,13 +45,17 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
 
       if (r && r.then && r.catch) {
         r.then(actorMessage.resolve)
-          .catch(actorMessage.reject)
+          .catch((e: any) => {
+            this.materializer.onError(this, actorMessage, e)
+            actorMessage.reject(e);
+          })
           .finally(freeAgain)
       } else {
         actorMessage.resolve(r)
         freeAgain()
       }
     } catch (e) {
+      this.materializer.onError(this, actorMessage, e)
       actorMessage.reject(e)
       freeAgain()
     }
