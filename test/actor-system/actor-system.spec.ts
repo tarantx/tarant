@@ -35,7 +35,7 @@ describe('Actor System', () => {
 
   test("should get an actor based on it's id", async () => {
     actorSystem.new(NamedActor, ['myName'])
-    const foundActor: NamedActor = actorSystem.find('myName') as NamedActor
+    const foundActor: NamedActor = await actorSystem.find('myName') as NamedActor
 
     const name = await waitFor(() => foundActor.sayHi())
 

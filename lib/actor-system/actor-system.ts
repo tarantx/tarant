@@ -49,13 +49,13 @@ export default class ActorSystem implements IProcessor {
     return proxy
   }
 
-  public find<T extends Actor>(id: string): T | undefined {
+  public async find<T extends Actor>(id: string): Promise<T> {
     const instance = this.actors.get(id)
     if (instance === undefined) {
-      return undefined
+      return await Promise.reject(undefined)
     }
 
-    return ActorProxy.of(this.mailbox, instance as T)
+    return await Promise.resolve(ActorProxy.of(this.mailbox, instance as T))
   }
 
   private setupInstance(instance: any, proxy: any): void {
