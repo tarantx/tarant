@@ -2,7 +2,7 @@ import Message from '../mailbox/message'
 import ISubscriber from '../mailbox/subscriber'
 import ActorMessage from './actor-message'
 import ActorSystem from './actor-system'
-import IMaterializer from './materializer/materializer';
+import IMaterializer from './materializer/materializer'
 
 export default abstract class Actor implements ISubscriber<ActorMessage> {
   public readonly id: string
@@ -47,7 +47,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
         r.then(actorMessage.resolve)
           .catch((e: any) => {
             this.materializer.onError(this, actorMessage, e)
-            actorMessage.reject(e);
+            actorMessage.reject(e)
           })
           .finally(freeAgain)
       } else {

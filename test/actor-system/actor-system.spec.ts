@@ -16,9 +16,9 @@ describe('Actor System', () => {
       onInitialize: jest.fn(),
       onBeforeMessage: jest.fn(),
       onAfterMessage: jest.fn(),
-      onError: jest.fn()
+      onError: jest.fn(),
     }
-    
+
     actorSystem = ActorSystem.default(materializer)
   })
 
@@ -71,16 +71,21 @@ describe('Actor System', () => {
 
     expect(materializer.onAfterMessage).toHaveBeenCalled()
   })
-  
+
   test('should call materializer when errored', async () => {
-    const actor: SemaphoreActor = actorSystem.new(SemaphoreActor, ['mySemaphore', () => { throw "something" }])
-    
+    const actor: SemaphoreActor = actorSystem.new(SemaphoreActor, [
+      'mySemaphore',
+      () => {
+        throw 'something'
+      },
+    ])
+
     try {
       await waitFor(() => actor.runFor(5))
     } catch (e) {
       // expected
     }
-    
+
     expect(materializer.onError).toHaveBeenCalled()
   })
 })
