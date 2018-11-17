@@ -1,6 +1,7 @@
 import Actor from '../../lib/actor-system/actor'
-import IMaterializer from '../../lib/actor-system/materializer/materializer'
 import ActorSystem from '../../lib/actor-system/actor-system'
+import IMaterializer from '../../lib/actor-system/materializer/materializer'
+import NoopResolver from '../../lib/actor-system/resolver/noop-resolver'
 import NamedActor from './fixtures/named-actor'
 import SemaphoreActor from './fixtures/semaphore-actor'
 import waitFor from './fixtures/wait-for'
@@ -13,13 +14,13 @@ describe('Actor System', () => {
 
   beforeEach(() => {
     materializer = {
-      onInitialize: jest.fn(),
-      onBeforeMessage: jest.fn(),
       onAfterMessage: jest.fn(),
+      onBeforeMessage: jest.fn(),
       onError: jest.fn(),
+      onInitialize: jest.fn(),
     }
 
-    actorSystem = ActorSystem.default(materializer)
+    actorSystem = ActorSystem.default(materializer, new NoopResolver())
   })
 
   afterEach(() => {
@@ -35,7 +36,7 @@ describe('Actor System', () => {
 
   test("should get an actor based on it's id", async () => {
     actorSystem.new(NamedActor, ['myName'])
-    const foundActor: NamedActor = await actorSystem.find('myName') as NamedActor
+    const foundActor: NamedActor = (await actorSystem.find('myName')) as NamedActor
 
     const name = await waitFor(() => foundActor.sayHi())
 

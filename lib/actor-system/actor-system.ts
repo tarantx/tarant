@@ -5,10 +5,11 @@ import Actor from './actor'
 import ActorMessage from './actor-message'
 import ActorProxy from './actor-proxy'
 import IMaterializer from './materializer/materializer'
+import IResolver from './resolver/resolver'
 
 export default class ActorSystem implements IProcessor {
-  public static default(materializer: IMaterializer): ActorSystem {
-    return new ActorSystem(materializer)
+  public static default(materializer: IMaterializer, resolver: IResolver): ActorSystem {
+    return new ActorSystem(materializer, resolver)
   }
 
   public readonly requirements: [string] = ['default']
@@ -17,14 +18,16 @@ export default class ActorSystem implements IProcessor {
   private readonly actors: Map<string, Actor>
   private readonly subscriptions: Map<string, string>
   private readonly materializer: IMaterializer
+  private readonly resolver: IResolver
 
-  private constructor(materializer: IMaterializer) {
+  private constructor(materializer: IMaterializer, resolver: IResolver) {
     this.mailbox = Mailbox.empty()
     this.fiber = Fiber.with({ resources: ['default'], tickInterval: 1 })
     this.fiber.acquire(this)
     this.actors = new Map()
     this.subscriptions = new Map()
     this.materializer = materializer
+    this.resolver = resolver
   }
 
   public process(): void {
@@ -49,13 +52,19 @@ export default class ActorSystem implements IProcessor {
     return proxy
   }
 
-  public async find<T extends Actor>(id: string): Promise<T> {
+  public async find<T extends Actor>(id: string): Promise<T | undefined> {
     const instance = this.actors.get(id)
     if (instance === undefined) {
-      return await Promise.reject(undefined)
+      const resolvedActor = await this.resolver.resolveActorById(id)
+      if (resolvedActor === undefined) {
+        return undefined
+      }
+
+      this.actors.set(id, resolvedActor)
+      return ActorProxy.of(this.mailbox, resolvedActor as T)
     }
 
-    return await Promise.resolve(ActorProxy.of(this.mailbox, instance as T))
+    return ActorProxy.of(this.mailbox, instance as T)
   }
 
   private setupInstance(instance: any, proxy: any): void {
