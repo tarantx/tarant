@@ -76,7 +76,7 @@ describe('Actor System', () => {
     const actor: SemaphoreActor = actorSystem.new(SemaphoreActor, [
       'mySemaphore',
       () => {
-        throw 'something'
+        throw new Error('something')
       },
     ])
 
