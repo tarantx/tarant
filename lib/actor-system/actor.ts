@@ -4,6 +4,8 @@ import ActorMessage from './actor-message'
 import ActorSystem from './actor-system'
 import IMaterializer from './materializer/materializer'
 
+import { v4 as uuid } from 'uuid'
+
 export default abstract class Actor implements ISubscriber<ActorMessage> {
   public readonly id: string
   public readonly partitions: [string]
@@ -12,9 +14,9 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
   private readonly materializer: IMaterializer
   private busy: boolean
 
-  protected constructor(id: string) {
-    this.id = id
-    this.partitions = [id]
+  protected constructor(id?: string) {
+    this.id = id || uuid()
+    this.partitions = [this.id]
     this.busy = false
     this.self = this
     this.system = (null as unknown) as ActorSystem
