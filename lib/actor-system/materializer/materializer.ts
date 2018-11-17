@@ -1,5 +1,5 @@
-import ActorMessage from '../actor-message'
 import Actor from '../actor'
+import ActorMessage from '../actor-message'
 
 export default interface IMaterializer {
   onInitialize(actor: Actor): void
