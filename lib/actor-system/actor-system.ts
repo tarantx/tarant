@@ -46,7 +46,7 @@ export default class ActorSystem implements IProcessor {
     this.fiber.free()
   }
 
-  public new<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
+  public actorOf<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
     const instance = new classFn(...values)
     const proxy = ActorProxy.of(this.mailbox, instance)
     const subscription = this.mailbox.addSubscriber(instance)
