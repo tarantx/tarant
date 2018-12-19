@@ -1,3 +1,4 @@
+import ActorMessage from '../../lib/actor-system/actor-message';
 import ActorSystem from '../../lib/actor-system/actor-system'
 import ActorSystemConfigurationBuilder from '../../lib/actor-system/configuration/actor-system-configuration-builder'
 import IActorSupervisor from '../../lib/actor-system/supervision/actor-supervisor'
@@ -20,6 +21,18 @@ describe('Actor System Supervision', () => {
         .done(),
     )
   })
+
+  const messagesForActor = (actor: any): [ActorMessage] => {
+      const unsafeSystem = actorSystem as any
+      const subscription = unsafeSystem.subscriptions.get(actor.ref.id) as string
+      const partitions = unsafeSystem.mailbox.subscribedPartitions[subscription] as [string]
+
+      return partitions.reduce((prev, cur) => {
+        return unsafeSystem.mailbox.subscriptions[cur]
+          .filter((managedSub: any) => managedSub.id === subscription)
+          .map((managedSub: any) => managedSub.messages).concat(prev)
+      }, []).reduce((par: [], agg: []) => agg.concat(par), [])
+  }
 
   afterEach(() => {
     actorSystem.free()
@@ -52,5 +65,19 @@ describe('Actor System Supervision', () => {
     }
 
     expect(currentSupervisor.supervise).toHaveBeenCalled()
+  })
+
+  test('should drop the message when the supervision drops it', async () => {
+    const thrownException = {}
+    supervisor.supervise = () => 'drop-message'
+    const actor: FailingActor = actorSystem.actorOf(FailingActor, [thrownException])
+
+    try {
+      await waitFor(() => actor.fails())
+    } catch (ex) {
+      expect(ex).toBe(thrownException)
+    }
+
+    expect(messagesForActor(actor).length).toEqual(0)
   })
 })
