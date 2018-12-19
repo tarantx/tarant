@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+- node
+script:
+- npm run test:coverage
+before_deploy:
+- npm run build
+deploy:
+  skip_cleanup: true
+  provider: npm
+  email: masruizkevin@gmail.com
+  api_key:
+    secure: "WKj9Y5CWDb9q1XSgHFJsOitfifyqOu65KYRjcfrBLeyvTlormraY7RTlD/ojgebAB9360lqTe5yaHeWWrAc5ow2d+IDHjdUAKoRMr8obGDcMzEMrw1iz6PNvBNxPH6aXWA3i+gMFgH9lxskc6tv6t0oAS28z/clqMreM8Jp0wjfgSRUQ3D7Kcf0Xtn0Uw+Zjur/M+lv3IUnkfPva9XaDD4MYz6JFf/LPWLTVWyO8O7XH4EQ/fK7LQa3fwhggPGXwMGtW8O8BSpeCwpk1JOmglL6nNN+W2xOKWI7CDC0b/hA/6FQD6zoMElr32j20tLTwlskYdp6eSy8jIwVht6B3dLTAo09lZmZ94UujB3/IFDALezKw9ylwGH3LZcJEmExLezh48qAydJwcpSdW17qcWxTmtKi+s2a543xFUld7mox74Jx7pAnIw5/vqE9cDEP9RhJ1FWFkaRrnTR/H3Jz1D23ARDkyhaXOQM/lUr9NCCpuZf4XPePscGUNzjv+iF00otLY3EuUZHJMkFPTV9DY3lHp40aRbfNxK8bVdGn1n2ooBXqmZEbynhQfayWIEkxKIBAgYxvXs6FlW08LSJw6Wo66nlpj/O8ukG/HVFcOtXpFFR7ff+EVshTk0rarBh7+6Cx44toozlVuxIzAdj82IPexRTrw/MfJBt1WKkcE7F0="
+  on:
+    tags: true
