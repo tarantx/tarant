@@ -43,11 +43,11 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
     } catch (ex) {
       this.materializer.onError(this, actorMessage, ex)
       const strategy = await this.supervisor.supervise(this.self, ex, actorMessage)
-      
-      if (strategy === "drop-message") {
+
+      if (strategy === 'drop-message') {
         actorMessage.reject(ex)
         return true
-      } else if (strategy === "retry-message") {
+      } else if (strategy === 'retry-message') {
         return false
       } else {
         actorMessage.reject(ex)

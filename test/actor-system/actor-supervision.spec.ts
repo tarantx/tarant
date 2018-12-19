@@ -23,15 +23,18 @@ describe('Actor System Supervision', () => {
   })
 
   const messagesForActor = (actor: any): [ActorMessage] => {
-      const unsafeSystem = actorSystem as any
-      const subscription = unsafeSystem.subscriptions.get(actor.ref.id) as string
-      const partitions = unsafeSystem.mailbox.subscribedPartitions[subscription] as [string]
+    const unsafeSystem = actorSystem as any
+    const subscription = unsafeSystem.subscriptions.get(actor.ref.id) as string
+    const partitions = unsafeSystem.mailbox.subscribedPartitions[subscription] as [string]
 
-      return partitions.reduce((prev, cur) => {
+    return partitions
+      .reduce((prev, cur) => {
         return unsafeSystem.mailbox.subscriptions[cur]
           .filter((managedSub: any) => managedSub.id === subscription)
-          .map((managedSub: any) => managedSub.messages).concat(prev)
-      }, []).reduce((par: [], agg: []) => agg.concat(par), [])
+          .map((managedSub: any) => managedSub.messages)
+          .concat(prev)
+      }, [])
+      .reduce((par: [], agg: []) => agg.concat(par), [])
   }
 
   afterEach(() => {
@@ -69,7 +72,7 @@ describe('Actor System Supervision', () => {
 
   test('should not drop the message when the supervision is retry', async () => {
     const thrownException = {}
-    supervisor.supervise = () => "retry-message"
+    supervisor.supervise = () => 'retry-message'
     const actor: FailingActor = actorSystem.actorOf(FailingActor, [thrownException])
 
     try {
