@@ -3,5 +3,5 @@ import Partition from './partition'
 
 export default interface ISubscriber<T> {
   partitions: [Partition]
-  onReceiveMessage(message: Message<T>): boolean
+  onReceiveMessage(message: Message<T>): Promise<boolean>
 }

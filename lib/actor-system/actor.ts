@@ -26,7 +26,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
     this.supervisor = (null as unknown) as IActorSupervisor
   }
 
-  public onReceiveMessage(message: Message<ActorMessage>): boolean {
+  public async onReceiveMessage(message: Message<ActorMessage>): Promise<boolean> {
     if (this.busy) {
       return false
     }

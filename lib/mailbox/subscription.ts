@@ -12,10 +12,10 @@ export default class Subscription<T> {
     this.messages = []
   }
 
-  public process(): void {
+  public async process(): Promise<void> {
     const message = this.messages[0]
     if (message) {
-      if (this.subscriber.onReceiveMessage(message)) {
+      if (await this.subscriber.onReceiveMessage(message)) {
         this.messages.pop()
       }
     }
