@@ -39,7 +39,6 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
       const result = await this.dispatchAndPromisify(actorMessage)
 
       actorMessage.resolve(result)
-      this.materializer.onAfterMessage(this, actorMessage)
     } catch (ex) {
       this.materializer.onError(this, actorMessage, ex)
       const strategy = await this.supervisor.supervise(this.self, ex, actorMessage)
