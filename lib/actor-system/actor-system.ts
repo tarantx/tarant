@@ -58,7 +58,7 @@ export default class ActorSystem implements IProcessor {
     return proxy
   }
 
-  public async find<T extends Actor>(id: string): Promise<T | undefined> {
+  public async actorFor<T extends Actor>(id: string): Promise<T | undefined> {
     const instance = this.actors.get(id)
     if (instance === undefined) {
       const resolvedActor = await this.resolver.resolveActorById(id)
