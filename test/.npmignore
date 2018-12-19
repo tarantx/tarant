@@ -1,0 +1,11 @@
+./vscode
+/examples
+/lib
+/test
+.gitignore
+.prettierrc
+.travis.yml
+jestconfig.json
+README.md
+tsconfig.json
+tslint.json
