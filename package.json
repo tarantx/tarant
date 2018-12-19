@@ -10,7 +10,9 @@
     "test": "jest --config jestconfig.json",
     "test:coverage": "jest --config jestconfig.json --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
-  "author": "",
+  "contributors": [
+    "Kevin Mas Ruiz <masruizkevin@gmail.com>"
+  ],
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^23.3.9",
