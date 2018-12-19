@@ -8,6 +8,7 @@ import IActorSystemConfiguration from './configuration/actor-system-configuratio
 import ActorSystemConfigurationBuilder from './configuration/actor-system-configuration-builder'
 import IMaterializer from './materializer/materializer'
 import IResolver from './resolver/resolver'
+import IActorSupervisor from './supervision/actor-supervisor'
 
 export default class ActorSystem implements IProcessor {
   public static for(configuration: IActorSystemConfiguration): ActorSystem {
@@ -25,6 +26,7 @@ export default class ActorSystem implements IProcessor {
   private readonly subscriptions: Map<string, string>
   private readonly materializer: IMaterializer
   private readonly resolver: IResolver
+  private readonly supervisor: IActorSupervisor
 
   private constructor(configuration: IActorSystemConfiguration) {
     this.mailbox = configuration.mailbox
@@ -34,6 +36,7 @@ export default class ActorSystem implements IProcessor {
     this.subscriptions = new Map()
     this.materializer = configuration.materializer
     this.resolver = configuration.resolver
+    this.supervisor = configuration.supervisor
   }
 
   public process(): void {
@@ -77,6 +80,7 @@ export default class ActorSystem implements IProcessor {
     instance.self = proxy
     instance.system = this
     instance.materializer = this.materializer
+    instance.supervisor = this.supervisor
     this.materializer.onInitialize(instance)
   }
 }

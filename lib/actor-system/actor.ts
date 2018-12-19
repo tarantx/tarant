@@ -5,6 +5,7 @@ import ActorSystem from './actor-system'
 import IMaterializer from './materializer/materializer'
 
 import { v4 as uuid } from 'uuid'
+import IActorSupervisor from './supervision/actor-supervisor'
 
 export default abstract class Actor implements ISubscriber<ActorMessage> {
   public readonly id: string
@@ -12,6 +13,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
   protected readonly self: this
   protected readonly system: ActorSystem
   private readonly materializer: IMaterializer
+  private readonly supervisor: IActorSupervisor
   private busy: boolean
 
   protected constructor(id?: string) {
@@ -19,8 +21,9 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
     this.partitions = [this.id]
     this.busy = false
     this.self = this
-    this.system = (null as unknown) as ActorSystem
-    this.materializer = (null as unknown) as IMaterializer
+    this.system = null as unknown as ActorSystem
+    this.materializer = null as unknown as IMaterializer
+    this.supervisor = null as unknown as IActorSupervisor
   }
 
   public onReceiveMessage(message: Message<ActorMessage>): boolean {
@@ -49,6 +52,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
         r.then(actorMessage.resolve)
           .catch((e: any) => {
             this.materializer.onError(this, actorMessage, e)
+            this.supervisor.supervise(this.self, e)
             actorMessage.reject(e)
           })
           .finally(freeAgain)
@@ -58,6 +62,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
       }
     } catch (e) {
       this.materializer.onError(this, actorMessage, e)
+      this.supervisor.supervise(this.self, e)
       actorMessage.reject(e)
       freeAgain()
     }

@@ -7,6 +7,8 @@ import IResolver from '../resolver/resolver'
 import Mailbox from '../../mailbox/mailbox'
 import NoopMaterializer from '../materializer/noop-materializer'
 import NoopResolver from '../resolver/noop-resolver'
+import IActorSupervisor from '../supervision/actor-supervisor'
+import NoopActorSupervisor from '../supervision/noop-supervisor'
 
 export default class ActorSystemConfigurationBuilder {
   public static define(): ActorSystemConfigurationBuilder {
@@ -18,6 +20,7 @@ export default class ActorSystemConfigurationBuilder {
   public resources: [string]
   public tickInterval: number
   public mailbox: Mailbox<ActorMessage>
+  public supervisor: IActorSupervisor
 
   private constructor() {
     this.materializer = new NoopMaterializer()
@@ -25,6 +28,7 @@ export default class ActorSystemConfigurationBuilder {
     this.resources = ['default']
     this.tickInterval = 1
     this.mailbox = Mailbox.empty()
+    this.supervisor = new NoopActorSupervisor()
   }
 
   public withMaterializer(materializer: IMaterializer): ActorSystemConfigurationBuilder {
@@ -49,6 +53,11 @@ export default class ActorSystemConfigurationBuilder {
 
   public withMailbox(mailbox: Mailbox<ActorMessage>): ActorSystemConfigurationBuilder {
     this.mailbox = mailbox
+    return this
+  }
+
+  public withTopSupervisor(supervisor: IActorSupervisor): ActorSystemConfigurationBuilder {
+    this.supervisor = supervisor
     return this
   }
 
