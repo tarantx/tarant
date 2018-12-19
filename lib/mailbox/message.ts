@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Partition from './Partition'
+import Partition from './partition'
 
 export default class Message<T> {
   public static of<T>(partition: Partition, content: T): Message<T> {
