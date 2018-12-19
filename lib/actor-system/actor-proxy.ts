@@ -18,7 +18,7 @@ export default class ActorProxy {
   public static of<T extends Actor, M>(mailbox: Mailbox<ActorMessage>, actor: T): T {
     const props = Object.getOwnPropertyNames((actor as any).constructor.prototype)
 
-    return props
+    return (props
       .filter(e => e !== 'constructor')
       .map(
         member =>
@@ -29,6 +29,6 @@ export default class ActorProxy {
             },
           ] as [string, any],
       )
-      .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor }) as unknown as T
+      .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor }) as unknown) as T
   }
 }

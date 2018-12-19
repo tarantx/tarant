@@ -73,13 +73,12 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   public supervise(actor: Actor, exception: any): SupervisionResponse {
     return this.supervisor.supervise(actor, exception)
   }
-  
+
   protected actorOf<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
     const actor = this.system.actorOf(classFn, values)
-    const unsafeActor = actor as any 
+    const unsafeActor = actor as any
     unsafeActor.ref.supervisor = this
 
     return actor
   }
-
 }

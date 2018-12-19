@@ -2,8 +2,8 @@ import ActorSystem from '../../lib/actor-system/actor-system'
 import ActorSystemConfigurationBuilder from '../../lib/actor-system/configuration/actor-system-configuration-builder'
 import IActorSupervisor from '../../lib/actor-system/supervision/actor-supervisor'
 import FailingActor from './fixtures/failing-actor'
+import ParentOfFailingActorActor from './fixtures/parent-of-failing-actor'
 import waitFor from './fixtures/wait-for'
-import ParentOfFailingActorActor from './fixtures/parent-of-failing-actor';
 
 describe('Actor System Supervision', () => {
   jest.useFakeTimers()
