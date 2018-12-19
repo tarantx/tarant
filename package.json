@@ -3,7 +3,9 @@
   "version": "2.0.3",
   "description": "Actor model for reactive and scalable applications.",
   "main": "dist/index.js",
-  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "format": "prettier --write \"**/*.ts\" && tslint -p tsconfig.json --fix lib/**/*.ts -t verbose",
