@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2018-present, wind-js
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import Message from '../mailbox/message'
 import ISubscriber from '../mailbox/subscriber'
 import ActorMessage from './actor-message'
@@ -70,16 +77,16 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
 
   protected schedule(interval: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
     const id = uuid()
-    this.scheduleds.set(id, setInterval(() => fn.apply(this, values), interval) as unknown as number)
+    this.scheduleds.set(id, (setInterval(() => fn.apply(this, values), interval) as unknown) as number)
     return id
   }
 
   protected scheduleOnce(timeout: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
     const id = uuid()
-    this.scheduleds.set(id, setTimeout(() => {
+    this.scheduleds.set(id, (setTimeout(() => {
       fn.apply(this, values)
       this.scheduleds.delete(id)
-    }, timeout) as unknown as number)
+    }, timeout) as unknown) as number)
 
     return id
   }
