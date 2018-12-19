@@ -39,9 +39,9 @@ export default class ActorSystem implements IProcessor {
     this.supervisor = configuration.supervisor
   }
 
-  public process(): void {
-    this.actors.forEach(v => {
-      this.mailbox.poll(this.subscriptions.get(v.id) as string)
+  public async process(): Promise<void> {
+    this.actors.forEach(async v => {
+      await this.mailbox.poll(this.subscriptions.get(v.id) as string)
     })
   }
 
