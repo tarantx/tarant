@@ -5,17 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import ActorMessage from '../actor-message'
-import ActorSystemConfiguration from './actor-system-configuration'
-
-import IMaterializer from '../materializer/materializer'
-import IResolver from '../resolver/resolver'
-
 import Mailbox from '../../mailbox/mailbox'
+import ActorMessage from '../actor-message'
+import IMaterializer from '../materializer/materializer'
 import NoopMaterializer from '../materializer/noop-materializer'
 import NoopResolver from '../resolver/noop-resolver'
+import IResolver from '../resolver/resolver'
 import IActorSupervisor from '../supervision/actor-supervisor'
 import NoopActorSupervisor from '../supervision/noop-supervisor'
+import ActorSystemConfiguration from './actor-system-configuration'
 
 export default class ActorSystemConfigurationBuilder {
   public static define(): ActorSystemConfigurationBuilder {

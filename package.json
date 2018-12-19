@@ -1,11 +1,11 @@
 {
   "name": "@wind-js/actor",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Actor model for reactive and scalable applications.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "format": "prettier --write \"**/*.ts\"",
+    "format": "prettier --write \"**/*.ts\" && tslint -p tsconfig.json --fix lib/**/*.ts -t verbose",
     "lint": "tslint -p tsconfig.json",
     "test": "jest --config jestconfig.json",
     "test:coverage": "jest --config jestconfig.json --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
