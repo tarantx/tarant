@@ -7,6 +7,8 @@ import IMaterializer from './materializer/materializer'
 import { v4 as uuid } from 'uuid'
 import IActorSupervisor, { SupervisionResponse } from './supervision/actor-supervisor'
 
+type Cancellable = string
+
 export default abstract class Actor implements ISubscriber<ActorMessage>, IActorSupervisor {
   public readonly id: string
   public readonly partitions: [string]
@@ -14,6 +16,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   protected readonly system: ActorSystem
   private readonly materializer: IMaterializer
   private readonly supervisor: IActorSupervisor
+  private readonly scheduleds: Map<Cancellable, number>
   private busy: boolean
 
   protected constructor(id?: string) {
@@ -24,6 +27,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
     this.system = (null as unknown) as ActorSystem
     this.materializer = (null as unknown) as IMaterializer
     this.supervisor = (null as unknown) as IActorSupervisor
+    this.scheduleds = new Map()
   }
 
   public async onReceiveMessage(message: Message<ActorMessage>): Promise<boolean> {
@@ -62,6 +66,32 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
 
   public supervise(actor: Actor, exception: any, message: any): SupervisionResponse {
     return this.supervisor.supervise(actor, exception, message)
+  }
+
+  protected schedule(interval: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
+    const id = uuid()
+    const thisRef = this
+    this.scheduleds.set(id, setInterval(() => fn.apply(thisRef, values), interval) as unknown as number)
+    return id
+  }
+
+  protected scheduleOnce(timeout: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
+    const id = uuid()
+    const thisRef = this
+    this.scheduleds.set(id, setTimeout(() => {
+      fn.apply(this, values)
+      this.scheduleds.delete(id)
+    }, timeout) as unknown as number)
+
+    return id
+  }
+
+  protected cancel(cancellable: Cancellable): void {
+    const id = this.scheduleds.get(cancellable)
+    clearTimeout(id)
+    clearInterval(id)
+
+    this.scheduleds.delete(cancellable)
   }
 
   protected actorOf<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
