@@ -1,13 +1,13 @@
 # ![logomakr_8cwvt1](https://user-images.githubusercontent.com/3071208/42311453-254a1474-803e-11e8-957a-5c1c8d157b31.png)
-[![npm](https://img.shields.io/npm/v/@wind-js/wind.js.svg)](https://www.npmjs.com/package/@wind-js/wind.js)
-[![Build Status](https://travis-ci.org/wind-js/wind.js.svg?branch=master)](https://travis-ci.org/@wind-js/wind.js)
-[![Coverage Status](https://coveralls.io/repos/github/wind-js/wind.js/badge.svg?branch=master)](https://coveralls.io/github/@wind-js/wind.js?branch=master)
+[![npm](https://img.shields.io/npm/v/@wind-js/wind.js.svg)](https://www.npmjs.com/package/@wind-js/actor)
+[![Build Status](https://travis-ci.org/wind-js/actor.svg?branch=master)](https://travis-ci.org/@wind-js/actor)
+[![Coverage Status](https://coveralls.io/repos/github/wind-js/actor/badge.svg?branch=master)](https://coveralls.io/github/@wind-js/actor?branch=master)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![issues Welcome](https://img.shields.io/badge/issues-welcome-brightgreen.svg)
-![npm](https://img.shields.io/npm/l/@wind-js/wind.js.svg)
-![GitHub issues](https://img.shields.io/github/issues/wind-js/wind.js.svg)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/wind-js/wind.js.svg)
-![Downloads](https://img.shields.io/npm/dt/@wind-js/wind.js.svg)
+![npm](https://img.shields.io/npm/l/@wind-js/actor.svg)
+![GitHub issues](https://img.shields.io/github/issues/wind-js/actor.svg)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/wind-js/actor.svg)
+![Downloads](https://img.shields.io/npm/dt/@wind-js/actor.svg)
 
 Wind.js is a TypeScript/JavaScript library for building software using the actor system model.
 
