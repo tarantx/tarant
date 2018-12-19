@@ -4,12 +4,18 @@ import Mailbox from '../mailbox/mailbox'
 import Actor from './actor'
 import ActorMessage from './actor-message'
 import ActorProxy from './actor-proxy'
+import IActorSystemConfiguration from './configuration/actor-system-configuration';
+import ActorSystemConfigurationBuilder from './configuration/actor-system-configuration-builder';
 import IMaterializer from './materializer/materializer'
 import IResolver from './resolver/resolver'
 
 export default class ActorSystem implements IProcessor {
-  public static default(materializer: IMaterializer, resolver: IResolver): ActorSystem {
-    return new ActorSystem(materializer, resolver)
+  public static for(configuration: IActorSystemConfiguration): ActorSystem {
+    return new ActorSystem(configuration)
+  }
+
+  public static default(): ActorSystem {
+    return new ActorSystem(ActorSystemConfigurationBuilder.define().done())
   }
 
   public readonly requirements: [string] = ['default']
@@ -20,14 +26,14 @@ export default class ActorSystem implements IProcessor {
   private readonly materializer: IMaterializer
   private readonly resolver: IResolver
 
-  private constructor(materializer: IMaterializer, resolver: IResolver) {
-    this.mailbox = Mailbox.empty()
-    this.fiber = Fiber.with({ resources: ['default'], tickInterval: 1 })
+  private constructor(configuration: IActorSystemConfiguration) {
+    this.mailbox = configuration.mailbox
+    this.fiber = Fiber.with({ resources: configuration.resources, tickInterval: configuration.tickInterval })
     this.fiber.acquire(this)
     this.actors = new Map()
     this.subscriptions = new Map()
-    this.materializer = materializer
-    this.resolver = resolver
+    this.materializer = configuration.materializer
+    this.resolver = configuration.resolver
   }
 
   public process(): void {
