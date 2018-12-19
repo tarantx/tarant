@@ -46,7 +46,7 @@ export default class Mailbox<T> {
     })
   }
 
-  public poll(subscription: string): void {
+  public async poll(subscription: string): Promise<void> {
     const partitions = this.subscribedPartitions[subscription]
     if (partitions === undefined) {
       return
@@ -55,7 +55,7 @@ export default class Mailbox<T> {
     partitions.forEach(partition => {
       this.subscriptions[partition]
         .filter(managedSubscription => managedSubscription.id === subscription)
-        .forEach(managedSubscription => managedSubscription.process())
+        .forEach(async managedSubscription => await managedSubscription.process())
     })
   }
 }

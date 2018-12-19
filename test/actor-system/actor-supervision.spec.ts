@@ -1,4 +1,4 @@
-import ActorMessage from '../../lib/actor-system/actor-message';
+import ActorMessage from '../../lib/actor-system/actor-message'
 import ActorSystem from '../../lib/actor-system/actor-system'
 import ActorSystemConfigurationBuilder from '../../lib/actor-system/configuration/actor-system-configuration-builder'
 import IActorSupervisor from '../../lib/actor-system/supervision/actor-supervisor'
