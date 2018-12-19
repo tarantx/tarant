@@ -35,7 +35,7 @@ describe('Actor System Supervision', () => {
       expect(ex).toBe(thrownException)
     }
 
-    expect(supervisor.supervise).toHaveBeenCalledWith(actor, thrownException)
+    expect(supervisor.supervise).toHaveBeenCalled()
   })
 
   test('should call parent actor for supervision on supervision', async () => {
@@ -51,6 +51,6 @@ describe('Actor System Supervision', () => {
       expect(ex).toBe(thrownException)
     }
 
-    expect(currentSupervisor.supervise).toHaveBeenCalledWith(actor, thrownException)
+    expect(currentSupervisor.supervise).toHaveBeenCalled()
   })
 })

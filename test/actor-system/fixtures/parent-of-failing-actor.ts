@@ -11,8 +11,8 @@ export default class ParentOfFailingActorActor extends Actor {
     this.customSupervisor = supervisor
   }
 
-  public supervise(actor: Actor, exception: any): SupervisionResponse {
-    return this.customSupervisor.supervise(actor, exception)
+  public supervise(actor: Actor, exception: any, message: any): SupervisionResponse {
+    return this.customSupervisor.supervise(actor, exception, message)
   }
 
   public async newFailingActor(ofException: any): Promise<FailingActor> {

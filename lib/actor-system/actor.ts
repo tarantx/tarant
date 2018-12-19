@@ -52,7 +52,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
         r.then(actorMessage.resolve)
           .catch((e: any) => {
             this.materializer.onError(this, actorMessage, e)
-            this.supervisor.supervise(this.self, e)
+            this.supervisor.supervise(this.self, e, actorMessage)
             actorMessage.reject(e)
           })
           .finally(freeAgain)
@@ -62,7 +62,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
       }
     } catch (e) {
       this.materializer.onError(this, actorMessage, e)
-      this.supervisor.supervise(this.self, e)
+      this.supervisor.supervise(this.self, e, actorMessage)
       actorMessage.reject(e)
       freeAgain()
     }
@@ -70,8 +70,8 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
     return true
   }
 
-  public supervise(actor: Actor, exception: any): SupervisionResponse {
-    return this.supervisor.supervise(actor, exception)
+  public supervise(actor: Actor, exception: any, message: any): SupervisionResponse {
+    return this.supervisor.supervise(actor, exception, message)
   }
 
   protected actorOf<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
