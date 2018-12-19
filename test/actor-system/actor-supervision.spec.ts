@@ -3,6 +3,7 @@ import ActorSystemConfigurationBuilder from '../../lib/actor-system/configuratio
 import IActorSupervisor from '../../lib/actor-system/supervision/actor-supervisor'
 import FailingActor from './fixtures/failing-actor'
 import waitFor from './fixtures/wait-for'
+import ParentOfFailingActorActor from './fixtures/parent-of-failing-actor';
 
 describe('Actor System Supervision', () => {
   jest.useFakeTimers()
@@ -27,7 +28,7 @@ describe('Actor System Supervision', () => {
   test('should call the top supervisor if the actor is a root actor', async () => {
     const thrownException = {}
     const actor: FailingActor = actorSystem.actorOf(FailingActor, [thrownException])
-    
+
     try {
       await waitFor(() => actor.fails())
     } catch (ex) {
@@ -35,5 +36,21 @@ describe('Actor System Supervision', () => {
     }
 
     expect(supervisor.supervise).toHaveBeenCalledWith(actor, thrownException)
+  })
+
+  test('should call parent actor for supervision on supervision', async () => {
+    const thrownException = {}
+    const currentSupervisor = { supervise: jest.fn() }
+
+    const parent: ParentOfFailingActorActor = actorSystem.actorOf(ParentOfFailingActorActor, [currentSupervisor])
+    const actor: FailingActor = await waitFor(() => parent.newFailingActor(thrownException))
+
+    try {
+      await waitFor(() => actor.fails())
+    } catch (ex) {
+      expect(ex).toBe(thrownException)
+    }
+
+    expect(currentSupervisor.supervise).toHaveBeenCalledWith(actor, thrownException)
   })
 })

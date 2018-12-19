@@ -29,6 +29,6 @@ export default class ActorProxy {
             },
           ] as [string, any],
       )
-      .reduce((result, [member, method]) => ({ ...result, [member]: method }), {}) as T
+      .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor }) as unknown as T
   }
 }

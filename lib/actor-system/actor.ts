@@ -5,9 +5,9 @@ import ActorSystem from './actor-system'
 import IMaterializer from './materializer/materializer'
 
 import { v4 as uuid } from 'uuid'
-import IActorSupervisor from './supervision/actor-supervisor'
+import IActorSupervisor, { SupervisionResponse } from './supervision/actor-supervisor'
 
-export default abstract class Actor implements ISubscriber<ActorMessage> {
+export default abstract class Actor implements ISubscriber<ActorMessage>, IActorSupervisor {
   public readonly id: string
   public readonly partitions: [string]
   protected readonly self: this
@@ -21,9 +21,9 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
     this.partitions = [this.id]
     this.busy = false
     this.self = this
-    this.system = null as unknown as ActorSystem
-    this.materializer = null as unknown as IMaterializer
-    this.supervisor = null as unknown as IActorSupervisor
+    this.system = (null as unknown) as ActorSystem
+    this.materializer = (null as unknown) as IMaterializer
+    this.supervisor = (null as unknown) as IActorSupervisor
   }
 
   public onReceiveMessage(message: Message<ActorMessage>): boolean {
@@ -69,4 +69,17 @@ export default abstract class Actor implements ISubscriber<ActorMessage> {
 
     return true
   }
+
+  public supervise(actor: Actor, exception: any): SupervisionResponse {
+    return this.supervisor.supervise(actor, exception)
+  }
+  
+  protected actorOf<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
+    const actor = this.system.actorOf(classFn, values)
+    const unsafeActor = actor as any 
+    unsafeActor.ref.supervisor = this
+
+    return actor
+  }
+
 }
