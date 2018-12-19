@@ -31,40 +31,31 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
       return false
     }
 
-    const setBusy = () => {
-      this.busy = true
-    }
-
-    const freeAgain = () => {
-      this.materializer.onAfterMessage(this, actorMessage)
-      this.busy = false
-    }
+    this.busy = true
 
     const actorMessage = message.content
-
     try {
-      setBusy()
       this.materializer.onBeforeMessage(this, actorMessage)
+      const result = await this.dispatchAndPromisify(actorMessage)
 
-      const r: any = (this as any)[actorMessage.methodName](...actorMessage.arguments)
-
-      if (r && r.then && r.catch) {
-        r.then(actorMessage.resolve)
-          .catch((e: any) => {
-            this.materializer.onError(this, actorMessage, e)
-            this.supervisor.supervise(this.self, e, actorMessage)
-            actorMessage.reject(e)
-          })
-          .finally(freeAgain)
+      actorMessage.resolve(result)
+      this.materializer.onAfterMessage(this, actorMessage)
+    } catch (ex) {
+      this.materializer.onError(this, actorMessage, ex)
+      const strategy = await this.supervisor.supervise(this.self, ex, actorMessage)
+      
+      if (strategy === "drop-message") {
+        actorMessage.reject(ex)
+        return true
+      } else if (strategy === "retry-message") {
+        return false
       } else {
-        actorMessage.resolve(r)
-        freeAgain()
+        actorMessage.reject(ex)
+        return true
       }
-    } catch (e) {
-      this.materializer.onError(this, actorMessage, e)
-      this.supervisor.supervise(this.self, e, actorMessage)
-      actorMessage.reject(e)
-      freeAgain()
+    } finally {
+      this.busy = false
+      this.materializer.onAfterMessage(this, actorMessage)
     }
 
     return true
@@ -80,5 +71,14 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
     unsafeActor.ref.supervisor = this
 
     return actor
+  }
+
+  private async dispatchAndPromisify(actorMessage: ActorMessage): Promise<any> {
+    const r: any = (this as any)[actorMessage.methodName](...actorMessage.arguments)
+    if (r && r.then && r.catch) {
+      return await (r as Promise<any>)
+    } else {
+      return r
+    }
   }
 }

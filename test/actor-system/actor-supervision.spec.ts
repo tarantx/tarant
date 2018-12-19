@@ -67,17 +67,17 @@ describe('Actor System Supervision', () => {
     expect(currentSupervisor.supervise).toHaveBeenCalled()
   })
 
-  test('should drop the message when the supervision drops it', async () => {
+  test('should not drop the message when the supervision is retry', async () => {
     const thrownException = {}
-    supervisor.supervise = () => 'drop-message'
+    supervisor.supervise = () => "retry-message"
     const actor: FailingActor = actorSystem.actorOf(FailingActor, [thrownException])
 
     try {
-      await waitFor(() => actor.fails())
+      waitFor(() => actor.fails())
     } catch (ex) {
       expect(ex).toBe(thrownException)
     }
 
-    expect(messagesForActor(actor).length).toEqual(0)
+    expect(messagesForActor(actor).length).toEqual(1)
   })
 })
