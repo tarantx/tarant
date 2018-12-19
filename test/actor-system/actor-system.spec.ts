@@ -1,6 +1,6 @@
 import Actor from '../../lib/actor-system/actor'
 import ActorSystem from '../../lib/actor-system/actor-system'
-import ActorSystemConfigurationBuilder from '../../lib/actor-system/configuration/actor-system-configuration-builder';
+import ActorSystemConfigurationBuilder from '../../lib/actor-system/configuration/actor-system-configuration-builder'
 import IMaterializer from '../../lib/actor-system/materializer/materializer'
 import NoopResolver from '../../lib/actor-system/resolver/noop-resolver'
 import NamedActor from './fixtures/named-actor'
@@ -21,9 +21,10 @@ describe('Actor System', () => {
       onInitialize: jest.fn(),
     }
 
-    actorSystem = ActorSystem.for(ActorSystemConfigurationBuilder.define()
-      .withMaterializer(materializer)
-      .done()
+    actorSystem = ActorSystem.for(
+      ActorSystemConfigurationBuilder.define()
+        .withMaterializer(materializer)
+        .done(),
     )
   })
 

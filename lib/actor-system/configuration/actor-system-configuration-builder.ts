@@ -53,6 +53,6 @@ export default class ActorSystemConfigurationBuilder {
   }
 
   public done(): ActorSystemConfiguration {
-      return this as ActorSystemConfiguration
+    return this as ActorSystemConfiguration
   }
 }
