@@ -69,7 +69,7 @@ myPinger.ping()
 The application will continue running and processing messages until you stop the actor system:
 
 ```js
-system.free();
+system.free()
 ```
 If you run the application you will see the following output:
 
