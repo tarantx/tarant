@@ -7,19 +7,19 @@
     "access": "public"
   },
   "scripts": {
-    "prepare": "npm run build",
+    "prepare": "yarn build",
     "build": "tsc",
     "format": "prettier --write \"**/*.ts\" && tslint -p tsconfig.json --fix lib/**/*.ts -t verbose",
     "lint": "tslint -p tsconfig.json",
-    "test": "npm run format && npm run lint && jest test",
+    "test": "yarn format && yarn lint && jest test",
     "test:dev": "jest --watchAll test",
-    "test:cov": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "push": "npm run test && git push",
-    "deploy:major": "npm run version --major",
-    "deploy:minor": "npm run version --minor",
-    "deploy:patch": "npm run version --patch",
+    "test:cov": "yarn format && yarn lint && jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "push": "yarn test && git push",
+    "deploy:major": "yarn version --major",
+    "deploy:minor": "yarn version --minor",
+    "deploy:patch": "yarn version --patch",
     "deploy:push": "git push && git push --tags",
-    "preversion": "npm run test"
+    "preversion": "yarn test"
   },
   "contributors": [
     "Kevin Mas Ruiz <masruizkevin@gmail.com>",
@@ -45,6 +45,13 @@
       "^.+\\.(t|j)sx?$": "ts-jest"
     },
     "testRegex": "/test/.+\\.(test|spec)\\.(tsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
