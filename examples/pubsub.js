@@ -1,22 +1,22 @@
 let { Actor, ActorSystem, Topic } = require('../dist/index')
 
-class Listener extends Actor {
+class SomeActor extends Actor {
     constructor(idx) {
         super("" + idx)
     }
 
-    listenToMessage(message) {
+    thisCanBeAnyMethod(message) {
         console.log(this.id, message)
     }
 }
 let system = ActorSystem.default()
-let topic = Topic.for(system, "my-topic", Listener)
+let topic = Topic.for(system, "my-topic", SomeActor)
 
 for (let i = 0; i < 100; i++) {
-    topic.subscribe(system.actorOf(Listener, [i]))
+    topic.subscribe(system.actorOf(SomeActor, [i]))
 }
 
-topic.listenToMessage("Hey!")
+topic.thisCanBeAnyMethod("Hey!")
 
 setTimeout(() => {
     system.free()
