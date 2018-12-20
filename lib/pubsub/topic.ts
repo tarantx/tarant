@@ -34,7 +34,7 @@ export default class Topic<T> extends Actor {
       .forEach(k => {
         unsafeThis.constructor.prototype[k] = function() {
           unsafeThis.subscriptions.forEach((actor: any) => {
-            ((actor[k] as unknown) as () => void).apply(actor, arguments as unknown as [])
+            ((actor[k] as unknown) as () => void).apply(actor, (arguments as unknown) as [])
           })
         }
       })
