@@ -13,14 +13,14 @@ import ActorMessage from './actor-message'
 export default class ActorProxy {
   public static sendAndReturn(
     mailbox: Mailbox<ActorMessage>,
-  actorId: string,
-  methodName: string,
-  args: IArguments,
-): Promise<object> {
-  return new Promise((resolve, reject) => {
-    mailbox.push(Message.of(actorId, ActorMessage.of(methodName, (args as unknown) as any[], resolve, reject)))
-  })
-}
+    actorId: string,
+    methodName: string,
+    args: IArguments,
+  ): Promise<object> {
+    return new Promise((resolve, reject) => {
+      mailbox.push(Message.of(actorId, ActorMessage.of(methodName, (args as unknown) as any[], resolve, reject)))
+    })
+  }
 
   public static of<T extends Actor, M>(mailbox: Mailbox<ActorMessage>, actor: T): T {
     const props = Object.getOwnPropertyNames((actor as any).constructor.prototype)

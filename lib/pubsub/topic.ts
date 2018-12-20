@@ -19,16 +19,20 @@ export default class Topic<T> extends Actor {
   private readonly subscriptions: Map<string, T>
 
   public constructor(topicName: string, consumerClass: new (...args: any[]) => T) {
-    super("topics/" + topicName)
+    super('topics/' + topicName)
     this.subscriptions = new Map()
 
     const props = Object.getOwnPropertyNames(consumerClass.prototype)
     const unsafeThis = this as any
-    unsafeThis.constructor = Object.assign({ prototype: { subscribe: this.subscribe, unsubscribe: this.unsubscribe} }, unsafeThis.constructor)
+    unsafeThis.constructor = Object.assign(
+      { prototype: { subscribe: this.subscribe, unsubscribe: this.unsubscribe } },
+      unsafeThis.constructor,
+    )
 
-    props.filter(k => k !== 'constructor')
+    props
+      .filter(k => k !== 'constructor')
       .forEach(k => {
-        unsafeThis.constructor.prototype[k] = function () {
+        unsafeThis.constructor.prototype[k] = function() {
           unsafeThis.subscriptions.forEach((actor: any) => {
             ((actor[k] as unknown) as () => void).apply(actor, arguments)
           })
