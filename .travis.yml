@@ -6,6 +6,8 @@ script:
 - npm run test:coverage
 before_deploy:
 - npm run build
+after_success:
+  - if [[ "${TRAVIS_EVENT_TYPE}" = "cron" ]]; then ./upgrade.sh; fi
 deploy:
   skip_cleanup: true
   provider: npm

@@ -22,22 +22,23 @@
     "preversion": "npm run test"
   },
   "contributors": [
-    "Kevin Mas Ruiz <masruizkevin@gmail.com>"
+    "Kevin Mas Ruiz <masruizkevin@gmail.com>",
+    "Kanekotic <alvarojosepl@gmail.com>"
   ],
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^23.3.9",
-    "@types/uuid": "^3.4.4",
-    "coveralls": "^3.0.2",
-    "jest": "^23.6.0",
-    "prettier": "^1.15.2",
-    "ts-jest": "^23.10.4",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.16.0",
-    "typescript": "^3.1.6"
+    "@types/jest": "23.3.9",
+    "@types/uuid": "3.4.4",
+    "coveralls": "3.0.2",
+    "jest": "23.6.0",
+    "prettier": "1.15.2",
+    "ts-jest": "23.10.4",
+    "tslint": "5.11.0",
+    "tslint-config-prettier": "1.16.0",
+    "typescript": "3.1.6"
   },
   "dependencies": {
-    "uuid": "^3.3.2"
+    "uuid": "3.3.2"
   },
   "jest": {
     "transform": {
