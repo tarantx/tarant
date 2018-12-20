@@ -13,9 +13,8 @@ describe('NoopResolver', () => {
 
   it('should return a promise that resolves to undefined', async () => {
     let result = resolver.resolveActorById(faker.random.uuid())
-    const resultValue = await result;
+    const resultValue = await result
     expect(result).toBeInstanceOf(Promise)
     expect(resultValue).toBeUndefined()
   })
-  
 })

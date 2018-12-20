@@ -15,8 +15,8 @@ export default class Mailbox<T> {
     return new Mailbox()
   }
 
-  private readonly subscribedPartitions: { [subscription: string]: [string] }
-  private readonly subscriptions: { [partition: string]: [Subscription<T>] }
+  private readonly subscribedPartitions: { [subscription: string]: string[] }
+  private readonly subscriptions: { [partition: string]: Array<Subscription<T>> }
 
   private constructor() {
     this.subscribedPartitions = {}
@@ -38,11 +38,9 @@ export default class Mailbox<T> {
 
   public removeSubscription(subscription: string): void {
     const partitions = this.subscribedPartitions[subscription]
-    partitions.forEach(partition => {
-      this.subscriptions[partition] = this.subscriptions[partition].filter(s => s.id !== subscription) as [
-        Subscription<T>
-      ]
-    })
+    partitions.forEach(
+      partition => (this.subscriptions[partition] = this.subscriptions[partition].filter(s => s.id !== subscription)),
+    )
 
     delete this.subscribedPartitions[subscription]
   }

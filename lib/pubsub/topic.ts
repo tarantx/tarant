@@ -13,7 +13,7 @@ type TopicSeenAs<T> = T & Topic<T>
 
 export default class Topic<T> extends Actor {
   public static for<T>(system: ActorSystem, name: string, consumerClass: new (...args: any[]) => T): TopicSeenAs<T> {
-    return system.actorOf(Topic, [name, consumerClass]) as TopicSeenAs<T>
+    return system.actorOf(Topic, [name, consumerClass]) as any
   }
 
   private readonly subscriptions: Map<string, T>
@@ -23,19 +23,16 @@ export default class Topic<T> extends Actor {
     this.subscriptions = new Map()
 
     const props = Object.getOwnPropertyNames(consumerClass.prototype)
-    const unsafeThis = this as any
-    unsafeThis.constructor = Object.assign(
+    this.constructor = Object.assign(
       { prototype: { subscribe: this.subscribe, unsubscribe: this.unsubscribe } },
-      unsafeThis.constructor,
+      this.constructor,
     )
 
     props
       .filter(k => k !== 'constructor')
       .forEach(k => {
-        unsafeThis.constructor.prototype[k] = function() {
-          unsafeThis.subscriptions.forEach((actor: any) => {
-            ((actor[k] as unknown) as () => void).apply(actor, (arguments as unknown) as [])
-          })
+        this.constructor.prototype[k] = (...args: []) => {
+          this.subscriptions.forEach((actor: any) => actor[k].apply(actor, args))
         }
       })
   }

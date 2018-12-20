@@ -26,24 +26,23 @@ export default class ActorSystem implements IProcessor {
     return new ActorSystem(ActorSystemConfigurationBuilder.define().done())
   }
 
-  public readonly requirements: [string] = ['default']
+  public readonly requirements: string[] = ['default']
+  private readonly actors: Map<string, Actor> = new Map()
+  private readonly subscriptions: Map<string, string> = new Map()
   private readonly mailbox: Mailbox<ActorMessage>
   private readonly fiber: Fiber
-  private readonly actors: Map<string, Actor>
-  private readonly subscriptions: Map<string, string>
   private readonly materializer: IMaterializer
   private readonly resolver: IResolver
   private readonly supervisor: IActorSupervisor
 
   private constructor(configuration: IActorSystemConfiguration) {
-    this.mailbox = configuration.mailbox
-    this.fiber = Fiber.with({ resources: configuration.resources, tickInterval: configuration.tickInterval })
+    const { mailbox, resources, tickInterval, materializer, resolver, supervisor } = configuration
+    this.mailbox = mailbox
+    this.materializer = materializer
+    this.resolver = resolver
+    this.supervisor = supervisor
+    this.fiber = Fiber.with({ resources, tickInterval })
     this.fiber.acquire(this)
-    this.actors = new Map()
-    this.subscriptions = new Map()
-    this.materializer = configuration.materializer
-    this.resolver = configuration.resolver
-    this.supervisor = configuration.supervisor
   }
 
   public async process(): Promise<void> {

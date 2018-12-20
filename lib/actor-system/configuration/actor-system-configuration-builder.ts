@@ -22,7 +22,7 @@ export default class ActorSystemConfigurationBuilder {
 
   public materializer: IMaterializer = new NoopMaterializer()
   public resolver: IResolver = new NoopResolver()
-  public resources: [string] = ['default']
+  public resources: string[] = ['default']
   public tickInterval: number = 1
   public mailbox: Mailbox<ActorMessage> = Mailbox.empty()
   public supervisor: IActorSupervisor = new NoopActorSupervisor()
@@ -58,6 +58,6 @@ export default class ActorSystemConfigurationBuilder {
   }
 
   public done(): ActorSystemConfiguration {
-    return this as ActorSystemConfiguration
+    return this
   }
 }

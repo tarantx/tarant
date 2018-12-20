@@ -8,7 +8,7 @@
 import IProcessor from './processor'
 
 interface IFiberConfiguration {
-  resources: [string]
+  resources: string[]
   tickInterval: number
 }
 

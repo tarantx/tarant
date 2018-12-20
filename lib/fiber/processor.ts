@@ -6,6 +6,6 @@
  */
 
 export default interface IProcessor {
-  requirements: [string]
+  requirements: string[]
   process(): void
 }

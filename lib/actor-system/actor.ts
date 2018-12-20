@@ -18,23 +18,17 @@ type Cancellable = string
 
 export default abstract class Actor implements ISubscriber<ActorMessage>, IActorSupervisor {
   public readonly id: string
-  public readonly partitions: [string]
-  protected readonly self: this
-  protected readonly system: ActorSystem
-  private readonly materializer: IMaterializer
-  private readonly supervisor: IActorSupervisor
-  private readonly scheduleds: Map<Cancellable, number>
-  private busy: boolean
+  public readonly partitions: string[]
+  protected readonly self: this = this
+  protected readonly system?: ActorSystem
+  private readonly materializer?: IMaterializer
+  private readonly supervisor?: IActorSupervisor
+  private readonly scheduled: Map<Cancellable, number> = new Map()
+  private busy: boolean = false
 
   protected constructor(id?: string) {
     this.id = id || uuid()
     this.partitions = [this.id]
-    this.busy = false
-    this.self = this
-    this.system = (null as unknown) as ActorSystem
-    this.materializer = (null as unknown) as IMaterializer
-    this.supervisor = (null as unknown) as IActorSupervisor
-    this.scheduleds = new Map()
   }
 
   public async onReceiveMessage(message: Message<ActorMessage>): Promise<boolean> {
@@ -46,13 +40,13 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
 
     const actorMessage = message.content
     try {
-      this.materializer.onBeforeMessage(this, actorMessage)
+      this.materializer!.onBeforeMessage(this, actorMessage)
       const result = await this.dispatchAndPromisify(actorMessage)
 
       actorMessage.resolve(result)
     } catch (ex) {
-      this.materializer.onError(this, actorMessage, ex)
-      const strategy = await this.supervisor.supervise(this.self, ex, actorMessage)
+      this.materializer!.onError(this, actorMessage, ex)
+      const strategy = await this.supervisor!.supervise(this.self, ex, actorMessage)
 
       if (strategy === 'drop-message') {
         actorMessage.reject(ex)
@@ -65,56 +59,51 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
       }
     } finally {
       this.busy = false
-      this.materializer.onAfterMessage(this, actorMessage)
+      this.materializer!.onAfterMessage(this, actorMessage)
     }
 
     return true
   }
 
   public supervise(actor: Actor, exception: any, message: any): SupervisionResponse {
-    return this.supervisor.supervise(actor, exception, message)
+    return this.supervisor!.supervise(actor, exception, message)
   }
 
   protected schedule(interval: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
     const id = uuid()
-    this.scheduleds.set(id, (setInterval(() => fn.apply(this, values), interval) as unknown) as number)
+    this.scheduled.set(id, setInterval(() => fn.apply(this, values), interval) as any)
     return id
   }
 
   protected scheduleOnce(timeout: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
     const id = uuid()
-    this.scheduleds.set(id, (setTimeout(() => {
+    this.scheduled.set(id, setTimeout(() => {
       fn.apply(this, values)
-      this.scheduleds.delete(id)
-    }, timeout) as unknown) as number)
+      this.scheduled.delete(id)
+    }, timeout) as any)
 
     return id
   }
 
   protected cancel(cancellable: Cancellable): void {
-    const id = this.scheduleds.get(cancellable)
+    const id = this.scheduled.get(cancellable)
     clearTimeout(id)
     clearInterval(id)
 
-    this.scheduleds.delete(cancellable)
+    this.scheduled.delete(cancellable)
   }
 
   protected actorOf<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
-    const actor = this.system.actorOf(classFn, values)
-    const unsafeActor = actor as any
-    unsafeActor.ref.supervisor = this
-
+    const actor = this.system!.actorOf(classFn, values) as any
+    actor.ref.supervisor = this
     return actor
   }
 
   private dispatchAndPromisify(actorMessage: ActorMessage): Promise<any> {
     try {
-      const r: any = (this as any).constructor.prototype[actorMessage.methodName].apply(
-        this,
-        (actorMessage.arguments as unknown) as any[],
-      )
+      const r: any = this.constructor.prototype[actorMessage.methodName].apply(this, actorMessage.arguments)
       if (r && r.then && r.catch) {
-        return r as Promise<any>
+        return r
       } else {
         return Promise.resolve(r)
       }

@@ -15,27 +15,24 @@ export default class ActorProxy {
     mailbox: Mailbox<ActorMessage>,
     actorId: string,
     methodName: string,
-    args: IArguments,
+    args: any[],
   ): Promise<object> {
     return new Promise((resolve, reject) => {
-      mailbox.push(Message.of(actorId, ActorMessage.of(methodName, (args as unknown) as any[], resolve, reject)))
+      mailbox.push(Message.of(actorId, ActorMessage.of(methodName, args, resolve, reject)))
     })
   }
 
-  public static of<T extends Actor, M>(mailbox: Mailbox<ActorMessage>, actor: T): T {
-    const props = Object.getOwnPropertyNames((actor as any).constructor.prototype)
+  public static of<T extends Actor>(mailbox: Mailbox<ActorMessage>, actor: T): T {
+    const props = Object.getOwnPropertyNames(actor.constructor.prototype)
 
-    return (props
+    return props
       .filter(e => e !== 'constructor')
       .map(
-        member =>
-          [
-            member,
-            function() {
-              return ActorProxy.sendAndReturn(mailbox, actor.id, member, arguments)
-            },
-          ] as [string, any],
+        (member): [string, any] => [
+          member,
+          (...args: any[]): any => ActorProxy.sendAndReturn(mailbox, actor.id, member, args),
+        ],
       )
-      .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor }) as unknown) as T
+      .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor }) as any
   }
 }

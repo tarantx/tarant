@@ -11,7 +11,7 @@ import Partition from '../../lib/mailbox/partition'
 import ISubscriber from '../../lib/mailbox/subscriber'
 
 interface IMessageHolder {
-  messages: [object]
+  messages: object[]
 }
 
 describe('Mailbox', () => {
@@ -45,7 +45,7 @@ describe('Mailbox', () => {
 })
 
 function dummySubscriber(partition: Partition): ISubscriber<object> & IMessageHolder {
-  const messages: [object] = ([] as unknown) as [object]
+  const messages: object[] = []
 
   return {
     messages,
