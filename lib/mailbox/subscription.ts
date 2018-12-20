@@ -23,7 +23,7 @@ export default class Subscription<T> {
     const message = this.messages[0]
     if (message) {
       if (await this.subscriber.onReceiveMessage(message)) {
-        this.messages.pop()
+        this.messages.splice(0, 1)
       }
     }
   }

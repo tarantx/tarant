@@ -107,13 +107,13 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
     return actor
   }
 
-  private async dispatchAndPromisify(actorMessage: ActorMessage): Promise<any> {
+  private dispatchAndPromisify(actorMessage: ActorMessage): Promise<any> {
     try {
-      const r: any = (this as any)[actorMessage.methodName](...actorMessage.arguments)
+      const r: any = (this as any).constructor.prototype[actorMessage.methodName].apply(this, actorMessage.arguments as unknown as any[])
       if (r && r.then && r.catch) {
-        return await (r as Promise<any>)
+        return (r as Promise<any>)
       } else {
-        return r
+        return Promise.resolve(r)
       }
     } catch (ex) {
       return Promise.reject(ex)

@@ -33,7 +33,8 @@ implicit persistence or rendering of actors.
 ### Showcase
 * [Actors support asynchronous messaging](./examples/ping-pong.js) and answering through Promises. Slow actors will not block fast actors.
 * [Actors can schedule tasks](./examples/scheduleds.js) for interval or one-shot delayed actions.
-* [Actors are safe and can be recovered with a supervisor](./examples/supervisor.js)
+* [Actors are safe and can be recovered with a supervisor](./examples/supervisor.js).
+* [Actors can subscribe in a topic in a type-safe way](./examples/pubsub.js) for extensible communication.
 
 ## Quick start
 

@@ -10,8 +10,9 @@ import Message from '../mailbox/message'
 import Actor from './actor'
 import ActorMessage from './actor-message'
 
-function sendAndReturn(
-  mailbox: Mailbox<ActorMessage>,
+export default class ActorProxy {
+  public static sendAndReturn(
+    mailbox: Mailbox<ActorMessage>,
   actorId: string,
   methodName: string,
   args: IArguments,
@@ -21,7 +22,6 @@ function sendAndReturn(
   })
 }
 
-export default class ActorProxy {
   public static of<T extends Actor, M>(mailbox: Mailbox<ActorMessage>, actor: T): T {
     const props = Object.getOwnPropertyNames((actor as any).constructor.prototype)
 
@@ -32,7 +32,7 @@ export default class ActorProxy {
           [
             member,
             function() {
-              return sendAndReturn(mailbox, actor.id, member, arguments)
+              return ActorProxy.sendAndReturn(mailbox, actor.id, member, arguments)
             },
           ] as [string, any],
       )

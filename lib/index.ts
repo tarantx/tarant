@@ -8,5 +8,6 @@
 import Actor from './actor-system/actor'
 import ActorSystem from './actor-system/actor-system'
 import ActorSystemConfigurationBuilder from './actor-system/configuration/actor-system-configuration-builder'
+import Topic from './pubsub/topic';
 
-export { Actor, ActorSystem, ActorSystemConfigurationBuilder }
+export { Actor, ActorSystem, ActorSystemConfigurationBuilder, Topic }
