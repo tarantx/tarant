@@ -7,7 +7,7 @@
 
 import Mailbox from '../../lib/mailbox/mailbox'
 import Message from '../../lib/mailbox/message'
-import Partition from '../../lib/mailbox/Partition'
+import Partition from '../../lib/mailbox/partition'
 import ISubscriber from '../../lib/mailbox/subscriber'
 
 interface IMessageHolder {
