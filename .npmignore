@@ -9,3 +9,4 @@ jestconfig.json
 README.md
 tsconfig.json
 tslint.json
+coverage
