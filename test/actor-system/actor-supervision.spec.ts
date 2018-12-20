@@ -34,17 +34,12 @@ describe('Actor System Supervision', () => {
     const subscription = unsafeSystem.subscriptions.get(actor.ref.id) as string
     const partitions = unsafeSystem.mailbox.subscribedPartitions[subscription] as [string]
 
-    return partitions
-      .reduce((prev : ActorMessage[], cur: string) : ActorMessage[] => {
-        return unsafeSystem.mailbox.subscriptions[cur]
-          .filter((managedSub: any) => managedSub.id === subscription)
-          .map((managedSub: any) : ActorMessage[] => managedSub.messages)
-          .concat(prev)
-      }, [])
-      // .reduce((par: ActorMessage[], agg: ActorMessage[]): ActorMessage[] => {
-      //   let a = agg.concat(par)
-      //   return a
-      // }, [])
+    return partitions.reduce((prev: ActorMessage[], cur: string): ActorMessage[] => {
+      return unsafeSystem.mailbox.subscriptions[cur]
+        .filter((managedSub: any) => managedSub.id === subscription)
+        .map((managedSub: any): ActorMessage[] => managedSub.messages)
+        .concat(prev)
+    }, [])
   }
 
   afterEach(() => {
