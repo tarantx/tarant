@@ -10,6 +10,6 @@ import IResolver from './resolver'
 
 export default class NoopResolver implements IResolver {
   public async resolveActorById(id: string): Promise<Actor | undefined> {
-    return undefined
+    return Promise.resolve(undefined)
   }
 }

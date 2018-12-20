@@ -20,21 +20,12 @@ export default class ActorSystemConfigurationBuilder {
     return new ActorSystemConfigurationBuilder()
   }
 
-  public materializer: IMaterializer
-  public resolver: IResolver
-  public resources: [string]
-  public tickInterval: number
-  public mailbox: Mailbox<ActorMessage>
-  public supervisor: IActorSupervisor
-
-  private constructor() {
-    this.materializer = new NoopMaterializer()
-    this.resolver = new NoopResolver()
-    this.resources = ['default']
-    this.tickInterval = 1
-    this.mailbox = Mailbox.empty()
-    this.supervisor = new NoopActorSupervisor()
-  }
+  public materializer: IMaterializer = new NoopMaterializer()
+  public resolver: IResolver = new NoopResolver()
+  public resources: [string] = ['default']
+  public tickInterval: number = 1
+  public mailbox: Mailbox<ActorMessage> = Mailbox.empty()
+  public supervisor: IActorSupervisor = new NoopActorSupervisor()
 
   public withMaterializer(materializer: IMaterializer): ActorSystemConfigurationBuilder {
     this.materializer = materializer
