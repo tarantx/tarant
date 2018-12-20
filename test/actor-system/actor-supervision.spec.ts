@@ -29,19 +29,22 @@ describe('Actor System Supervision', () => {
     )
   })
 
-  const messagesForActor = (actor: any): [ActorMessage] => {
+  const messagesForActor = (actor: any): ActorMessage[] => {
     const unsafeSystem = actorSystem as any
     const subscription = unsafeSystem.subscriptions.get(actor.ref.id) as string
     const partitions = unsafeSystem.mailbox.subscribedPartitions[subscription] as [string]
 
     return partitions
-      .reduce((prev, cur) => {
+      .reduce((prev : ActorMessage[], cur: string) : ActorMessage[] => {
         return unsafeSystem.mailbox.subscriptions[cur]
           .filter((managedSub: any) => managedSub.id === subscription)
-          .map((managedSub: any) => managedSub.messages)
+          .map((managedSub: any) : ActorMessage[] => managedSub.messages)
           .concat(prev)
       }, [])
-      .reduce((par: [], agg: []) => agg.concat(par), [])
+      // .reduce((par: ActorMessage[], agg: ActorMessage[]): ActorMessage[] => {
+      //   let a = agg.concat(par)
+      //   return a
+      // }, [])
   }
 
   afterEach(() => {
