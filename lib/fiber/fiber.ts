@@ -17,20 +17,20 @@ export default class Fiber {
     return new Fiber(config)
   }
 
-  public readonly name: string
   private readonly configuration: IFiberConfiguration
-  private readonly interval: any
-  private readonly processors: IProcessor[]
+  public readonly name: string
+  private readonly timerId: NodeJS.Timer
+  private readonly processors: IProcessor[] = []
 
   private constructor(configuration: IFiberConfiguration) {
-    this.name = 'fiber-with' + configuration.resources.reduce((aggr, current) => aggr + '-' + current, '')
+    const {resources, tickInterval} = configuration
     this.configuration = configuration
-    this.interval = setInterval(this.tick.bind(this), this.configuration.tickInterval)
-    this.processors = []
+    this.name = `fiber-with${resources.reduce((aggregation, current) => `${aggregation}-${current}`, '')}`
+    this.timerId = setInterval(this.tick.bind(this), tickInterval)
   }
 
   public free(): void {
-    clearInterval(this.interval)
+    clearInterval(this.timerId)
   }
 
   public acquire(processor: IProcessor): boolean {

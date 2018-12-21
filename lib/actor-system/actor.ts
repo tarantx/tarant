@@ -23,7 +23,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   protected readonly system?: ActorSystem
   private readonly materializer?: IMaterializer
   private readonly supervisor?: IActorSupervisor
-  private readonly scheduled: Map<Cancellable, number> = new Map()
+  private readonly scheduled: Map<Cancellable, NodeJS.Timer> = new Map()
   private busy: boolean = false
 
   protected constructor(id?: string) {
@@ -71,7 +71,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
 
   protected schedule(interval: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
     const id = uuid()
-    this.scheduled.set(id, setInterval(() => fn.apply(this, values), interval) as any)
+    this.scheduled.set(id, setInterval(() => fn.apply(this, values), interval))
     return id
   }
 
@@ -80,13 +80,13 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
     this.scheduled.set(id, setTimeout(() => {
       fn.apply(this, values)
       this.scheduled.delete(id)
-    }, timeout) as any)
+    }, timeout))
 
     return id
   }
 
   protected cancel(cancellable: Cancellable): void {
-    const id = this.scheduled.get(cancellable)
+    const id = this.scheduled.get(cancellable) as NodeJS.Timer
     clearTimeout(id)
     clearInterval(id)
 
