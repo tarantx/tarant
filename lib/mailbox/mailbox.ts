@@ -46,7 +46,9 @@ export default class Mailbox<T> {
 
   public async poll(subscription: string): Promise<void> {
     const partitions = this.subscribedPartitions[subscription]
-    if (!partitions) { return }
+    if (!partitions) {
+      return
+    }
 
     partitions.forEach(partition =>
       this.subscriptions[partition]
