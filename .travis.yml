@@ -10,8 +10,7 @@ deploy:
   skip_cleanup: true
   provider: npm
   email: $NPM_EMAIL
-  api_key:
-    secure: Zh+L5CbH5L+wZgcFRnEhbcc025WGyVsLxF4Sc0UIuMcGan2b+TS/e21Td0mo0bJq+SAj58rPL2YtYBtIiZz9xLpXYms6LS4YWk9Y/92/sWe9etr4tVCfzatnykb/8HYtO6pc6DuoXYoJpvF8pmEvV2mQI3EDs2umKRMOu2BuxgB69GsjbUeV6ATnATzBOflyQBPWgXbDeoeySZA9ChSWqK1Ui4eiTm/+DG6OjNU0QEwVahGUabIjfqzHlOoHu162Y2EpVZW0WwDWAMgTgYlEXzDVSo0bPcgToR7bUtndtWI7w8HEtB9RG5/1az51kNRfiAP0A2INqQatWLIzy7A8ABwKSdLt8MbDjISYSbwkikBL49VSM46oEBBVKcA66iUpi37j089r+teMldoCmbKJDRHe0VD75lXY+t8+F1c60mDeTJTENh8f9Litj+SnNcO+Gz3bEzwcYYsIqIrEzB89tPikBkbkcu8iAK7S6VeqoquiEsc8ZYZTVVtJxwnyD4/ruAcx6PjRpGTEz30PRMT7S2zO+k9WFL13g6LgxK8j5dgCEA1u6lyF4VlyVoHTICMdGgl9D7rIjQwDWL/t42h9aG31usv0QRvNUwiZ7st8m5amb/O0f22gkeYrAinZAmX77ILyzsnTZh8eaNjxKjbTDVmgL0jxM6i4Sz3aI87Vguo=
+  api_key: $NPM_TOKEN
   on:
     tags: true
   
