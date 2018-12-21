@@ -77,10 +77,13 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
 
   protected scheduleOnce(timeout: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
     const id = uuid()
-    this.scheduled.set(id, setTimeout(() => {
-      fn.apply(this, values)
-      this.scheduled.delete(id)
-    }, timeout))
+    this.scheduled.set(
+      id,
+      setTimeout(() => {
+        fn.apply(this, values)
+        this.scheduled.delete(id)
+      }, timeout),
+    )
 
     return id
   }

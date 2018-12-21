@@ -16,7 +16,7 @@ export default class Mailbox<T> {
   }
 
   private readonly subscribedPartitions: { [subscription: string]: string[] } = {}
-  private readonly subscriptions: { [partition: string]: Subscription<T>[] } = {}
+  private readonly subscriptions: { [partition: string]: Array<Subscription<T>> } = {}
 
   public addSubscriber(subscriber: ISubscriber<T>): string {
     const id = uuid()
@@ -46,13 +46,12 @@ export default class Mailbox<T> {
 
   public async poll(subscription: string): Promise<void> {
     const partitions = this.subscribedPartitions[subscription]
-    if (!partitions)
-      return
+    if (!partitions) { return }
 
     partitions.forEach(partition =>
       this.subscriptions[partition]
         .filter(managedSubscription => managedSubscription.id === subscription)
-        .forEach(async managedSubscription => await managedSubscription.process())
+        .forEach(async managedSubscription => await managedSubscription.process()),
     )
   }
 }
