@@ -87,6 +87,6 @@ export default class ActorSystem implements IProcessor {
     instance.system = this
     instance.materializer = this.materializer
     instance.supervisor = this.supervisor
-    this.materializer.onInitialize(instance)
+    instance.initialized()
   }
 }

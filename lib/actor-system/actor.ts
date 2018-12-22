@@ -114,4 +114,8 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
       return Promise.reject(ex)
     }
   }
+
+  private initialized(): void {
+    this.materializer!.onInitialize(this)
+  }
 }
