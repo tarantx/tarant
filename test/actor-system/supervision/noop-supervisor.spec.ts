@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import NoopSupervisor from '../../../lib/actor-system/supervision/noop-supervisor'
 import { Actor } from '../../../lib'
+import NoopSupervisor from '../../../lib/actor-system/supervision/noop-supervisor'
 
 class FakeActor extends Actor {
   constructor() {
