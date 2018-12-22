@@ -1,22 +1,45 @@
 let { Actor, ActorSystem, Topic } = require('../dist/index')
 
-class SomeActor extends Actor {
+class SpeakingActor extends Actor {
     constructor(idx) {
-        super("" + idx)
+        super(idx)
     }
 
-    thisCanBeAnyMethod(message) {
-        console.log(this.id, message)
+    say(message) {}
+}
+
+class HappyActor extends SpeakingActor {
+    constructor(idx) {
+        super(`happy-${idx}`)
+    }
+
+    say(message) {
+        console.log(this.id, message, ":D")
     }
 }
+
+class SadActor extends SpeakingActor {
+    constructor(idx) {
+        super(`Sad-${idx}`)
+    }
+
+    say(message) {
+        console.log(this.id, message, ":(")
+    }
+}
+
 let system = ActorSystem.default()
-let topic = Topic.for(system, "my-topic", SomeActor)
+let topic = Topic.for(system, "my-topic", SpeakingActor)
 
 for (let i = 0; i < 100; i++) {
-    topic.subscribe(system.actorOf(SomeActor, [i]))
+    if (i % 2 === 0) {
+        topic.subscribe(system.actorOf(HappyActor, [i]))
+    } else {
+        topic.subscribe(system.actorOf(SadActor, [i]))
+    }
 }
 
-topic.thisCanBeAnyMethod("Hey!")
+topic.say("Hi")
 
 setTimeout(() => {
     system.free()
