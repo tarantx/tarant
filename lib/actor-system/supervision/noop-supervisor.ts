@@ -7,10 +7,10 @@
 
 import { Actor } from '../..'
 import IActorSupervisor from './actor-supervisor'
-import { SupervisionResponse } from './actor-supervisor'
+import { SupervisionStrategies } from './actor-supervisor'
 
 export default class NoopActorSupervisor implements IActorSupervisor {
-  public supervise(actor: Actor, exception: any, message: any): SupervisionResponse {
+  public supervise(actor: Actor, exception: any, message: any): SupervisionStrategies {
     return 'drop-message'
   }
 }

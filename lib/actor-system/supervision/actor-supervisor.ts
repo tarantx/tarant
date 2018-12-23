@@ -7,8 +7,8 @@
 
 import { Actor } from '../..'
 
-export type SupervisionResponse = 'drop-message' | 'retry-message' | 'kill-actor'
+export type SupervisionStrategies = 'drop-message' | 'retry-message' | 'kill-actor'
 
 export default interface IActorSupervisor {
-  supervise(actor: Actor, exception: any, message: any): SupervisionResponse
+  supervise(actor: Actor, exception: any, message: any): SupervisionStrategies
 }

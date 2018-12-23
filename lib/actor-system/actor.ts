@@ -12,7 +12,7 @@ import ActorSystem from './actor-system'
 import IMaterializer from './materializer/materializer'
 
 import { v4 as uuid } from 'uuid'
-import IActorSupervisor, { SupervisionResponse } from './supervision/actor-supervisor'
+import IActorSupervisor, { SupervisionStrategies } from './supervision/actor-supervisor'
 
 type Cancellable = string
 
@@ -65,7 +65,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
     return true
   }
 
-  public supervise(actor: Actor, exception: any, message: any): SupervisionResponse {
+  public supervise(actor: Actor, exception: any, message: any): SupervisionStrategies {
     return this.supervisor!.supervise(actor, exception, message)
   }
 
