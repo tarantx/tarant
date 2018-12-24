@@ -7,7 +7,7 @@
 
 import { v4 as uuid } from 'uuid'
 import Actor from '../../../lib/actor-system/actor'
-import IActorSupervisor, { SupervisionResponse } from '../../../lib/actor-system/supervision/actor-supervisor'
+import IActorSupervisor, { SupervisionStrategies } from '../../../lib/actor-system/supervision/actor-supervisor'
 import FailingActor from './failing-actor'
 
 export default class ParentOfFailingActorActor extends Actor {
@@ -18,7 +18,7 @@ export default class ParentOfFailingActorActor extends Actor {
     this.customSupervisor = supervisor
   }
 
-  public supervise(actor: Actor, exception: any, message: any): SupervisionResponse {
+  public supervise(actor: Actor, exception: any, message: any): SupervisionStrategies {
     return this.customSupervisor.supervise(actor, exception, message)
   }
 
