@@ -14,3 +14,4 @@ export { default as IMaterializer } from './actor-system/materializer/materializ
 export { default as IResolver } from './actor-system/resolver/resolver'
 export { default as IActorSupervisor, SupervisionStrategies } from './actor-system/supervision/actor-supervisor'
 export { default as Topic } from './pubsub/topic'
+export {default as ActorMessage } from './actor-system/actor-message'
