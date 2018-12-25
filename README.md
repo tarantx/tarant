@@ -1,4 +1,4 @@
-# ![logomakr_8cwvt1](https://user-images.githubusercontent.com/3071208/42311453-254a1474-803e-11e8-957a-5c1c8d157b31.png)
+# ![logomakr_7yenvo](https://user-images.githubusercontent.com/3071208/50427408-f7e54a00-086c-11e9-8fb6-43506ad4d454.png)
 [![npm](https://img.shields.io/npm/v/@wind-js/actor.svg)](https://www.npmjs.com/package/@wind-js/actor)
 [![Build Status](https://travis-ci.org/wind-js/actor.svg?branch=master)](https://travis-ci.org/@wind-js/actor)
 [![Coverage Status](https://coveralls.io/repos/github/wind-js/actor/badge.svg?branch=master)](https://coveralls.io/github/@wind-js/actor?branch=master)
@@ -86,6 +86,4 @@ project and ordinary requirements for PRs and issues are also a requirement.
 If you want to be a long-term contributor and participate actively on the design of new features on the project, contact
 us! Check the package.json to see who you need to contact.
 
-### Logo
-Player graphic by <a href="http://www.flaticon.com/authors/pixel-perfect">pixel_perfect</a> from <a href="http://www.flaticon.com/">Flaticon</a> is licensed under <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>. Check out the new logo that I created on <a href="http://logomakr.com" title="Logo Makr">LogoMakr.com</a> https://logomakr.com/8CWVt1
-0
+##### Created my free [logo](https://logomakr.com/43ipOz) at <a href="http://logomakr.com" title="Logo Makr">LogoMakr.com</a> 
