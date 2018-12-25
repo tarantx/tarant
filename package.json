@@ -1,6 +1,6 @@
 {
   "name": "@wind-js/actor",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "Actor model for reactive and scalable applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
