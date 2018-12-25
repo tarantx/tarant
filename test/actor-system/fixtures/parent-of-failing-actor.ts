@@ -8,7 +8,7 @@
 import Actor from '../../../lib/actor-system/actor'
 import IActorSupervisor, { SupervisionStrategies } from '../../../lib/actor-system/supervision/actor-supervisor'
 import FailingActor from './failing-actor'
-import uuid from '../../../lib/uuid'
+import uuid from '../../../lib/helper/uuid'
 
 export default class ParentOfFailingActorActor extends Actor {
   private readonly customSupervisor: IActorSupervisor

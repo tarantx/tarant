@@ -6,7 +6,7 @@
  */
 
 import Actor from '../../../lib/actor-system/actor'
-import uuid from '../../../lib/uuid'
+import uuid from '../../../lib/helper/uuid'
 
 export default class FailingActor extends Actor {
   private readonly exceptionToThrow: any
