@@ -1,5 +1,5 @@
 {
-  "name": "@wind-js/actor",
+  "name": "tarant",
   "version": "2.1.7",
   "description": "Actor model for reactive and scalable applications.",
   "main": "dist/index.js",
