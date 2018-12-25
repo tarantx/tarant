@@ -5,7 +5,8 @@
     "declaration": true,
     "outDir": "./dist",
     "strict": true,
-    "lib": ["es6"]
+    "lib": ["es6"],
+    "importHelpers": true
   },
   "include": ["lib"],
   "exclude": ["node_modules", "**/test/*"]
