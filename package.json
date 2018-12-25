@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/faker": "4.1.4",
     "@types/jest": "23.3.10",
-    "@types/uuid": "3.4.4",
+    "@types/node": "10.12.18",
     "coveralls": "3.0.2",
     "faker": "4.1.0",
     "jest": "23.6.0",
@@ -40,9 +40,7 @@
     "tslint-config-prettier": "1.17.0",
     "typescript": "3.2.2"
   },
-  "dependencies": {
-    "uuid": "3.3.2"
-  },
+  "dependencies": {},
   "jest": {
     "preset": "ts-jest"
   }

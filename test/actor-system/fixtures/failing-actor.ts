@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { v4 as uuid } from 'uuid'
 import Actor from '../../../lib/actor-system/actor'
+import uuid from '../../../lib/uuid'
 
 export default class FailingActor extends Actor {
   private readonly exceptionToThrow: any

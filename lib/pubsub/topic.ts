@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { v4 as uuid } from 'uuid'
 import Actor from '../actor-system/actor'
 import ActorSystem from '../actor-system/actor-system'
+import uuid from '../helper/uuid'
 
 type TopicSeenAs<T> = T & Topic<T>
 

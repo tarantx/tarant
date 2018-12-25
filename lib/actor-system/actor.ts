@@ -11,7 +11,7 @@ import ActorMessage from './actor-message'
 import ActorSystem from './actor-system'
 import IMaterializer from './materializer/materializer'
 
-import { v4 as uuid } from 'uuid'
+import uuid from '../helper/uuid'
 import IActorSupervisor, { SupervisionStrategies } from './supervision/actor-supervisor'
 
 type Cancellable = string

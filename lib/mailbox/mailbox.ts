@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { v4 as uuid } from 'uuid'
+import uuid from '../helper/uuid'
 import Message from './message'
 import ISubscriber from './subscriber'
 import Subscription from './subscription'
