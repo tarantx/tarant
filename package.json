@@ -32,6 +32,7 @@
     "Kevin Mas Ruiz <masruizkevin@gmail.com>",
     "Kanekotic <alvarojosepl@gmail.com>"
   ],
+  "repository": "git@github.com:tarantx/tarant.git",
   "license": "MIT",
   "devDependencies": {
     "@types/faker": "4.1.4",
