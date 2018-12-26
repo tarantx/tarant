@@ -1,13 +1,13 @@
 # ![logomakr_7yenvo](https://user-images.githubusercontent.com/3071208/50427408-f7e54a00-086c-11e9-8fb6-43506ad4d454.png)
-[![npm](https://img.shields.io/npm/v/@wind-js/actor.svg)](https://www.npmjs.com/package/@wind-js/actor)
-[![Build Status](https://travis-ci.org/wind-js/actor.svg?branch=master)](https://travis-ci.org/@wind-js/actor)
-[![Coverage Status](https://coveralls.io/repos/github/wind-js/actor/badge.svg?branch=master)](https://coveralls.io/github/@wind-js/actor?branch=master)
+[![npm](https://img.shields.io/npm/v/tarant.svg)](https://www.npmjs.com/package/tarant)
+[![Build Status](https://travis-ci.org/tarantx/tarant.svg?branch=master)](https://travis-ci.org/tarantx/tarant)
+[![Coverage Status](https://coveralls.io/repos/github/tarantx/tarant/badge.svg?branch=master)](https://coveralls.io/github/tarantx/tarant?branch=master)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![issues Welcome](https://img.shields.io/badge/issues-welcome-brightgreen.svg)
-![npm](https://img.shields.io/npm/l/@wind-js/actor.svg)
-![GitHub issues](https://img.shields.io/github/issues/wind-js/actor.svg)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/wind-js/actor.svg)
-![Downloads](https://img.shields.io/npm/dt/@wind-js/actor.svg)
+![npm](https://img.shields.io/npm/l/tarant.svg)
+![GitHub issues](https://img.shields.io/github/issues/tarantx/tarant.svg)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/tarantx/tarant.svg)
+![Downloads](https://img.shields.io/npm/dt/tarant.svg)
 
 Wind.js is a TypeScript/JavaScript library for building software using the actor system model.
 
@@ -41,12 +41,12 @@ implicit persistence or rendering of actors.
 Creating your first actor system is easy and you don't need to understand everything that is happening under the hood.
 First you must install the package:
 
-`npm install @wind-js/actor --save`
+`npm install tarant --save`
 
 Then create your first ActorSystem
 
 ```js
-let { Actor, ActorSystem } = require('@wind-js/actor')
+let { Actor, ActorSystem } = require('tarant')
 let system = ActorSystem.default()
 ```
 

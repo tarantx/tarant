@@ -7,6 +7,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "actor system",
+    "actor",
+    "DDD",
+    "actor-system"
+  ],
   "scripts": {
     "prepare": "yarn build",
     "build": "tsc",
