@@ -9,7 +9,7 @@
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/tarantx/tarant.svg)
 ![Downloads](https://img.shields.io/npm/dt/tarant.svg)
 
-Wind.js is a TypeScript/JavaScript library for building software using the actor system model.
+Tarant is a TypeScript/JavaScript library for building software using the actor system model.
 
 * **Actors are easy to reason about**: An actor is the unit of state and logic of your application.
 They are transactional, so you don't need to handle state rollbacks in case of errors.
@@ -19,7 +19,7 @@ composed and injected.
 
 ## Features
 
-Wind.js implements a rich set of features that makes it suitable for building complex applications.
+Tarant implements a rich set of features that makes it suitable for building complex applications.
 
 * Actors are reliable because they are transactional. You don't need to bother yourself with error recovery.
 * Actors are performant, as they are pull-based and decoupled from other actors lifecycle.
