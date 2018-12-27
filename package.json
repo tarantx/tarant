@@ -14,7 +14,7 @@
     "actor-system"
   ],
   "scripts": {
-    "prepare": "yarn build",
+    "prepare": "yarn build && yarn build:cdn",
     "build": "tsc",
     "build:cdn": "yarn build && rollup -c",
     "format": "prettier --write \"**/*.ts\" && tslint -p tsconfig.json --fix lib/**/*.ts -t verbose",
