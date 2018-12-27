@@ -4,6 +4,7 @@
   "description": "Actor model for reactive and scalable applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "homepage": "https://www.tarant.io/",
   "publishConfig": {
     "access": "public"
   },
@@ -11,7 +12,10 @@
     "actor system",
     "actor",
     "DDD",
-    "actor-system"
+    "actor-system",
+    "reactive",
+    "async",
+    "asynchronous"
   ],
   "scripts": {
     "prepare": "yarn build && yarn build:cdn",
