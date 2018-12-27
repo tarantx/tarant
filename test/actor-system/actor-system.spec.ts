@@ -11,6 +11,8 @@ import IMaterializer from '../../lib/actor-system/materializer/materializer'
 import NamedActor from './fixtures/named-actor'
 import SemaphoreActor from './fixtures/semaphore-actor'
 import waitFor from './fixtures/wait-for'
+import IResolver from '../../lib/actor-system/resolver/resolver'
+import { Actor } from '../../lib'
 
 describe('Actor System', () => {
   jest.useFakeTimers()
@@ -18,6 +20,9 @@ describe('Actor System', () => {
   let actorSystem: ActorSystem
   let firstMaterializer: IMaterializer
   let secondMaterializer: IMaterializer
+
+  let firstResolver: IResolver<Actor>
+  let secondResolver: IResolver<Actor>
 
   beforeEach(() => {
     firstMaterializer = {
@@ -32,10 +37,17 @@ describe('Actor System', () => {
       onError: jest.fn(),
       onInitialize: jest.fn(),
     }
+    firstResolver = {
+      resolveActorById: jest.fn(),
+    }
+    secondResolver = {
+      resolveActorById: jest.fn(),
+    }
 
     actorSystem = ActorSystem.for(
       ActorSystemConfigurationBuilder.define()
         .withMaterializers([firstMaterializer, secondMaterializer])
+        .withResolvers([firstResolver, secondResolver])
         .done(),
     )
   })
@@ -58,6 +70,39 @@ describe('Actor System', () => {
     const name = await waitFor(() => foundActor.sayHi())
 
     expect(name).toStrictEqual('myName')
+  })
+
+  test('should get actor from first resolver if not local', async () => {
+    const mockedActor = new NamedActor('myName')
+    ;(firstResolver.resolveActorById as jest.Mock).mockImplementation(() => Promise.resolve(mockedActor))
+    ;(secondResolver.resolveActorById as jest.Mock).mockImplementation(() => Promise.reject())
+    const foundActor: NamedActor = (await actorSystem.actorFor('myName')) as NamedActor
+
+    const name = await waitFor(() => foundActor.sayHi())
+
+    expect(name).toBe('myName')
+  })
+
+  test('should get actor from second resolver if not local or in first resolver', async () => {
+    const mockedActor = new NamedActor('myName')
+    ;(firstResolver.resolveActorById as jest.Mock).mockImplementation(() => Promise.reject())
+    ;(secondResolver.resolveActorById as jest.Mock).mockImplementation(() => Promise.resolve(mockedActor))
+    const foundActor: NamedActor = (await actorSystem.actorFor('myName')) as NamedActor
+
+    const name = await waitFor(() => foundActor.sayHi())
+
+    expect(name).toBe('myName')
+  })
+
+  test('should reject if actor is not local or resolvable', async () => {
+    ;(firstResolver.resolveActorById as jest.Mock).mockImplementation(() => Promise.reject())
+    ;(secondResolver.resolveActorById as jest.Mock).mockImplementation(() => Promise.reject())
+    try {
+      await actorSystem.actorFor('myName')
+      fail('should have thrown an error')
+    } catch (err) {
+      expect(err).toEqual(`unable to resolve actor myName`)
+    }
   })
 
   test('should let actors process messages only once at a time', async () => {

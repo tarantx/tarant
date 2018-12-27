@@ -7,6 +7,6 @@
 
 import Actor from '../../actor-system/actor'
 
-export default interface IResolver {
-  resolveActorById(id: string): Promise<Actor | undefined>
+export default interface IResolver<T extends Actor> {
+  resolveActorById(id: string): Promise<T>
 }

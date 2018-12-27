@@ -32,14 +32,14 @@ export default class ActorSystem implements IProcessor {
   private readonly mailbox: Mailbox<ActorMessage>
   private readonly fiber: Fiber
   private readonly materializers: IMaterializer[]
-  private readonly resolver: IResolver
+  private readonly resolvers: Array<IResolver<Actor>>
   private readonly supervisor: IActorSupervisor
 
   private constructor(configuration: IActorSystemConfiguration) {
-    const { mailbox, resources, tickInterval, materializers, resolver, supervisor } = configuration
+    const { mailbox, resources, tickInterval, materializers, resolvers: resolvers, supervisor } = configuration
     this.mailbox = mailbox
     this.materializers = materializers
-    this.resolver = resolver
+    this.resolvers = resolvers
     this.supervisor = supervisor
     this.fiber = Fiber.with({ resources, tickInterval })
     this.fiber.acquire(this)
@@ -67,16 +67,23 @@ export default class ActorSystem implements IProcessor {
     return proxy
   }
 
-  public async actorFor<T extends Actor>(id: string): Promise<T | undefined> {
-    const instance = this.actors.get(id)
+  public async actorFor<T extends Actor>(id: string): Promise<T> {
+    let instance: T = this.actors.get(id) as T
     if (instance === undefined) {
-      const resolvedActor = await this.resolver.resolveActorById(id)
-      if (resolvedActor === undefined) {
-        return undefined
+      for (const resolver of this.resolvers) {
+        try {
+          instance = (await resolver.resolveActorById(id)) as T
+          break
+        } catch (_) {
+          //
+        }
+      }
+      if (instance === undefined) {
+        return Promise.reject(`unable to resolve actor ${id}`)
       }
 
-      this.actors.set(id, resolvedActor)
-      return ActorProxy.of(this.mailbox, resolvedActor as T)
+      this.actors.set(id, instance)
+      this.subscriptions.set(instance.id, this.mailbox.addSubscriber(instance))
     }
 
     return ActorProxy.of(this.mailbox, instance as T)
