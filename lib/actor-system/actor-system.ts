@@ -32,7 +32,7 @@ export default class ActorSystem implements IProcessor {
   private readonly mailbox: Mailbox<ActorMessage>
   private readonly fiber: Fiber
   private readonly materializers: IMaterializer[]
-  private readonly resolvers: Array<IResolver<Actor>>
+  private readonly resolvers: IResolver[]
   private readonly supervisor: IActorSupervisor
 
   private constructor(configuration: IActorSystemConfiguration) {

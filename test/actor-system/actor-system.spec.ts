@@ -12,7 +12,6 @@ import NamedActor from './fixtures/named-actor'
 import SemaphoreActor from './fixtures/semaphore-actor'
 import waitFor from './fixtures/wait-for'
 import IResolver from '../../lib/actor-system/resolver/resolver'
-import { Actor } from '../../lib'
 
 describe('Actor System', () => {
   jest.useFakeTimers()
@@ -21,8 +20,8 @@ describe('Actor System', () => {
   let firstMaterializer: IMaterializer
   let secondMaterializer: IMaterializer
 
-  let firstResolver: IResolver<Actor>
-  let secondResolver: IResolver<Actor>
+  let firstResolver: IResolver
+  let secondResolver: IResolver
 
   beforeEach(() => {
     firstMaterializer = {
