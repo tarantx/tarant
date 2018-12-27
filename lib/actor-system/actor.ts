@@ -21,7 +21,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   public readonly partitions: string[]
   protected readonly self: this = this
   protected readonly system?: ActorSystem
-  private readonly materializer?: IMaterializer
+  private readonly materializers: IMaterializer[] = []
   private readonly supervisor?: IActorSupervisor
   private readonly scheduled: Map<Cancellable, NodeJS.Timer> = new Map()
   private busy: boolean = false
@@ -40,12 +40,12 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
 
     const actorMessage = message.content
     try {
-      this.materializer!.onBeforeMessage(this, actorMessage)
+      this.materializers.forEach(materializer => materializer.onBeforeMessage(this, actorMessage))
       const result = await this.dispatchAndPromisify(actorMessage)
 
       actorMessage.resolve(result)
     } catch (ex) {
-      this.materializer!.onError(this, actorMessage, ex)
+      this.materializers.forEach(materializer => materializer.onError(this, actorMessage, ex))
       const strategy = await this.supervisor!.supervise(this.self, ex, actorMessage)
 
       if (strategy === 'drop-message') {
@@ -59,7 +59,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
       }
     } finally {
       this.busy = false
-      this.materializer!.onAfterMessage(this, actorMessage)
+      this.materializers.forEach(materializer => materializer.onAfterMessage(this, actorMessage))
     }
 
     return true
@@ -116,6 +116,6 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   }
 
   private initialized(): void {
-    this.materializer!.onInitialize(this)
+    this.materializers.forEach(materializer => materializer.onInitialize(this))
   }
 }

@@ -28,7 +28,7 @@ Tarant implements a rich set of features that makes it suitable for building com
 in a time machine, for further debugging and navigation.
 * The Actor System has an event bus. Actors can subscribe, publish and request messages from any topic and subscriptions
 can be handled at any time.
-* The Actor System is highly extensive. You can add your own supervisor and materializer to add new features like
+* The Actor System is highly extensive. You can add your own supervisor and materializers to add new features like
 implicit persistence or rendering of actors.
 
 ### Showcase

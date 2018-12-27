@@ -31,14 +31,14 @@ export default class ActorSystem implements IProcessor {
   private readonly subscriptions: Map<string, string> = new Map()
   private readonly mailbox: Mailbox<ActorMessage>
   private readonly fiber: Fiber
-  private readonly materializer: IMaterializer
+  private readonly materializers: IMaterializer[]
   private readonly resolver: IResolver
   private readonly supervisor: IActorSupervisor
 
   private constructor(configuration: IActorSystemConfiguration) {
-    const { mailbox, resources, tickInterval, materializer, resolver, supervisor } = configuration
+    const { mailbox, resources, tickInterval, materializers, resolver, supervisor } = configuration
     this.mailbox = mailbox
-    this.materializer = materializer
+    this.materializers = materializers
     this.resolver = resolver
     this.supervisor = supervisor
     this.fiber = Fiber.with({ resources, tickInterval })
@@ -85,7 +85,7 @@ export default class ActorSystem implements IProcessor {
   private setupInstance(instance: any, proxy: any): void {
     instance.self = proxy
     instance.system = this
-    instance.materializer = this.materializer
+    instance.materializers = this.materializers
     instance.supervisor = this.supervisor
     instance.initialized()
   }

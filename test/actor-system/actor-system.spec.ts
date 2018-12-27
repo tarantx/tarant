@@ -16,10 +16,17 @@ describe('Actor System', () => {
   jest.useFakeTimers()
 
   let actorSystem: ActorSystem
-  let materializer: IMaterializer
+  let firstMaterializer: IMaterializer
+  let secondMaterializer: IMaterializer
 
   beforeEach(() => {
-    materializer = {
+    firstMaterializer = {
+      onAfterMessage: jest.fn(),
+      onBeforeMessage: jest.fn(),
+      onError: jest.fn(),
+      onInitialize: jest.fn(),
+    }
+    secondMaterializer = {
       onAfterMessage: jest.fn(),
       onBeforeMessage: jest.fn(),
       onError: jest.fn(),
@@ -28,7 +35,7 @@ describe('Actor System', () => {
 
     actorSystem = ActorSystem.for(
       ActorSystemConfigurationBuilder.define()
-        .withMaterializer(materializer)
+        .withMaterializers([firstMaterializer, secondMaterializer])
         .done(),
     )
   })
@@ -64,23 +71,26 @@ describe('Actor System', () => {
     expect(cb).toHaveBeenCalledTimes(2)
   })
 
-  test('should call materializer when actor is built', async () => {
+  test('should call all materializers when actor is built', async () => {
     const actor: SemaphoreActor = actorSystem.actorOf(SemaphoreActor, ['mySemaphore', jest.fn()])
-    expect(materializer.onInitialize).toHaveBeenCalled()
+    expect(firstMaterializer.onInitialize).toHaveBeenCalled()
+    expect(secondMaterializer.onInitialize).toHaveBeenCalled()
   })
 
-  test('should call materializer before the message is processed', async () => {
+  test('should call all materializer before the message is processed', async () => {
     const actor: SemaphoreActor = actorSystem.actorOf(SemaphoreActor, ['mySemaphore', jest.fn()])
     await waitFor(() => actor.runFor(5))
 
-    expect(materializer.onBeforeMessage).toHaveBeenCalled()
+    expect(firstMaterializer.onBeforeMessage).toHaveBeenCalled()
+    expect(secondMaterializer.onBeforeMessage).toHaveBeenCalled()
   })
 
-  test('should call materializer after the message is processed', async () => {
+  test('should call all materializer after the message is processed', async () => {
     const actor: SemaphoreActor = actorSystem.actorOf(SemaphoreActor, ['mySemaphore', jest.fn()])
     await waitFor(() => actor.runFor(5))
 
-    expect(materializer.onAfterMessage).toHaveBeenCalled()
+    expect(firstMaterializer.onAfterMessage).toHaveBeenCalled()
+    expect(secondMaterializer.onAfterMessage).toHaveBeenCalled()
   })
 
   test('should call materializer when errored', async () => {
@@ -97,6 +107,7 @@ describe('Actor System', () => {
       // expected
     }
 
-    expect(materializer.onError).toHaveBeenCalled()
+    expect(firstMaterializer.onError).toHaveBeenCalled()
+    expect(secondMaterializer.onError).toHaveBeenCalled()
   })
 })
