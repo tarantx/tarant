@@ -7,10 +7,16 @@ script:
 after_success:
   - if [[ "${TRAVIS_EVENT_TYPE}" = "cron" ]]; then ./upgrade.sh; fi
 deploy:
-  skip_cleanup: true
-  provider: npm
-  email: $NPM_EMAIL
-  api_key: $NPM_TOKEN
-  on:
-    tags: true
-  
+  - provider: npm
+    skip_cleanup: true
+    email: $NPM_EMAIL
+    api_key: $NPM_TOKEN
+    on:
+      tags: true
+  - provider: releases
+    skip_cleanup: true
+    file_glob: true
+    file: cdn/*.js
+    api_key: $GH_TOKEN
+    on:
+      tags: true

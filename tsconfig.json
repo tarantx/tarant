@@ -8,6 +8,6 @@
     "lib": ["es6"],
     "importHelpers": true
   },
-  "include": ["lib"],
+  "files": ["./lib/index.ts"],
   "exclude": ["node_modules", "**/test/*"]
 }
