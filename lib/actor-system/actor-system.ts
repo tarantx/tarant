@@ -52,7 +52,7 @@ export default class ActorSystem implements IProcessor {
   }
 
   public free(): void {
-    this.fiber.free()
+    setTimeout(() => this.fiber.free(), 0)
   }
 
   public actorOf<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
