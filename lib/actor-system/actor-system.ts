@@ -84,6 +84,11 @@ export default class ActorSystem implements IProcessor {
 
       this.actors.set(id, instance)
       this.subscriptions.set(instance.id, this.mailbox.addSubscriber(instance))
+
+      const proxy = ActorProxy.of(this.mailbox, instance)
+      this.setupInstance(instance, proxy)
+
+      return proxy
     }
 
     return ActorProxy.of(this.mailbox, instance as T)
