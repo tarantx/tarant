@@ -100,7 +100,7 @@ export default class ActorSystem implements IProcessor {
     values: any[],
   ): Promise<T> {
     try {
-      return this.actorFor(id)
+      return await this.actorFor(id)
     } catch (_) {
       return this.actorOf(elseClass, values)
     }
