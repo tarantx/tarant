@@ -104,6 +104,18 @@ describe('Actor System', () => {
     }
   })
 
+  test('should return first resolved actor if exists', async () => {
+    const expectedActor = {
+      initialized: () => {
+        return
+      },
+      partitions: [],
+    }
+    ;(firstResolver.resolveActorById as jest.Mock).mockImplementation(() => Promise.resolve(expectedActor))
+    const actor = (await actorSystem.resolveOrNew('myId', SemaphoreActor, ['myId', null])) as any
+    expect(actor.ref).toBe(expectedActor)
+  })
+
   test('should let actors process messages only once at a time', async () => {
     const cb = jest.fn()
     const actor: SemaphoreActor = actorSystem.actorOf(SemaphoreActor, ['mySemaphore', cb])

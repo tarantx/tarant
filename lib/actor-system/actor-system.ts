@@ -94,6 +94,18 @@ export default class ActorSystem implements IProcessor {
     return ActorProxy.of(this.mailbox, instance as T)
   }
 
+  public async resolveOrNew<T extends Actor>(
+    id: string,
+    elseClass: new (...args: any[]) => T,
+    values: any[],
+  ): Promise<T> {
+    try {
+      return this.actorFor(id)
+    } catch (_) {
+      return this.actorOf(elseClass, values)
+    }
+  }
+
   private setupInstance(instance: any, proxy: any): void {
     instance.self = proxy
     instance.system = this
