@@ -166,4 +166,12 @@ describe('Actor System', () => {
     expect(firstMaterializer.onError).toHaveBeenCalled()
     expect(secondMaterializer.onError).toHaveBeenCalled()
   })
+
+  test('should allow function actors', async () => {
+    const sum = async (a: number, b: number) => a + b
+    const sumActor = actorSystem.functionFor(sum)
+
+    const result = await waitFor(() => sumActor(5, 15))
+    expect(result).toBe(20)
+  })
 })

@@ -13,6 +13,7 @@ import ActorMessage from './actor-message'
 import ActorProxy from './actor-proxy'
 import IActorSystemConfiguration from './configuration/actor-system-configuration'
 import ActorSystemConfigurationBuilder from './configuration/actor-system-configuration-builder'
+import FunctionActor from './fn/function'
 import IMaterializer from './materializer/materializer'
 import IResolver from './resolver/resolver'
 import IActorSupervisor from './supervision/actor-supervisor'
@@ -107,6 +108,10 @@ export default class ActorSystem implements IProcessor {
     }
 
     return ActorProxy.of(this.mailbox, instance as T)
+  }
+
+  public functionFor<T>(fn: T): T {
+    return (FunctionActor.for(this, fn) as unknown) as T
   }
 
   /**
