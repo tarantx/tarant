@@ -51,10 +51,19 @@ export default class ActorSystem implements IProcessor {
     })
   }
 
+  /**
+   * Stops the actor system and frees all actors
+   */
   public free(): void {
     setTimeout(() => this.fiber.free(), 0)
   }
 
+  /**
+   * Creates a new root actor.
+   * 
+   * @param classFn Constructor of the actor to create
+   * @param values Parameters to pass to the constructor
+   */
   public actorOf<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
     const instance = new classFn(...values)
     const proxy = ActorProxy.of(this.mailbox, instance)
@@ -67,6 +76,12 @@ export default class ActorSystem implements IProcessor {
     return proxy
   }
 
+  /**
+   * Looks for an existing actor in this actor system. If none exist,
+   * it will try to resolve the actor, by id, with the provided resolvers.
+   *  
+   * @param id Id of the actor to find
+   */
   public async actorFor<T extends Actor>(id: string): Promise<T> {
     let instance: T = this.actors.get(id) as T
     if (instance === undefined) {
@@ -94,6 +109,13 @@ export default class ActorSystem implements IProcessor {
     return ActorProxy.of(this.mailbox, instance as T)
   }
 
+  /**
+   * Tries to find an actor, if it doesn't exist, creates a new one.
+   * 
+   * @param id Id of the actor to find
+   * @param elseClass Constructor of the actor to create, if doesn't exist
+   * @param values Parameters of the constructor
+   */
   public async resolveOrNew<T extends Actor>(
     id: string,
     elseClass: new (...args: any[]) => T,

@@ -12,6 +12,13 @@ import uuid from '../helper/uuid'
 type TopicSeenAs<T> = T & Topic<T>
 
 export default class Topic<T> extends Actor {
+  /**
+   * Creates a topic for the given actor system. The id of the topic will be `topics/NAME_OF_THE_TOPIC`
+   * 
+   * @param system Actor system where the topic will live
+   * @param name Name of the topic to be created
+   * @param consumerClass Protocol of the topic
+   */
   public static for<T>(system: ActorSystem, name: string, consumerClass: new (...args: any[]) => T): TopicSeenAs<T> {
     return system.actorOf(Topic, [name, consumerClass]) as any
   }
