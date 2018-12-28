@@ -60,7 +60,7 @@ export default class ActorSystem implements IProcessor {
 
   /**
    * Creates a new root actor.
-   * 
+   *
    * @param classFn Constructor of the actor to create
    * @param values Parameters to pass to the constructor
    */
@@ -79,7 +79,7 @@ export default class ActorSystem implements IProcessor {
   /**
    * Looks for an existing actor in this actor system. If none exist,
    * it will try to resolve the actor, by id, with the provided resolvers.
-   *  
+   *
    * @param id Id of the actor to find
    */
   public async actorFor<T extends Actor>(id: string): Promise<T> {
@@ -111,7 +111,7 @@ export default class ActorSystem implements IProcessor {
 
   /**
    * Tries to find an actor, if it doesn't exist, creates a new one.
-   * 
+   *
    * @param id Id of the actor to find
    * @param elseClass Constructor of the actor to create, if doesn't exist
    * @param values Parameters of the constructor

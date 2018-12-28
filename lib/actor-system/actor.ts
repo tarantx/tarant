@@ -18,7 +18,7 @@ type Cancellable = string
 
 /**
  * Class that must be extended by all actors. All defined public methods in actors should be
- * asynchronous (return a Promise<T>) or return void. 
+ * asynchronous (return a Promise<T>) or return void.
  */
 export default abstract class Actor implements ISubscriber<ActorMessage>, IActorSupervisor {
   public readonly id: string
@@ -38,7 +38,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   /**
    * Method called by the mailbox when there are messages to be processed. This should
    * not be overriden by the actor.
-   * 
+   *
    * @param message Message received from the mailbox
    */
   public async onReceiveMessage(message: Message<ActorMessage>): Promise<boolean> {
@@ -78,7 +78,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   /**
    * Supervision method, called when a child actor failed.
    * The default strategy is to delegate the supervision to this actor supervisor.
-   * 
+   *
    * @param actor Actor that raised the exception
    * @param exception Exception that raised the actor
    * @param message Message that we failed to process
@@ -90,11 +90,11 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   /**
    * Schedules a message to this actor every {interval} milliseconds. Returns a cancellable, that
    * can be passed to #cancel to stop the scheduled message.
-   * 
+   *
    * @param interval Interval, in ms, between messages
    * @param fn Message to send to this current actor, in form of a method reference (like this.myMethod)
    * @param values Parameters to pass with the message (parameters of the method to call)
-   * 
+   *
    * @see Actor#cancel
    */
   protected schedule(interval: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
@@ -106,11 +106,11 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   /**
    * Schedules a message to this actor once, after {timeout} milliseconds. Returns a cancellable, that
    * can be passed to #cancel to stop the scheduled message.
-   * 
+   *
    * @param timeout Time to send the message, in ms
    * @param fn Message to send to this current actor, in form of a method reference (like this.myMethod)
    * @param values Parameters to pass with the message (parameters of the method to call)
-   * 
+   *
    * @see Actor#cancel
    */
   protected scheduleOnce(timeout: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
@@ -128,7 +128,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
 
   /**
    * Cancels a scheduled action created by #schedule or #scheduleOnce
-   * 
+   *
    * @param cancellable Cancellable reference
    * @see Actor#schedule
    * @see Actor#scheduleOnce
@@ -144,7 +144,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   /**
    * Creates a child actor of this actor. The current actor will behave as the supervisor
    * of the created actor.
-   * 
+   *
    * @param classFn Constructor of the actor to build
    * @param values Values to pass as the constructor parameters
    */
