@@ -109,7 +109,16 @@ export default class ActorSystem implements IProcessor {
 
     return ActorProxy.of(this.mailbox, instance as T)
   }
-
+  
+  /**
+   * Converts a function to a function actor, with the same signature. Function actors behave the same way as
+   * actors, but can be called as ordinary functions.
+   * 
+   * Like actors, there is a limitation on the signature of the function. It can receive any number and type
+   * of parameters, but it *must* return a Promise.
+   * 
+   * @param fn Function to be wrapped in an actor
+   */
   public functionFor<T>(fn: T): T {
     return (FunctionActor.for(this, fn) as unknown) as T
   }
