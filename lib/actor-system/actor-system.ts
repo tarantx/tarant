@@ -8,7 +8,7 @@
 import Fiber from '../fiber/fiber'
 import IProcessor from '../fiber/processor'
 import Mailbox from '../mailbox/mailbox'
-import Actor from './actor'
+import Actor, { IActor } from './actor'
 import ActorMessage from './actor-message'
 import ActorProxy from './actor-proxy'
 import IActorSystemConfiguration from './configuration/actor-system-configuration'
@@ -28,7 +28,7 @@ export default class ActorSystem implements IProcessor {
   }
 
   public readonly requirements: string[] = ['default']
-  private readonly actors: Map<string, Actor> = new Map()
+  private readonly actors: Map<string, IActor> = new Map()
   private readonly subscriptions: Map<string, string> = new Map()
   private readonly mailbox: Mailbox<ActorMessage>
   private readonly fiber: Fiber
@@ -65,7 +65,7 @@ export default class ActorSystem implements IProcessor {
    * @param classFn Constructor of the actor to create
    * @param values Parameters to pass to the constructor
    */
-  public actorOf<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
+  public actorOf<T extends IActor>(classFn: new (...args: any[]) => T, values: any[]): T {
     const instance = new classFn(...values)
     const proxy = ActorProxy.of(this.mailbox, instance)
     const subscription = this.mailbox.addSubscriber(instance)
@@ -83,7 +83,7 @@ export default class ActorSystem implements IProcessor {
    *
    * @param id Id of the actor to find
    */
-  public async actorFor<T extends Actor>(id: string): Promise<T> {
+  public async actorFor<T extends IActor>(id: string): Promise<T> {
     let instance: T = this.actors.get(id) as T
     if (instance === undefined) {
       for (const resolver of this.resolvers) {
@@ -130,7 +130,7 @@ export default class ActorSystem implements IProcessor {
    * @param elseClass Constructor of the actor to create, if doesn't exist
    * @param values Parameters of the constructor
    */
-  public async resolveOrNew<T extends Actor>(
+  public async resolveOrNew<T extends IActor>(
     id: string,
     elseClass: new (...args: any[]) => T,
     values: any[],

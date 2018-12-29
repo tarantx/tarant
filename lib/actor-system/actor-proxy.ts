@@ -7,7 +7,7 @@
 
 import Mailbox from '../mailbox/mailbox'
 import Message from '../mailbox/message'
-import Actor from './actor'
+import { IActor } from './actor'
 import ActorMessage from './actor-message'
 
 export default class ActorProxy {
@@ -22,7 +22,7 @@ export default class ActorProxy {
     })
   }
 
-  public static of<T extends Actor>(mailbox: Mailbox<ActorMessage>, actor: T): T {
+  public static of<T extends IActor>(mailbox: Mailbox<ActorMessage>, actor: T): T {
     const props = Object.getOwnPropertyNames(actor.constructor.prototype)
 
     return props

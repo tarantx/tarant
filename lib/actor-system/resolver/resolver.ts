@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Actor from '../../actor-system/actor'
+import { IActor } from '../../actor-system/actor'
 
 export default interface IResolver {
-  resolveActorById(id: string): Promise<Actor>
+  resolveActorById(id: string): Promise<IActor>
 }

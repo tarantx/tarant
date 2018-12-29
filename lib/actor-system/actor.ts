@@ -17,12 +17,14 @@ import ActorProxy from './actor-proxy'
 import IActorSupervisor, { SupervisionStrategies } from './supervision/actor-supervisor'
 
 type Cancellable = string
-
+export interface IActor extends ISubscriber<ActorMessage>, IActorSupervisor {
+  id: string
+}
 /**
  * Class that must be extended by all actors. All defined public methods in actors should be
  * asynchronous (return a Promise<T>) or return void.
  */
-export default abstract class Actor implements ISubscriber<ActorMessage>, IActorSupervisor {
+export default abstract class Actor implements IActor {
   public readonly id: string
   public readonly partitions: string[]
   protected readonly self: any = this
@@ -161,7 +163,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
    * @param classFn Constructor of the actor to build
    * @param values Values to pass as the constructor parameters
    */
-  protected actorOf<T extends Actor>(classFn: new (...args: any[]) => T, values: any[]): T {
+  protected actorOf<T extends IActor>(classFn: new (...args: any[]) => T, values: any[]): T {
     const actor = this.system!.actorOf(classFn, values) as any
     actor.ref.supervisor = this
     return actor
