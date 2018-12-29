@@ -13,7 +13,7 @@ export default class FunctionActor extends Actor {
     const actor = system.actorOf(FunctionActor, [fn])
     // tslint:disable-next-line
     return function() {
-      return actor.execute.apply((actor as any).ref, (arguments as unknown) as any[])
+      return actor.execute(...((arguments as unknown) as any[]))
     }
   }
 
