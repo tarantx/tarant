@@ -1,8 +1,8 @@
 # Summary
 
-[ ] tarant version:
-[ ] Fails in browsers: (list of browsers, or all)
-[ ] Fails in server: (node version if possible)
+- [ ] tarant version:
+- [ ] Fails in browsers: (list of browsers, or all)
+- [ ] Fails in server: (node version if possible)
 
 Please, explain what is the issue that you are having
 
