@@ -11,6 +11,7 @@ import ActorMessage from './actor-message'
 import ActorSystem from './actor-system'
 import IMaterializer from './materializer/materializer'
 
+import { Topic } from '..'
 import uuid from '../helper/uuid'
 import ActorProxy from './actor-proxy'
 import IActorSupervisor, { SupervisionStrategies } from './supervision/actor-supervisor'
@@ -29,6 +30,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
   private readonly materializers: IMaterializer[] = []
   private readonly supervisor?: IActorSupervisor
   private readonly scheduled: Map<Cancellable, NodeJS.Timer> = new Map()
+  private readonly topicSubscriptions: Map<string, string> = new Map()
   private busy: boolean = false
 
   protected constructor(id?: string) {
@@ -163,6 +165,23 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
     const actor = this.system!.actorOf(classFn, values) as any
     actor.ref.supervisor = this
     return actor
+  }
+
+  protected subscribeToTopic(topic: Topic<Actor>): void {
+    setTimeout(async () => {
+      const topicSubscription = await topic.subscribe(this)
+      this.topicSubscriptions.set(topic.id, topicSubscription)
+    }, 0)
+  }
+
+  protected unsubscribeFromTopic(topic: Topic<Actor>): void {
+    const id = this.topicSubscriptions.get(topic.id)
+    if (id === undefined) {
+      return
+    }
+
+    topic.unsubscribe(id)
+    this.topicSubscriptions.delete(topic.id)
   }
 
   private dispatchAndPromisify(actorMessage: ActorMessage): Promise<any> {
