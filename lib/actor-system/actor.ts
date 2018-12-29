@@ -23,7 +23,7 @@ type Cancellable = string
 export default abstract class Actor implements ISubscriber<ActorMessage>, IActorSupervisor {
   public readonly id: string
   public readonly partitions: string[]
-  protected readonly self: this = this
+  protected readonly self: any = this
   protected readonly system?: ActorSystem
   private readonly materializers: IMaterializer[] = []
   private readonly supervisor?: IActorSupervisor
