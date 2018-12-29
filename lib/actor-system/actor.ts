@@ -24,7 +24,6 @@ type Cancellable = string
 export default abstract class Actor implements ISubscriber<ActorMessage>, IActorSupervisor {
   public readonly id: string
   public readonly partitions: string[]
-  protected readonly self: any = this
   protected readonly system?: ActorSystem
   private readonly materializers: IMaterializer[] = []
   private readonly supervisor?: IActorSupervisor
@@ -57,7 +56,7 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
       actorMessage.resolve(result)
     } catch (ex) {
       this.materializers.forEach(materializer => materializer.onError(this, actorMessage, ex))
-      const strategy = await this.supervisor!.supervise(this.self, ex, actorMessage)
+      const strategy = await this.supervisor!.supervise(this, ex, actorMessage)
 
       if (strategy === 'drop-message') {
         actorMessage.reject(ex)
