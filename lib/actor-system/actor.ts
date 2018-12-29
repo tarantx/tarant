@@ -12,6 +12,7 @@ import ActorSystem from './actor-system'
 import IMaterializer from './materializer/materializer'
 
 import uuid from '../helper/uuid'
+import ActorProxy from './actor-proxy'
 import IActorSupervisor, { SupervisionStrategies } from './supervision/actor-supervisor'
 
 type Cancellable = string
@@ -99,7 +100,13 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
    */
   protected schedule(interval: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
     const id = uuid()
-    this.scheduled.set(id, setInterval(() => fn.apply(this, values), interval))
+    setTimeout(() => {
+      const sysAny = this.system as any
+      this.scheduled.set(
+        id,
+        setInterval(() => ActorProxy.sendAndReturn(sysAny.mailbox, this.id, fn.name, values), interval),
+      )
+    }, 0)
     return id
   }
 
@@ -115,14 +122,16 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
    */
   protected scheduleOnce(timeout: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
     const id = uuid()
-    this.scheduled.set(
-      id,
-      setTimeout(() => {
-        fn.apply(this, values)
-        this.scheduled.delete(id)
-      }, timeout),
-    )
-
+    setTimeout(() => {
+      const sysAny = this.system as any
+      this.scheduled.set(
+        id,
+        setTimeout(() => {
+          ActorProxy.sendAndReturn(sysAny.mailbox, this.id, fn.name, values)
+          this.scheduled.delete(id)
+        }, timeout),
+      )
+    }, 0)
     return id
   }
 
@@ -134,11 +143,13 @@ export default abstract class Actor implements ISubscriber<ActorMessage>, IActor
    * @see Actor#scheduleOnce
    */
   protected cancel(cancellable: Cancellable): void {
-    const id = this.scheduled.get(cancellable) as NodeJS.Timer
-    clearTimeout(id)
-    clearInterval(id)
+    setTimeout(() => {
+      const id = this.scheduled.get(cancellable) as NodeJS.Timer
+      clearTimeout(id)
+      clearInterval(id)
 
-    this.scheduled.delete(cancellable)
+      this.scheduled.delete(cancellable)
+    }, 0)
   }
 
   /**
