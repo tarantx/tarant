@@ -25,6 +25,6 @@ export default class FunctionActor extends Actor {
   }
 
   public async execute(...args: any[]): Promise<any> {
-    return await this.fn.apply(this, args)
+    return await this.fn(...args)
   }
 }
