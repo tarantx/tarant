@@ -27,7 +27,7 @@ export interface IActor extends ISubscriber<ActorMessage>, IActorSupervisor {
 export default abstract class Actor implements IActor {
   public readonly id: string
   public readonly partitions: string[]
-  protected readonly self: any = this
+  protected readonly self: this = this
   protected readonly system?: ActorSystem
   private readonly materializers: IMaterializer[] = []
   private readonly supervisor?: IActorSupervisor
