@@ -174,4 +174,12 @@ describe('Actor System', () => {
     const result = await waitFor(() => sumActor(5, 15))
     expect(result).toBe(20)
   })
+
+  test('should allow function actors not returning anything', async () => {
+    const fn = jest.fn()
+    const fnActor = actorSystem.functionFor(fn)
+
+    await waitFor(() => fnActor(5, 15))
+    expect(fn).toBeCalledWith(5, 15)
+  })
 })
