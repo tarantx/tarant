@@ -1,7 +1,7 @@
-import { uglify } from "rollup-plugin-uglify";
+import { terser } from "rollup-plugin-terser"
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
-import typescript from 'rollup-plugin-typescript'
+import typescript from 'rollup-plugin-typescript2'
 
 export default {
     output: {
@@ -11,15 +11,12 @@ export default {
     },
     input: "lib/index.ts",
     plugins: [
-        typescript({
-            tsconfig: false,
-            target: "es5",
-            declaration: true,
-            strict: true,
-            lib: ["es6"],
-
-        }),
         nodeResolve(), 
         commonjs(), 
-        uglify()]
+        typescript({
+            rollupCommonJSResolveHack: true,
+            objectHashIgnoreUnknownHack: true,
+            tsconfigOverride: { compilerOptions: { module: "ESNext" } }
+        }),
+        terser()]
 }

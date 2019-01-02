@@ -67,3 +67,4 @@ dist
 .vscode
 dist
 coverage
+.rpt2_cache

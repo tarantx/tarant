@@ -10,3 +10,4 @@ README.md
 tsconfig.json
 tslint.json
 coverage
+.rpt2_cache
