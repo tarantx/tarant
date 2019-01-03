@@ -9,6 +9,8 @@
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/tarantx/tarant.svg)
 ![Downloads](https://img.shields.io/npm/dt/tarant.svg)
 
+[![Join Gitter](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg)](https://gitter.im/tarantx/general?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+
 [Tarant](https://www.tarant.io/) is a TypeScript/JavaScript library for building software using the actor system model.
 You can visit the home page for more information and a more complete quick start guide: https://www.tarant.io/
 
