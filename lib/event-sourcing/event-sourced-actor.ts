@@ -27,7 +27,7 @@ export abstract class EventSourcedActor extends Actor implements IEventSourcedAc
       family: this.constructor.name,
       name: event.name || name!,
       stream: this.id,
-      version: event.length + 1,
+      version: this.events.length + 1,
     }
 
     this.events.push(eventToApply)

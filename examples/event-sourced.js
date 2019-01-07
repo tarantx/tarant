@@ -30,7 +30,6 @@ class CounterLogger extends EventSourcedActor {
 
     loggedCounter(baseCounter) {
         this.logs.push('Added one from ' + baseCounter)
-        console.log("All logs right now", this.logs)
     }
 }
 
