@@ -30,8 +30,22 @@ export abstract class EventSourcedActor extends Actor implements IEventSourcedAc
       version: event.length + 1,
     })
     const mailbox = (this.system as any).mailbox as Mailbox<ActorMessage>
-    [ JOURNAL, FAMILY + this.constructor.name, FAMILY + this.constructor.name + STREAM + this.id].forEach(partition => {
-      mailbox.push(Message.of(partition, ActorMessage.of(event.name, data, (r) => { return }, (r) => { return })))
+    ;[JOURNAL, FAMILY + this.constructor.name, FAMILY + this.constructor.name + STREAM + this.id].forEach(partition => {
+      mailbox.push(
+        Message.of(
+          partition,
+          ActorMessage.of(
+            event.name,
+            data,
+            r => {
+              return
+            },
+            r => {
+              return
+            },
+          ),
+        ),
+      )
     })
   }
 

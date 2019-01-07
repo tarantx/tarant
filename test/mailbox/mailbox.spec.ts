@@ -30,6 +30,21 @@ describe('Mailbox', () => {
     expect(outcome).toStrictEqual(message)
   })
 
+  test('should move messages when a resubscription', () => {
+    const message = Message.ofJson(partition, { test: true })
+    const mailbox = Mailbox.empty()
+    const subscriber = dummySubscriber(partition)
+
+    const subscription = mailbox.addSubscriber(subscriber)
+    mailbox.push(message)
+
+    const newSubscription = mailbox.redirectSubscription(subscription, subscriber)
+    mailbox.poll(newSubscription)
+
+    const [outcome] = subscriber.messages
+    expect(outcome).toStrictEqual(message)
+  })
+
   test('should not poll messages after an unsubscription', () => {
     const message = Message.ofJson(partition, { test: true })
     const mailbox = Mailbox.empty()
