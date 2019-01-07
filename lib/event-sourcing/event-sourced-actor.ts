@@ -38,7 +38,7 @@ export abstract class EventSourcedActor extends Actor implements IEventSourcedAc
 
   public source(events: IEvent[]): void {
     events.forEach(event => {
-      ;(this as any)[event.name].call(this, ...event.data)
+      (this as any)[event.name].call(this, ...event.data)
       this.events.push(event)
     })
   }
