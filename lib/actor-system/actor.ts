@@ -32,7 +32,7 @@ export default abstract class Actor implements IActor {
   public partitions: string[]
   protected readonly self: this = this
   protected readonly system?: ActorSystem
-  private readonly materializers: IMaterializer[] = []
+  protected readonly materializers: IMaterializer[] = []
   private readonly supervisor?: IActorSupervisor
   private readonly scheduled: Map<Cancellable, NodeJS.Timer> = new Map()
   private readonly topicSubscriptions: Map<string, string> = new Map()

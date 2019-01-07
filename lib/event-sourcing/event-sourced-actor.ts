@@ -22,13 +22,16 @@ export abstract class EventSourcedActor extends Actor implements IEventSourcedAc
 
   public apply(event: (...args: any[]) => void, data: any[], name: string | undefined): void {
     event.call(this, ...data)
-    this.events.push({
+    const eventToApply = {
       data,
       family: this.constructor.name,
       name: event.name || name!,
       stream: this.id,
       version: event.length + 1,
-    })
+    }
+
+    this.events.push(eventToApply)
+    this.materializers.forEach(m => m.onAppliedEvent(this, eventToApply))
     const mailbox = (this.system as any).mailbox as Mailbox<ActorMessage>
     ;[JOURNAL, FAMILY + this.constructor.name, FAMILY + this.constructor.name + STREAM + this.id].forEach(partition => {
       mailbox.push(

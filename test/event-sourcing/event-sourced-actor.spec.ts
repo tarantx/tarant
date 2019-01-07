@@ -9,12 +9,27 @@ import ActorSystem from '../../lib/actor-system/actor-system'
 import sleep from '../fixtures/sleep'
 import PublisherActor from './fixtures/publisher-actor'
 import SubscriberActor from './fixtures/subscriber-actor'
+import IMaterializer from '../../lib/materializer/materializer'
+import { ActorSystemConfigurationBuilder } from '../../lib'
 
 describe('Actor System Subscriptions', () => {
   let actorSystem: ActorSystem
+  let firstMaterializer: IMaterializer
 
   beforeEach(() => {
-    actorSystem = ActorSystem.default()
+    firstMaterializer = {
+      onAfterMessage: jest.fn(),
+      onAppliedEvent: jest.fn(),
+      onBeforeMessage: jest.fn(),
+      onError: jest.fn(),
+      onInitialize: jest.fn(),
+    }
+
+    actorSystem = ActorSystem.for(
+      ActorSystemConfigurationBuilder.define()
+        .withMaterializers([firstMaterializer])
+        .done(),
+    )
   })
 
   afterEach(() => {
@@ -35,6 +50,20 @@ describe('Actor System Subscriptions', () => {
         version: 1,
       },
     ])
+  })
+
+  test('that applied messages are notified to the materializer', async () => {
+    const publisher = actorSystem.actorOf(PublisherActor, [])
+    publisher.somethingHappens()
+
+    await sleep(5)
+    expect(firstMaterializer.onAppliedEvent).toHaveBeenCalledWith(publisher.ref, {
+      family: 'PublisherActor',
+      name: 'somethingHappened',
+      stream: publisher.id,
+      data: [],
+      version: 1,
+    })
   })
 
   test('that applied messages are in the journal of subscribers subscribing to the global journal', async () => {
