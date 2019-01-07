@@ -28,19 +28,24 @@ class SadActor extends SpeakingActor {
     }
 }
 
-let system = ActorSystem.default()
-let topic = Topic.for(system, "my-topic", SpeakingActor)
-
-for (let i = 0; i < 100; i++) {
-    if (i % 2 === 0) {
-        topic.subscribe(system.actorOf(HappyActor, [i]))
-    } else {
-        topic.subscribe(system.actorOf(SadActor, [i]))
+let main = async () => {
+    let system = ActorSystem.default()
+    let topic = await system.topicFor('my-topic', SpeakingActor)
+    
+    for (let i = 0; i < 100; i++) {
+        if (i % 2 === 0) {
+            topic.subscribe(system.actorOf(HappyActor, [i]))
+        } else {
+            topic.subscribe(system.actorOf(SadActor, [i]))
+        }
     }
+    
+    topic.say("Hi")
+
+    
+    setTimeout(() => {
+        system.free()
+    }, 1000)
 }
 
-topic.say("Hi")
-
-setTimeout(() => {
-    system.free()
-}, 1000)
+main()

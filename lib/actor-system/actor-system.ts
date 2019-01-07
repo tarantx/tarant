@@ -127,14 +127,19 @@ export default class ActorSystem implements IProcessor {
    *
    * @param fn Function to be wrapped in an actor
    */
-  public async topicFor<T extends IActor>(fn: new (...args: any[]) => T): Promise<T & Topic<T>> {
-    const actor = (await this.actorFor('topics/' + fn.name)) as T & Topic<T>
+  public async topicFor<T extends IActor>(name: string, fn: new (...args: any[]) => T): Promise<T & Topic<T>> {
+    try {
+      const actor = (await this.actorFor('topics/' + name)) as T & Topic<T>
 
-    if (actor === undefined) {
-      return Topic.for(this, fn.name, fn)
-    } else {
-      return actor
+      if (actor === undefined) {
+        return Topic.for(this, name, fn)
+      } else {
+        return actor
+      }
+    } catch (_) {
+      return Topic.for(this, name, fn)
     }
+    
   }
 
   /**
