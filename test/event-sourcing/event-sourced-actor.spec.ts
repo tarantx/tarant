@@ -59,4 +59,50 @@ describe('Actor System Subscriptions', () => {
       },
     ])
   })
+
+  test('that applied messages are in the journal of subscribers subscribing to the family journal', async () => {
+    const publisher = actorSystem.actorOf(PublisherActor, [])
+    const subscriber = actorSystem.actorOf(SubscriberActor, [
+      (actor: SubscriberActor) => {
+        actor.subscribeToFamily(PublisherActor)
+      },
+    ])
+
+    await sleep(1)
+    publisher.somethingHappens()
+    await sleep(1)
+
+    expect(subscriber.ref.journal()).toEqual([
+      {
+        data: ['somethingHappened'],
+        family: 'SubscriberActor',
+        name: 'receivedMessage',
+        stream: subscriber.ref.id,
+        version: 1,
+      },
+    ])
+  })
+
+  test('that applied messages are in the journal of subscribers subscribing to a single stream', async () => {
+    const publisher = actorSystem.actorOf(PublisherActor, [])
+    const subscriber = actorSystem.actorOf(SubscriberActor, [
+      (actor: SubscriberActor) => {
+        actor.subscribeToStream(publisher)
+      },
+    ])
+
+    await sleep(1)
+    publisher.somethingHappens()
+    await sleep(1)
+
+    expect(subscriber.ref.journal()).toEqual([
+      {
+        data: ['somethingHappened'],
+        family: 'SubscriberActor',
+        name: 'receivedMessage',
+        stream: subscriber.ref.id,
+        version: 1,
+      },
+    ])
+  })
 })

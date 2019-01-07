@@ -76,7 +76,7 @@ export abstract class EventSourcedActor extends Actor implements IEventSourcedAc
   }
 
   public subscribeToStream(stream: IEventSourced): void {
-    this.partitionSet.add(FAMILY + stream.constructor.name + STREAM + stream.id)
+    this.partitionSet.add(FAMILY + stream.ref.constructor.name + STREAM + stream.ref.id)
     this.refreshMailbox()
     return
   }

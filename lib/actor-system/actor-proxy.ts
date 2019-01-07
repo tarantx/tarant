@@ -33,6 +33,6 @@ export default class ActorProxy {
           (...args: any[]): any => ActorProxy.sendAndReturn(mailbox, actor.id, member, args),
         ],
       )
-      .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor }) as any
+      .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor, id: actor.id }) as any
   }
 }

@@ -23,6 +23,7 @@ export interface IEventToApply {
  * Base interface for all event sourced entities.
  */
 export interface IEventSourced {
+  ref: this
   id: string
 
   /**
