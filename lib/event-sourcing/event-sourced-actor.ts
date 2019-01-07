@@ -10,10 +10,10 @@ export class EventSourcedActor extends Actor implements IEventSourcedActor {
   public apply(event: (...args: any[]) => void, data: any[]): void {
     event.call(this, ...data)
     this.events.push({
-      family: this.constructor.name,
-      stream: this.id,
-      name: event.name,
       data,
+      family: this.constructor.name,
+      name: event.name,
+      stream: this.id,
       version: event.length + 1,
     })
   }
