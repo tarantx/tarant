@@ -5,12 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Actor from '../actor'
+import IActor from '../actor'
 import ActorMessage from '../actor-message'
+import { IEvent, IEventSourced } from '../event-sourcing/event-sourced'
 
 export default interface IMaterializer {
-  onInitialize(actor: Actor): void
-  onBeforeMessage(actor: Actor, message: ActorMessage): void
-  onAfterMessage(actor: Actor, message: ActorMessage): void
-  onError(actor: Actor, message: ActorMessage, error: any): void
+  onInitialize(actor: IActor): void
+  onBeforeMessage(actor: IActor, message: ActorMessage): void
+  onAfterMessage(actor: IActor, message: ActorMessage): void
+  onAppliedEvent(sourced: IEventSourced, event: IEvent): void
+  onError(actor: IActor, message: ActorMessage, error: any): void
 }
