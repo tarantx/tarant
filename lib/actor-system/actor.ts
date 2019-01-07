@@ -7,9 +7,9 @@
 
 import Message from '../mailbox/message'
 import ISubscriber from '../mailbox/subscriber'
+import IMaterializer from '../materializer/materializer'
 import ActorMessage from './actor-message'
 import ActorSystem from './actor-system'
-import IMaterializer from './materializer/materializer'
 
 import { Topic } from '..'
 import uuid from '../helper/uuid'

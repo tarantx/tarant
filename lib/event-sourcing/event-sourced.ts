@@ -1,10 +1,15 @@
 export interface IEvent {
+  family: string
+  stream: string
   name: string
   data: any[]
   version: number
 }
 
-export interface IEventToApply {event: (...args: any[]) => void, data: any[]}
+export interface IEventToApply {
+  event: (...args: any[]) => void
+  data: any[]
+}
 
 /**
  * Base interface for all event sourced entities.
@@ -15,9 +20,9 @@ export interface IEventSourced {
   /**
    * Applies an event to the current entity. This should be called with a reference
    * to the event handler, and the parameters as an array. For example:
-   * 
+   *
    * this.apply(this.transactionCommited, [ { amount: 150.0 } ])
-   * 
+   *
    * @param event Event to write in the journal
    * @param data Data to be wrote in the journal along the event information
    */
@@ -26,7 +31,7 @@ export interface IEventSourced {
   /**
    * Applies a set pf events to the current entity, in the order provided. The entity will
    * not be released to process new messages until all events are applied.
-   * 
+   *
    * @param event Event to write in the journal
    * @param data Data to be wrote in the journal along the event information
    */

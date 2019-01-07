@@ -6,9 +6,9 @@
  */
 
 import Mailbox from '../../mailbox/mailbox'
+import IMaterializer from '../../materializer/materializer'
+import IResolver from '../../resolver/resolver'
 import ActorMessage from '../actor-message'
-import IMaterializer from '../materializer/materializer'
-import IResolver from '../resolver/resolver'
 import IActorSupervisor from '../supervision/actor-supervisor'
 import NoopActorSupervisor from '../supervision/noop-supervisor'
 import ActorSystemConfiguration from './actor-system-configuration'

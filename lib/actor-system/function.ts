@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Actor from '../actor'
-import ActorSystem from '../actor-system'
+import Actor from './actor'
+import ActorSystem from './actor-system'
 
 export default class FunctionActor extends Actor {
   public static for(system: ActorSystem, fn: any): (...args: any[]) => Promise<any> {

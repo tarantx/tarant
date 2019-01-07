@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import IActor from '../actor'
-import ActorMessage from '../actor-message'
+import IActor from '../actor-system/actor'
+import ActorMessage from '../actor-system/actor-message'
 import { IEvent, IEventSourced } from '../event-sourcing/event-sourced'
 
 export default interface IMaterializer {

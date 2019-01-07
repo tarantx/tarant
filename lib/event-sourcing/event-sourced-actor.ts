@@ -1,6 +1,6 @@
-import Actor, { IActor } from './actor'
-import ActorProxy from './actor-proxy'
-import { IEvent, IEventSourced, IEventToApply } from './event-sourcing/event-sourced'
+import Actor, { IActor } from '../actor-system/actor'
+import ActorProxy from '../actor-system/actor-proxy'
+import { IEvent, IEventSourced, IEventToApply } from './event-sourced'
 
 export interface IEventSourcedActor extends IActor, IEventSourced {}
 
@@ -9,7 +9,13 @@ export class EventSourcedActor extends Actor implements IEventSourcedActor {
 
   public apply(event: (...args: any[]) => void, data: any[]): void {
     event.call(this, ...data)
-    this.events.push({ name: event.name, data, version: event.length + 1 })
+    this.events.push({
+      family: this.constructor.name,
+      stream: this.id,
+      name: event.name,
+      data,
+      version: event.length + 1,
+    })
   }
 
   public applyAll(...events: IEventToApply[]): void {
@@ -28,6 +34,6 @@ export class EventSourcedActor extends Actor implements IEventSourcedActor {
   }
 
   public version(): number {
-      return this.events.length + 1
+    return this.events.length + 1
   }
 }
