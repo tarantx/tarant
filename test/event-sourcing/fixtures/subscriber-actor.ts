@@ -15,7 +15,7 @@ export default class SubscriberActor extends EventSourcedActor {
   }
 
   public somethingHappened(): void {
-    this.apply(this.receivedMessage, ['somethingHappened'], 'receivedMessage')
+    this.applyAll({ event: this.receivedMessage, data: ['somethingHappened'], name: 'receivedMessage' })
   }
 
   public receivedMessage(): void {
