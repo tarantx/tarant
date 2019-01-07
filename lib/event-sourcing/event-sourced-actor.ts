@@ -10,7 +10,7 @@ import { IEvent, IEventSourced, IEventToApply } from './event-sourced'
 
 const JOURNAL = '/journal/'
 const FAMILY = '/journal/family/'
-const STREAM = '/journal/stream/'
+const STREAM = '/stream/'
 
 export interface IEventSourcedActor extends IActor, IEventSourced {}
 
@@ -55,7 +55,7 @@ export abstract class EventSourcedActor extends Actor implements IEventSourcedAc
   }
 
   public subscribeToStream(stream: IEventSourced): void {
-    this.partitionSet.add(STREAM + stream.id)
+    this.partitionSet.add(FAMILY + stream.constructor.name + STREAM + stream.id)
     this.refreshMailbox()
     return
   }
