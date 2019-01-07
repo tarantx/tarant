@@ -10,10 +10,15 @@ import { EventSourcedActor } from '../../../lib/event-sourcing/event-sourced-act
 export default class SubscriberActor extends EventSourcedActor {
   public constructor(doSubscribeLambda: (a: SubscriberActor) => void) {
     super()
+
     doSubscribeLambda(this)
   }
 
   public somethingHappened(): void {
+    this.apply(this.receivedMessage, ['somethingHappened'], 'receivedMessage')
+  }
+
+  public receivedMessage(): void {
     return
   }
 }

@@ -13,7 +13,7 @@ export default class PublisherActor extends EventSourcedActor {
   }
 
   public somethingHappens(): void {
-    this.apply(this.somethingHappened, 'somethingHappened', [])
+    this.apply(this.somethingHappened, [], 'somethingHappened')
   }
 
   public somethingHappened(): void {

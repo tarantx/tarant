@@ -20,12 +20,12 @@ export interface IEventSourcedActor extends IActor, IEventSourced {}
 export abstract class EventSourcedActor extends Actor implements IEventSourcedActor {
   private readonly events: IEvent[] = []
 
-  public apply(event: (...args: any[]) => void, name: string, data: any[]): void {
+  public apply(event: (...args: any[]) => void, data: any[], name: string | undefined): void {
     event.call(this, ...data)
     this.events.push({
       data,
       family: this.constructor.name,
-      name,
+      name: event.name || name!,
       stream: this.id,
       version: event.length + 1,
     })
@@ -35,7 +35,7 @@ export abstract class EventSourcedActor extends Actor implements IEventSourcedAc
         Message.of(
           partition,
           ActorMessage.of(
-            event.name,
+            event.name || name!,
             data,
             r => {
               return
@@ -50,7 +50,7 @@ export abstract class EventSourcedActor extends Actor implements IEventSourcedAc
   }
 
   public applyAll(...events: IEventToApply[]): void {
-    events.forEach(event => this.apply(event.event, event.name, event.data))
+    events.forEach(event => this.apply(event.event, event.data, event.event.name || event.name!))
   }
 
   public journal(): IEvent[] {

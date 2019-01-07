@@ -8,7 +8,7 @@ class Counter extends EventSourcedActor {
     }
 
     addOne() {
-        this.apply(this.addedOne, 'addedOne', [this.counter])
+        this.apply(this.addedOne, [this.counter])
     }
 
     addedOne(baseCounter) {
@@ -25,7 +25,7 @@ class CounterLogger extends EventSourcedActor {
     }
 
     addedOne(baseCounter) {
-        this.apply(this.loggedCounter, 'loggedCounter', [baseCounter])
+        this.apply(this.loggedCounter, [baseCounter])
     }
 
     loggedCounter(baseCounter) {
