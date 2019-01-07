@@ -6,13 +6,13 @@
  */
 
 import IActor from '../actor-system/actor'
-import ActorMessage from '../actor-system/actor-message'
+import { IActorMessage } from '../actor-system/actor-message'
 import { IEvent, IEventSourced } from '../event-sourcing/event-sourced'
 
 export default interface IMaterializer {
   onInitialize(actor: IActor): void
-  onBeforeMessage(actor: IActor, message: ActorMessage): void
-  onAfterMessage(actor: IActor, message: ActorMessage): void
+  onBeforeMessage(actor: IActor, message: IActorMessage): void
+  onAfterMessage(actor: IActor, message: IActorMessage): void
   onAppliedEvent(sourced: IEventSourced, event: IEvent): void
-  onError(actor: IActor, message: ActorMessage, error: any): void
+  onError(actor: IActor, message: IActorMessage, error: any): void
 }

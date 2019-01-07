@@ -7,7 +7,14 @@
 
 type AnswerFunction = (r: any) => void
 
-export default class ActorMessage {
+export interface IActorMessage {
+  readonly methodName: string
+  readonly arguments: any[]
+  readonly resolve: AnswerFunction
+  readonly reject: AnswerFunction
+}
+
+export default class ActorMessage implements IActorMessage {
   public static of(method: string, args: any[], resolve: AnswerFunction, reject: AnswerFunction): ActorMessage {
     return new ActorMessage(method, args, resolve, reject)
   }

@@ -14,5 +14,5 @@ export {
   default as ActorSystemConfigurationBuilder,
 } from './actor-system/configuration/actor-system-configuration-builder'
 export { default as Topic } from './pubsub/topic'
-export { default as ActorMessage } from './actor-system/actor-message'
+export { IActorMessage } from './actor-system/actor-message'
 export { EventSourcedActor } from './event-sourcing/event-sourced-actor'

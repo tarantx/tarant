@@ -139,7 +139,6 @@ export default class ActorSystem implements IProcessor {
     } catch (_) {
       return Topic.for(this, name, fn)
     }
-    
   }
 
   /**
