@@ -105,4 +105,16 @@ describe('Actor System Subscriptions', () => {
       },
     ])
   })
+
+  test('that sourced messages are in the journal', async () => {
+    const publisher = actorSystem.actorOf(PublisherActor, [])
+    const events = [
+      { name: 'somethingHappened', family: 'PublisherActor', stream: publisher.id, version: 1, data: [] },
+      { name: 'somethingHappened', family: 'PublisherActor', stream: publisher.id, version: 2, data: [] },
+      { name: 'somethingHappened', family: 'PublisherActor', stream: publisher.id, version: 3, data: [] },
+    ]
+
+    publisher.ref.source(events)
+    expect(publisher.ref.journal()).toEqual(events)
+  })
 })
