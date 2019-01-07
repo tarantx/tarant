@@ -26,7 +26,8 @@ export interface IActor extends ISubscriber<ActorMessage>, IActorSupervisor {
  */
 export default abstract class Actor implements IActor {
   public readonly id: string
-  public readonly partitions: string[]
+  public readonly partitionSet: Set<string> = new Set()
+  public partitions: string[]
   protected readonly self: this = this
   protected readonly system?: ActorSystem
   private readonly materializers: IMaterializer[] = []
@@ -37,7 +38,8 @@ export default abstract class Actor implements IActor {
 
   protected constructor(id?: string) {
     this.id = id || uuid()
-    this.partitions = [this.id]
+    this.partitionSet.add(this.id)
+    this.partitions = Array.from(this.partitionSet.values())
   }
 
   /**
@@ -184,6 +186,11 @@ export default abstract class Actor implements IActor {
 
     topic.unsubscribe(id)
     this.topicSubscriptions.delete(topic.id)
+  }
+
+  protected refreshMailbox() {
+    this.partitions = Array.from(this.partitionSet.values())
+    this.system!.resetSubscriptionsFor(this)
   }
 
   private dispatchAndPromisify(actorMessage: ActorMessage): Promise<any> {

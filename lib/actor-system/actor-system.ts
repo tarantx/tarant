@@ -9,8 +9,9 @@ import Fiber from '../fiber/fiber'
 import IProcessor from '../fiber/processor'
 import Mailbox from '../mailbox/mailbox'
 import IMaterializer from '../materializer/materializer'
+import Topic from '../pubsub/topic'
 import IResolver from '../resolver/resolver'
-import Actor, { IActor } from './actor'
+import { IActor } from './actor'
 import ActorMessage from './actor-message'
 import ActorProxy from './actor-proxy'
 import IActorSystemConfiguration from './configuration/actor-system-configuration'
@@ -68,11 +69,9 @@ export default class ActorSystem implements IProcessor {
   public actorOf<T extends IActor>(classFn: new (...args: any[]) => T, values: any[]): T {
     const instance = new classFn(...values)
     const proxy = ActorProxy.of(this.mailbox, instance)
-    const subscription = this.mailbox.addSubscriber(instance)
-
     this.actors.set(instance.id, instance)
-    this.subscriptions.set(instance.id, subscription)
 
+    this.addSubscriptionToMailbox(instance)
     this.setupInstance(instance, proxy)
     return proxy
   }
@@ -99,7 +98,7 @@ export default class ActorSystem implements IProcessor {
       }
 
       this.actors.set(id, instance)
-      this.subscriptions.set(instance.id, this.mailbox.addSubscriber(instance))
+      this.addSubscriptionToMailbox(instance)
 
       const proxy = ActorProxy.of(this.mailbox, instance)
       this.setupInstance(instance, proxy)
@@ -124,6 +123,21 @@ export default class ActorSystem implements IProcessor {
   }
 
   /**
+   * Creates or returns a topic for the given protocol.
+   *
+   * @param fn Function to be wrapped in an actor
+   */
+  public async topicFor<T extends IActor>(fn: new (...args: any[]) => T): Promise<T & Topic<T>> {
+    const actor = (await this.actorFor('topics/' + fn.name)) as T & Topic<T>
+
+    if (actor === undefined) {
+      return Topic.for(this, fn.name, fn)
+    } else {
+      return actor
+    }
+  }
+
+  /**
    * Tries to find an actor, if it doesn't exist, creates a new one.
    *
    * @param id Id of the actor to find
@@ -140,6 +154,16 @@ export default class ActorSystem implements IProcessor {
     } catch (_) {
       return this.actorOf(elseClass, values)
     }
+  }
+
+  public resetSubscriptionsFor(instance: IActor): void {
+    const oldSubscription = this.subscriptions.get(instance.id)!
+    const subscription = this.mailbox.redirectSubscription(oldSubscription, instance)
+    this.subscriptions.set(instance.id, subscription)
+  }
+
+  private addSubscriptionToMailbox(instance: IActor): void {
+    this.subscriptions.set(instance.id, this.mailbox.addSubscriber(instance))
   }
 
   private setupInstance(instance: any, proxy: any): void {

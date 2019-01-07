@@ -31,6 +31,20 @@ export default class Mailbox<T> {
     return id
   }
 
+  public redirectSubscription(subscription: string, subscriber: ISubscriber<T>): string {
+    const newSubscription = this.addSubscriber(subscriber)
+    const partitions = this.subscribedPartitions[subscription]
+
+    partitions.forEach(partition =>
+      this.subscriptions[partition].forEach(oldSubscription => {
+        oldSubscription.messages.forEach(message => this.push(message))
+      }),
+    )
+
+    this.removeSubscription(subscription)
+    return newSubscription
+  }
+
   public removeSubscription(subscription: string): void {
     const partitions = this.subscribedPartitions[subscription]
     partitions.forEach(

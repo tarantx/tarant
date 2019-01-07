@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2018-present, tarant
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 export interface IEvent {
   family: string
   stream: string
@@ -48,6 +55,32 @@ export interface IEventSourced {
    * @param events The list of events to process
    */
   source(events: IEvent[]): void
+
+  /**
+   * Subscribes to all events in the journal.
+   *
+   * If an event can not be handled (because there is no method handler with
+   * the same name) it wil be ignored.
+   */
+  subscribeToJournal(): void
+
+  /**
+   * Subscribes to all events in the family. A family is the set of all streams for a given
+   * entity type.
+   *
+   * If an event can not be handled (because there is no method handler with
+   * the same name) it wil be ignored.
+   */
+  subscribeToFamily(family: new (...args: any[]) => any): void
+
+  /**
+   * Subscribes to all events in the stream. A stream is a potentially infinite set of events that are
+   * emited from an entity.
+   *
+   * If an event can not be handled (because there is no method handler with
+   * the same name) it wil be ignored.
+   */
+  subscribeToStream(stream: IEventSourced): void
 
   /**
    * Returns the current version of the sourced entity.
