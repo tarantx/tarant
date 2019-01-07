@@ -117,4 +117,16 @@ describe('Actor System Subscriptions', () => {
     publisher.ref.source(events)
     expect(publisher.ref.journal()).toEqual(events)
   })
+
+  test('that version should be the next event offset using index based on 1', async () => {
+    const publisher = actorSystem.actorOf(PublisherActor, [])
+    const events = [
+      { name: 'somethingHappened', family: 'PublisherActor', stream: publisher.id, version: 1, data: [] },
+      { name: 'somethingHappened', family: 'PublisherActor', stream: publisher.id, version: 2, data: [] },
+      { name: 'somethingHappened', family: 'PublisherActor', stream: publisher.id, version: 3, data: [] },
+    ]
+
+    publisher.ref.source(events)
+    expect(publisher.ref.version()).toEqual(4)
+  })
 })
