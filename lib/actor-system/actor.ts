@@ -18,6 +18,7 @@ import IActorSupervisor, { SupervisionStrategies } from './supervision/actor-sup
 
 type Cancellable = string
 export interface IActor extends ISubscriber<ActorMessage>, IActorSupervisor {
+  ref: this
   id: string
 }
 /**
@@ -27,6 +28,7 @@ export interface IActor extends ISubscriber<ActorMessage>, IActorSupervisor {
 export default abstract class Actor implements IActor {
   public readonly id: string
   public readonly partitionSet: Set<string> = new Set()
+  public readonly ref: this = this
   public partitions: string[]
   protected readonly self: this = this
   protected readonly system?: ActorSystem
@@ -35,6 +37,7 @@ export default abstract class Actor implements IActor {
   private readonly scheduled: Map<Cancellable, NodeJS.Timer> = new Map()
   private readonly topicSubscriptions: Map<string, string> = new Map()
   private busy: boolean = false
+  private shouldRefreshMailboxOnce: boolean = false
 
   protected constructor(id?: string) {
     this.id = id || uuid()
@@ -189,8 +192,12 @@ export default abstract class Actor implements IActor {
   }
 
   protected refreshMailbox() {
-    this.partitions = Array.from(this.partitionSet.values())
-    this.system!.resetSubscriptionsFor(this)
+    if (this.system === undefined) {
+      this.shouldRefreshMailboxOnce = true
+    } else {
+      this.partitions = Array.from(this.partitionSet.values())
+      this.system!.resetSubscriptionsFor(this)
+    }
   }
 
   private dispatchAndPromisify(actorMessage: ActorMessage): Promise<any> {
@@ -207,6 +214,10 @@ export default abstract class Actor implements IActor {
   }
 
   private initialized(): void {
+    if (this.shouldRefreshMailboxOnce) {
+      this.shouldRefreshMailboxOnce = false
+      this.refreshMailbox()
+    }
     this.materializers.forEach(materializer => materializer.onInitialize(this))
   }
 }

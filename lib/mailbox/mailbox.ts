@@ -55,6 +55,7 @@ export default class Mailbox<T> {
   }
 
   public push(message: Message<T>): void {
+    this.subscriptions[message.partition] = this.subscriptions[message.partition] || [] 
     this.subscriptions[message.partition].forEach(subscription => subscription.messages.push(message))
   }
 
