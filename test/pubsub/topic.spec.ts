@@ -7,8 +7,8 @@
 
 import ActorSystem from '../../lib/actor-system/actor-system'
 import Topic from '../../lib/pubsub/topic'
-import sleep from '../actor-system/fixtures/sleep'
 import TopicSubscriberActor from '../actor-system/fixtures/topic-subscriber-actor'
+import sleep from '../fixtures/sleep'
 
 describe('Topics', () => {
   jest.useRealTimers()

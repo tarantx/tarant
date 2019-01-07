@@ -15,6 +15,7 @@ export interface IEvent {
 
 export interface IEventToApply {
   event: (...args: any[]) => void
+  name: string
   data: any[]
 }
 
@@ -33,7 +34,7 @@ export interface IEventSourced {
    * @param event Event to write in the journal
    * @param data Data to be wrote in the journal along the event information
    */
-  apply(event: (...args: any[]) => void, data: any[]): void
+  apply(event: (...args: any[]) => void, name: string, data: any[]): void
 
   /**
    * Applies a set pf events to the current entity, in the order provided. The entity will

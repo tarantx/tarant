@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export default async function waitFor<T>(fn: () => Promise<T>): Promise<T> {
+export default async <T>(fn: () => Promise<T>) => {
   const r = fn()
   jest.advanceTimersByTime(100)
   return await r

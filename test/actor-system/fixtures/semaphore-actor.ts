@@ -6,7 +6,7 @@
  */
 
 import Actor from '../../../lib/actor-system/actor'
-import sleep from './sleep'
+import sleep from '../../fixtures/sleep'
 
 export default class SemaphoreActor extends Actor {
   private current: number

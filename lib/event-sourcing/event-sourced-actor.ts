@@ -20,12 +20,12 @@ export interface IEventSourcedActor extends IActor, IEventSourced {}
 export abstract class EventSourcedActor extends Actor implements IEventSourcedActor {
   private readonly events: IEvent[] = []
 
-  public apply(event: (...args: any[]) => void, data: any[]): void {
+  public apply(event: (...args: any[]) => void, name: string, data: any[]): void {
     event.call(this, ...data)
     this.events.push({
       data,
       family: this.constructor.name,
-      name: event.name,
+      name,
       stream: this.id,
       version: event.length + 1,
     })
@@ -50,7 +50,7 @@ export abstract class EventSourcedActor extends Actor implements IEventSourcedAc
   }
 
   public applyAll(...events: IEventToApply[]): void {
-    events.forEach(event => this.apply(event.event, event.data))
+    events.forEach(event => this.apply(event.event, event.name, event.data))
   }
 
   public journal(): IEvent[] {

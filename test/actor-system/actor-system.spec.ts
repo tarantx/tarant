@@ -7,11 +7,11 @@
 
 import ActorSystem from '../../lib/actor-system/actor-system'
 import ActorSystemConfigurationBuilder from '../../lib/actor-system/configuration/actor-system-configuration-builder'
-import IMaterializer from '../../lib/actor-system/materializer/materializer'
+import IMaterializer from '../../lib/materializer/materializer'
 import NamedActor from './fixtures/named-actor'
 import SemaphoreActor from './fixtures/semaphore-actor'
 import waitFor from './fixtures/wait-for'
-import IResolver from '../../lib/actor-system/resolver/resolver'
+import IResolver from '../../lib/resolver/resolver'
 
 describe('Actor System', () => {
   jest.useFakeTimers()
@@ -29,12 +29,14 @@ describe('Actor System', () => {
       onBeforeMessage: jest.fn(),
       onError: jest.fn(),
       onInitialize: jest.fn(),
+      onAppliedEvent: jest.fn(),
     }
     secondMaterializer = {
       onAfterMessage: jest.fn(),
       onBeforeMessage: jest.fn(),
       onError: jest.fn(),
       onInitialize: jest.fn(),
+      onAppliedEvent: jest.fn(),
     }
     firstResolver = {
       resolveActorById: jest.fn(),

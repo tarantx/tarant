@@ -7,7 +7,7 @@
 
 import ActorSystem from '../../lib/actor-system/actor-system'
 import Topic from '../../lib/pubsub/topic'
-import sleep from './fixtures/sleep'
+import sleep from '../fixtures/sleep'
 import TopicSubscriberFromConstructorActor from './fixtures/topic-subscriber-from-constructor-actor'
 
 describe('Actor System Subscriptions', () => {
