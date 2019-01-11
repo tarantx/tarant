@@ -11,6 +11,7 @@ git fetch origin-master
 git checkout -b master-local origin-master/master
 
 yarn upgrade --latest
+yarn build:doc
 git add .
 git commit --allow-empty -m "updated dependencies [skip ci]"
 
