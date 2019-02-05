@@ -30,15 +30,11 @@ export default class Topic<T> extends Actor {
     this.subscriptions = new Map()
 
     const props = Object.getOwnPropertyNames(consumerClass.prototype)
-    this.constructor = Object.assign(
-      { prototype: { subscribe: this.subscribe, unsubscribe: this.unsubscribe } },
-      this.constructor,
-    )
 
     props
       .filter(k => k !== 'constructor')
       .forEach(k => {
-        this.constructor.prototype[k] = (...args: []) => {
+        (this as any).constructor.prototype[k] = (...args: []) => {
           this.subscriptions.forEach((actor: any) => actor[k].apply(actor, args))
         }
       })

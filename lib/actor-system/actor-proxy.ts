@@ -7,7 +7,7 @@
 
 import Mailbox from '../mailbox/mailbox'
 import Message from '../mailbox/message'
-import { IActor } from './actor'
+import Actor, { IActor } from './actor'
 import ActorMessage from './actor-message'
 
 export default class ActorProxy {
@@ -17,20 +17,23 @@ export default class ActorProxy {
     methodName: string,
     args: any[],
   ): Promise<object> {
-    return new Promise((resolve, reject) => {
-      mailbox.push(Message.of(actorId, ActorMessage.of(methodName, args, resolve, reject)))
-    })
+    return new Promise((resolve, reject) =>
+      mailbox.push(Message.of(actorId, ActorMessage.of(methodName, args, resolve, reject))),
+    )
   }
 
   public static of<T extends IActor>(mailbox: Mailbox<ActorMessage>, actor: T): T {
-    const props = Object.getOwnPropertyNames(actor.constructor.prototype)
+    let allNames: string[] = []
+    for (let o = actor; (o as any) !== Actor.prototype; o = Object.getPrototypeOf(o)) {
+      allNames = allNames.concat(Object.getOwnPropertyNames(o).filter(a => typeof (o as any)[a] === 'function'))
+    }
 
-    return props
-      .filter(e => e !== 'constructor')
+    return allNames
+      .filter(name => name !== 'constructor')
       .map(
-        (member): [string, any] => [
-          member,
-          (...args: any[]): any => ActorProxy.sendAndReturn(mailbox, actor.id, member, args),
+        (name: string): [string, any] => [
+          name,
+          (...args: any[]): any => ActorProxy.sendAndReturn(mailbox, actor.id, name, args),
         ],
       )
       .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor }) as any

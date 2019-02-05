@@ -7,9 +7,9 @@
 
 export { default as Actor } from './actor-system/actor'
 export { default as ActorSystem } from './actor-system/actor-system'
-export { default as IMaterializer } from "./actor-system/materializer/materializer"
-export { default as IResolver } from "./actor-system/resolver/resolver"
-export { default as IActorSupervisor, SupervisionStrategies } from "./actor-system/supervision/actor-supervisor"
+export { default as IMaterializer } from './actor-system/materializer/materializer'
+export { default as IResolver } from './actor-system/resolver/resolver'
+export { default as IActorSupervisor, SupervisionStrategies } from './actor-system/supervision/actor-supervisor'
 export {
   default as ActorSystemConfigurationBuilder,
 } from './actor-system/configuration/actor-system-configuration-builder'

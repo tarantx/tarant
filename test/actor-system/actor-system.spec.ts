@@ -12,6 +12,7 @@ import NamedActor from './fixtures/named-actor'
 import SemaphoreActor from './fixtures/semaphore-actor'
 import waitFor from './fixtures/wait-for'
 import IResolver from '../../lib/actor-system/resolver/resolver'
+import { Actor } from '../../lib'
 
 describe('Actor System', () => {
   jest.useFakeTimers()
@@ -105,12 +106,12 @@ describe('Actor System', () => {
   })
 
   test('should return first resolved actor if exists', async () => {
-    const expectedActor = {
-      initialized: () => {
-        return
-      },
-      partitions: [],
+    class AnActor extends Actor {
+      constructor() {
+        super()
+      }
     }
+    const expectedActor = new AnActor()
     ;(firstResolver.resolveActorById as jest.Mock).mockImplementation(() => Promise.resolve(expectedActor))
     const actor = (await actorSystem.resolveOrNew('myId', SemaphoreActor, ['myId', null])) as any
     expect(actor.ref).toBe(expectedActor)
