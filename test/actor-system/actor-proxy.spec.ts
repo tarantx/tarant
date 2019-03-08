@@ -16,7 +16,7 @@ const actorMessageMock = {
 
 jest.mock('../../lib/mailbox/mailbox', () => ({
   __esModule: true,
-  default: jest.fn<Mailbox<ActorMessage>>(() => mailboxMock),
+  default: jest.fn(() => mailboxMock),
 }))
 jest.mock('../../lib/mailbox/message', () => ({ __esModule: true, default: messageMock }))
 jest.mock('../../lib/actor-system/actor-message', () => ({ __esModule: true, default: actorMessageMock }))
