@@ -9,6 +9,8 @@ export { default as Actor } from './actor-system/actor'
 export { default as ActorSystem } from './actor-system/actor-system'
 export { default as IMaterializer } from './materializer/materializer'
 export { default as IResolver } from './resolver/resolver'
+export { IEvent, IEventSourced, IEventToApply } from './event-sourcing/event-sourced'
+
 export { default as IActorSupervisor, SupervisionStrategies } from './actor-system/supervision/actor-supervisor'
 export {
   default as ActorSystemConfigurationBuilder,
