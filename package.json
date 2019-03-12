@@ -48,7 +48,7 @@
     "@types/node": "10.12.18",
     "coveralls": "3.0.2",
     "faker": "4.1.0",
-    "jest": "23.6.0",
+    "jest": "24.5.0",
     "prettier": "1.15.3",
     "rollup": "^0.68.2",
     "rollup-plugin-commonjs": "^9.2.0",
