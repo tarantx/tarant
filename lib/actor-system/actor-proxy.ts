@@ -30,12 +30,10 @@ export default class ActorProxy {
 
     return allNames
       .filter(name => name !== 'constructor')
-      .map(
-        (name: string): [string, any] => [
-          name,
-          (...args: any[]): any => ActorProxy.sendAndReturn(mailbox, actor.id, name, args),
-        ],
-      )
+      .map((name: string): [string, any] => [
+        name,
+        (...args: any[]): any => ActorProxy.sendAndReturn(mailbox, actor.id, name, args),
+      ])
       .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor }) as any
   }
 }
