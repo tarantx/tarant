@@ -58,6 +58,7 @@
     "faker": "4.1.0",
     "jest": "24.9.0",
     "jsdoc-babel": "0.5.0",
+    "nodemon": "^2.0.1",
     "prettier": "1.19.1",
     "rollup": "1.27.5",
     "rollup-plugin-commonjs": "10.1.0",
