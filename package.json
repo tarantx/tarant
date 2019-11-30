@@ -23,6 +23,7 @@
   "scripts": {
     "prepare": "yarn build && yarn build:cdn",
     "build": "tsc",
+    "build:dev": "nodemon",
     "build:cdn": "yarn build && rollup -c",
     "build:doc": "jsdoc2md --files 'lib/**/*.ts' --configure jsdoc2md.json > API.md",
     "format": "prettier --write \"**/*.ts\" && tslint -p tsconfig.json --fix lib/**/*.ts -t verbose",

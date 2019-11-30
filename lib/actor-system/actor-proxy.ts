@@ -25,15 +25,16 @@ export default class ActorProxy {
   public static of<T extends IActor>(mailbox: Mailbox<ActorMessage>, actor: T): T {
     let allNames: string[] = []
     for (let o = actor; o && (o as any) !== Actor.prototype; o = Object.getPrototypeOf(o)) {
-      allNames = allNames.concat(Object.getOwnPropertyNames(o).filter(a => typeof (o as any)[a] === 'function'))
+      allNames = allNames.concat(Object.getOwnPropertyNames(o).filter(a => typeof (o as any)[a] === 'function' && a !== 'constructor'))
     }
 
     return allNames
-      .filter(name => name !== 'constructor')
-      .map((name: string): [string, any] => [
-        name,
-        (...args: any[]): any => ActorProxy.sendAndReturn(mailbox, actor.id, name, args),
-      ])
+      .map(
+        (name: string): [string, any] => [
+          name,
+          (...args: any[]): any => ActorProxy.sendAndReturn(mailbox, actor.id, name, args),
+        ],
+      )
       .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor }) as any
   }
 }
