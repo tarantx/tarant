@@ -23,6 +23,7 @@
   "scripts": {
     "prepare": "yarn build && yarn build:cdn",
     "build": "tsc",
+    "build:dev": "nodemon",
     "build:cdn": "yarn build && rollup -c",
     "build:doc": "jsdoc2md --files 'lib/**/*.ts' --configure jsdoc2md.json > API.md",
     "format": "prettier --write \"**/*.ts\" && tslint -p tsconfig.json --fix lib/**/*.ts -t verbose",
@@ -57,6 +58,7 @@
     "faker": "4.1.0",
     "jest": "24.3.1",
     "jsdoc-babel": "0.5.0",
+    "nodemon": "^2.0.1",
     "prettier": "1.16.4",
     "rollup": "1.6.0",
     "rollup-plugin-commonjs": "9.2.1",
