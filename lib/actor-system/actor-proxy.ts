@@ -25,7 +25,9 @@ export default class ActorProxy {
   public static of<T extends IActor>(mailbox: Mailbox<ActorMessage>, actor: T): T {
     let allNames: string[] = []
     for (let o = actor; o && (o as any) !== Actor.prototype; o = Object.getPrototypeOf(o)) {
-      allNames = allNames.concat(Object.getOwnPropertyNames(o).filter(a => typeof (o as any)[a] === 'function' && a !== 'constructor'))
+      allNames = allNames.concat(
+        Object.getOwnPropertyNames(o).filter(a => typeof (o as any)[a] === 'function' && a !== 'constructor'),
+      )
     }
 
     return allNames
