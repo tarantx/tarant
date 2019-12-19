@@ -26,15 +26,6 @@ LICENSE file in the root directory of this source tree.</p></dd>
 LICENSE file in the root directory of this source tree.</p></dd>
 </dl>
 
-## Members
-
-<dl>
-<dt><a href="#_default">_default</a></dt>
-<dd><p>Copyright (c) 2018-present, tarant</p>
-<p>This source code is licensed under the MIT license found in the
-LICENSE file in the root directory of this source tree.</p></dd>
-</dl>
-
 <a name="ActorMessage"></a>
 
 ## ActorMessage
@@ -176,11 +167,3 @@ LICENSE file in the root directory of this source tree.</p>
 LICENSE file in the root directory of this source tree.</p>
 
 **Kind**: global class  
-<a name="_default"></a>
-
-## \_default
-<p>Copyright (c) 2018-present, tarant</p>
-<p>This source code is licensed under the MIT license found in the
-LICENSE file in the root directory of this source tree.</p>
-
-**Kind**: global variable  
