@@ -16,7 +16,7 @@ export default class Mailbox<T> {
   }
 
   private readonly subscribedPartitions: { [subscription: string]: string[] } = {}
-  private readonly subscriptions: { [partition: string]: Array<Subscription<T>> } = {}
+  private readonly subscriptions: { [partition: string]: Subscription<T>[] } = {}
 
   public addSubscriber(subscriber: ISubscriber<T>): string {
     const id = uuid()
