@@ -55,12 +55,12 @@ export default abstract class Actor implements IActor {
 
     const actorMessage = message.content
     try {
-      this.materializers.forEach(materializer => materializer.onBeforeMessage(this, actorMessage))
+      this.materializers.forEach((materializer) => materializer.onBeforeMessage(this, actorMessage))
       const result = await this.dispatchAndPromisify(actorMessage)
 
       actorMessage.resolve(result)
     } catch (ex) {
-      this.materializers.forEach(materializer => materializer.onError(this, actorMessage, ex))
+      this.materializers.forEach((materializer) => materializer.onError(this, actorMessage, ex))
       const strategy = await this.supervisor!.supervise(this.self, ex, actorMessage)
 
       if (strategy === 'drop-message') {
@@ -74,7 +74,7 @@ export default abstract class Actor implements IActor {
       }
     } finally {
       this.busy = false
-      this.materializers.forEach(materializer => materializer.onAfterMessage(this, actorMessage))
+      this.materializers.forEach((materializer) => materializer.onAfterMessage(this, actorMessage))
     }
 
     return true
@@ -200,6 +200,6 @@ export default abstract class Actor implements IActor {
   }
 
   private initialized(): void {
-    this.materializers.forEach(materializer => materializer.onInitialize(this))
+    this.materializers.forEach((materializer) => materializer.onInitialize(this))
   }
 }

@@ -23,7 +23,7 @@ export default class Mailbox<T> {
     const { partitions } = subscriber
 
     this.subscribedPartitions[id] = partitions
-    partitions.forEach(partition => {
+    partitions.forEach((partition) => {
       this.subscriptions[partition] = this.subscriptions[partition] || []
       this.subscriptions[partition].push(new Subscription(id, subscriber))
     })
@@ -34,14 +34,15 @@ export default class Mailbox<T> {
   public removeSubscription(subscription: string): void {
     const partitions = this.subscribedPartitions[subscription]
     partitions.forEach(
-      partition => (this.subscriptions[partition] = this.subscriptions[partition].filter(s => s.id !== subscription)),
+      (partition) =>
+        (this.subscriptions[partition] = this.subscriptions[partition].filter((s) => s.id !== subscription)),
     )
 
     delete this.subscribedPartitions[subscription]
   }
 
   public push(message: Message<T>): void {
-    this.subscriptions[message.partition].forEach(subscription => subscription.messages.push(message))
+    this.subscriptions[message.partition].forEach((subscription) => subscription.messages.push(message))
   }
 
   public async poll(subscription: string): Promise<void> {
@@ -50,10 +51,10 @@ export default class Mailbox<T> {
       return
     }
 
-    partitions.forEach(partition =>
+    partitions.forEach((partition) =>
       this.subscriptions[partition]
-        .filter(managedSubscription => managedSubscription.id === subscription)
-        .forEach(async managedSubscription => await managedSubscription.process()),
+        .filter((managedSubscription) => managedSubscription.id === subscription)
+        .forEach(async (managedSubscription) => await managedSubscription.process()),
     )
   }
 }

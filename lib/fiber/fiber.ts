@@ -34,7 +34,7 @@ export default class Fiber {
   }
 
   public acquire(processor: IProcessor): boolean {
-    if (processor.requirements.every(req => this.configuration.resources.indexOf(req) !== -1)) {
+    if (processor.requirements.every((req) => this.configuration.resources.indexOf(req) !== -1)) {
       this.processors.push(processor)
       return true
     }
@@ -43,6 +43,6 @@ export default class Fiber {
   }
 
   private tick(): void {
-    this.processors.forEach(p => p.process())
+    this.processors.forEach((p) => p.process())
   }
 }

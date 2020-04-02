@@ -22,11 +22,7 @@ describe('Actor System Supervision', () => {
   beforeEach(() => {
     supervisor = { supervise: jest.fn() }
 
-    actorSystem = ActorSystem.for(
-      ActorSystemConfigurationBuilder.define()
-        .withTopSupervisor(supervisor)
-        .done(),
-    )
+    actorSystem = ActorSystem.for(ActorSystemConfigurationBuilder.define().withTopSupervisor(supervisor).done())
   })
 
   const messagesForActor = (actor: any): ActorMessage[] => {

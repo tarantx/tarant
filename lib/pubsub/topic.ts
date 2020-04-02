@@ -32,8 +32,8 @@ export default class Topic<T> extends Actor {
     const props = Object.getOwnPropertyNames(consumerClass.prototype)
 
     props
-      .filter(k => k !== 'constructor')
-      .forEach(k => {
+      .filter((k) => k !== 'constructor')
+      .forEach((k) => {
         (this as any).constructor.prototype[k] = (...args: []) => {
           this.subscriptions.forEach((actor: any) => actor[k].apply(actor, args))
         }

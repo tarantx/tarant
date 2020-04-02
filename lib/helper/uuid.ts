@@ -1,5 +1,5 @@
 export default () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, character => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (character) => {
     // tslint:disable-next-line:no-bitwise
     const randomHex = (Math.random() * 16) | 0
     // tslint:disable-next-line:no-bitwise

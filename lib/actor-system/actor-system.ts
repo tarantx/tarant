@@ -47,7 +47,7 @@ export default class ActorSystem implements IProcessor {
   }
 
   public async process(): Promise<void> {
-    this.actors.forEach(async v => {
+    this.actors.forEach(async (v) => {
       await this.mailbox.poll(this.subscriptions.get(v.id) as string)
     })
   }

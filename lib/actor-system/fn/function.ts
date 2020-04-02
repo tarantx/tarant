@@ -12,7 +12,7 @@ export default class FunctionActor extends Actor {
   public static for(system: ActorSystem, fn: any): (...args: any[]) => Promise<any> {
     const actor = system.actorOf(FunctionActor, [fn])
     // tslint:disable-next-line
-    return function() {
+    return function () {
       return actor.execute(...((arguments as unknown) as any[]))
     }
   }

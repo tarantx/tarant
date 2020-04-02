@@ -49,7 +49,7 @@ function dummySubscriber(partition: Partition): ISubscriber<object> & IMessageHo
 
   return {
     messages,
-    onReceiveMessage: message => {
+    onReceiveMessage: (message) => {
       messages.push(message)
       return Promise.resolve(true)
     },
