@@ -52,27 +52,27 @@
     "@babel/preset-env": "7.9.6",
     "@babel/preset-typescript": "7.9.0",
     "@types/faker": "4.1.11",
-    "@types/jest": "25.2.1",
-    "@types/node": "13.13.5",
+    "@types/jest": "25.2.2",
+    "@types/node": "14.0.1",
     "coveralls": "3.1.0",
     "faker": "4.1.0",
     "jest": "26.0.1",
     "jsdoc-babel": "0.5.0",
-    "nodemon": "^2.0.3",
+    "nodemon": "^2.0.4",
     "prettier": "2.0.5",
-    "rollup": "2.8.2",
+    "rollup": "2.10.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-terser": "5.3.0",
-    "rollup-plugin-typescript2": "0.27.0",
-    "ts-jest": "25.5.0",
+    "rollup-plugin-typescript2": "0.27.1",
+    "ts-jest": "25.5.1",
     "tslint": "6.1.2",
     "tslint-config-prettier": "1.18.0",
-    "typescript": "3.8.3"
+    "typescript": "3.9.2"
   },
   "dependencies": {
     "jsdoc-to-markdown": "^5.0.3",
-    "tslib": "1.11.2"
+    "tslib": "2.0.0"
   },
   "jest": {
     "preset": "ts-jest"
