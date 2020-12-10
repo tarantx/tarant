@@ -1,6 +1,6 @@
 {
   "name": "tarant",
-  "version": "2.7.54",
+  "version": "2.7.55",
   "description": "Actor model for reactive and scalable applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
