@@ -7,33 +7,35 @@
 
 import IProcessor from './processor'
 
+type Timer = any
 interface IFiberConfiguration {
   resources: string[]
   tickInterval: number
 }
 
 export default class Fiber {
-  public static with(config: IFiberConfiguration): Fiber {
+  public static with (config: IFiberConfiguration): Fiber {
     return new Fiber(config)
   }
+
   public readonly name: string
 
   private readonly configuration: IFiberConfiguration
-  private readonly timerId: NodeJS.Timer
+  private readonly timerId: Timer
   private readonly processors: IProcessor[] = []
 
-  private constructor(configuration: IFiberConfiguration) {
+  private constructor (configuration: IFiberConfiguration) {
     const { resources, tickInterval } = configuration
     this.configuration = configuration
     this.name = `fiber-with${resources.reduce((aggregation, current) => `${aggregation}-${current}`, '')}`
     this.timerId = setInterval(this.tick.bind(this), tickInterval)
   }
 
-  public free(): void {
+  public free (): void {
     clearInterval(this.timerId)
   }
 
-  public acquire(processor: IProcessor): boolean {
+  public acquire (processor: IProcessor): boolean {
     if (processor.requirements.every((req) => this.configuration.resources.indexOf(req) !== -1)) {
       this.processors.push(processor)
       return true
@@ -42,7 +44,7 @@ export default class Fiber {
     return false
   }
 
-  private tick(): void {
+  private tick (): void {
     this.processors.forEach((p) => p.process())
   }
 }

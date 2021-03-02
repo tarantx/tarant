@@ -1,5 +1,0 @@
-{
-    "watch": ["lib"],
-    "ext": "ts",
-    "exec": "yarn build"
-}

@@ -9,7 +9,7 @@ import Actor from '../actor'
 import ActorSystem from '../actor-system'
 
 export default class FunctionActor extends Actor {
-  public static for(system: ActorSystem, fn: any): (...args: any[]) => Promise<any> {
+  public static for (system: ActorSystem, fn: any): (...args: any[]) => Promise<any> {
     const actor = system.actorOf(FunctionActor, [fn])
     // tslint:disable-next-line
     return function () {
@@ -19,12 +19,12 @@ export default class FunctionActor extends Actor {
 
   private fn: (...args: any[]) => Promise<any>
 
-  constructor(fn: (...args: any[]) => Promise<any>) {
+  constructor (fn: (...args: any[]) => Promise<any>) {
     super()
     this.fn = fn
   }
 
-  public async execute(...args: any[]): Promise<any> {
+  public async execute (...args: any[]): Promise<any> {
     return await this.fn(...args)
   }
 }

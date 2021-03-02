@@ -101,7 +101,7 @@ describe('Actor System', () => {
       await actorSystem.actorFor('myName')
       fail('should have thrown an error')
     } catch (err) {
-      expect(err).toEqual(`unable to resolve actor myName`)
+      expect(err).toEqual(new Error(`unable to resolve actor myName`))
     }
   })
 

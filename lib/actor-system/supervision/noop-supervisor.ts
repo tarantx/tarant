@@ -6,11 +6,10 @@
  */
 
 import { Actor } from '../..'
-import IActorSupervisor from './actor-supervisor'
-import { SupervisionStrategies } from './actor-supervisor'
+import IActorSupervisor, { SupervisionStrategies } from './actor-supervisor'
 
 export default class NoopActorSupervisor implements IActorSupervisor {
-  public supervise(actor: Actor, exception: any, message: any): SupervisionStrategies {
+  public supervise (actor: Actor, exception: any, message: any): SupervisionStrategies {
     return 'drop-message'
   }
 }
