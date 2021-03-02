@@ -21,7 +21,7 @@
     "asynchronous"
   ],
   "scripts": {
-    "prepare": "npm run build && npm run build:cdn",
+    "prepare": "npm run build",
     "build": "tsc",
     "format": "prettier --write \"**/*.ts\" && eslint --fix lib/**/*.ts",
     "lint": "eslint",
