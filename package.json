@@ -27,7 +27,7 @@
     "lint": "eslint",
     "test": "npm run format && npm run lint && jest test",
     "test:dev": "jest --watchAll test",
-    "test:cov": "npm run format && npm run lint && jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test:cov": "npm run format && npm run lint && jest --coverage",
     "push": "npm run test && git push",
     "deploy:major": "npm version major",
     "deploy:minor": "npm version minor",
