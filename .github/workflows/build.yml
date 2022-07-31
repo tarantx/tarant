@@ -27,8 +27,3 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - uses: mikeal/merge-release@master
-        if: github.event_name != 'pull_request'
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
