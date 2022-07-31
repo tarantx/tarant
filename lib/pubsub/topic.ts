@@ -19,13 +19,13 @@ export default class Topic<T> extends Actor {
    * @param name Name of the topic to be created
    * @param consumerClass Protocol of the topic
    */
-  public static for<T> (system: ActorSystem, name: string, consumerClass: new (...args: any[]) => T): TopicSeenAs<T> {
+  public static for<T>(system: ActorSystem, name: string, consumerClass: new (...args: any[]) => T): TopicSeenAs<T> {
     return system.actorOf(Topic, [name, consumerClass]) as any
   }
 
   private readonly subscriptions: Map<string, T>
 
-  public constructor (topicName: string, consumerClass: new (...args: any[]) => T) {
+  public constructor(topicName: string, consumerClass: new (...args: any[]) => T) {
     super('topics/' + topicName)
     this.subscriptions = new Map()
 
@@ -34,19 +34,20 @@ export default class Topic<T> extends Actor {
     props
       .filter((k) => k !== 'constructor')
       .forEach((k) => {
-        ;(this as any).constructor.prototype[k] = (...args: []) => {
-          this.subscriptions.forEach((actor: any) => actor[k].apply(actor, args))
+        (this as any).constructor.prototype[k] = (...args: []) => {
+          // tslint:disable-next-line
+          this.subscriptions.forEach((actor: any) => actor[k].apply(actor, args)) // eslint-disable-line
         }
       })
   }
 
-  public subscribe (t: T): string {
+  public subscribe(t: T): string {
     const id = uuid()
     this.subscriptions.set(id, t)
     return id
   }
 
-  public unsubscribe (id: string): void {
+  public unsubscribe(id: string): void {
     this.subscriptions.delete(id)
   }
 }

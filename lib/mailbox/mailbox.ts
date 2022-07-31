@@ -11,14 +11,14 @@ import ISubscriber from './subscriber'
 import Subscription from './subscription'
 
 export default class Mailbox<T> {
-  public static empty<T> (): Mailbox<T> {
+  public static empty<T>(): Mailbox<T> {
     return new Mailbox()
   }
 
   private readonly subscribedPartitions: { [subscription: string]: string[] } = {}
   private readonly subscriptions: { [partition: string]: Subscription<T>[] } = {}
 
-  public addSubscriber (subscriber: ISubscriber<T>): string {
+  public addSubscriber(subscriber: ISubscriber<T>): string {
     const id = uuid()
     const { partitions } = subscriber
 
@@ -31,21 +31,21 @@ export default class Mailbox<T> {
     return id
   }
 
-  public removeSubscription (subscription: string): void {
+  public removeSubscription(subscription: string): void {
     const partitions = this.subscribedPartitions[subscription]
     partitions.forEach(
       (partition) =>
-        (this.subscriptions[partition] = this.subscriptions[partition].filter((s) => s.id !== subscription))
+        (this.subscriptions[partition] = this.subscriptions[partition].filter((s) => s.id !== subscription)),
     )
 
     delete this.subscribedPartitions[subscription]
   }
 
-  public push (message: Message<T>): void {
+  public push(message: Message<T>): void {
     this.subscriptions[message.partition].forEach((subscription) => subscription.messages.push(message))
   }
 
-  public async poll (subscription: string): Promise<void> {
+  public async poll(subscription: string): Promise<void> {
     const partitions = this.subscribedPartitions[subscription]
     if (!partitions) {
       return
@@ -54,7 +54,7 @@ export default class Mailbox<T> {
     partitions.forEach((partition) =>
       this.subscriptions[partition]
         .filter((managedSubscription) => managedSubscription.id === subscription)
-        .forEach(async (managedSubscription) => await managedSubscription.process())
+        .forEach(async (managedSubscription) => await managedSubscription.process()),
     )
   }
 }

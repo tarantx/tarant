@@ -34,9 +34,9 @@ export default abstract class Actor implements IActor {
   private readonly supervisor?: IActorSupervisor
   private readonly scheduled: Map<Cancellable, Timer> = new Map()
   private readonly topicSubscriptions: Map<string, string> = new Map()
-  private busy: boolean = false
+  private busy = false
 
-  protected constructor (id?: string) {
+  protected constructor(id?: string) {
     this.id = id || uuid()
     this.partitions = [this.id]
   }
@@ -47,7 +47,7 @@ export default abstract class Actor implements IActor {
    *
    * @param message Message received from the mailbox
    */
-  public async onReceiveMessage (message: Message<ActorMessage>): Promise<boolean> {
+  public async onReceiveMessage(message: Message<ActorMessage>): Promise<boolean> {
     if (this.busy) {
       return false
     }
@@ -89,7 +89,7 @@ export default abstract class Actor implements IActor {
    * @param exception Exception that raised the actor
    * @param message Message that we failed to process
    */
-  public supervise (actor: Actor, exception: any, message: any): SupervisionStrategies {
+  public supervise(actor: Actor, exception: any, message: any): SupervisionStrategies {
     return this.supervisor!.supervise(actor, exception, message)
   }
 
@@ -103,13 +103,13 @@ export default abstract class Actor implements IActor {
    *
    * @see Actor#cancel
    */
-  protected schedule (interval: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
+  protected schedule(interval: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
     const id = uuid()
     setTimeout(() => {
       const sysAny = this.system as any
       this.scheduled.set(
         id,
-        setInterval(() => ActorProxy.sendAndReturn(sysAny.mailbox, this.id, fn.name, values), interval)
+        setInterval(() => ActorProxy.sendAndReturn(sysAny.mailbox, this.id, fn.name, values), interval),
       )
     }, 0)
     return id
@@ -125,7 +125,7 @@ export default abstract class Actor implements IActor {
    *
    * @see Actor#cancel
    */
-  protected scheduleOnce (timeout: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
+  protected scheduleOnce(timeout: number, fn: (...args: any[]) => void, values: any[]): Cancellable {
     const id = uuid()
     setTimeout(() => {
       const sysAny = this.system as any
@@ -134,7 +134,7 @@ export default abstract class Actor implements IActor {
         setTimeout(() => {
           ActorProxy.sendAndReturn(sysAny.mailbox, this.id, fn.name, values)
           this.scheduled.delete(id)
-        }, timeout)
+        }, timeout),
       )
     }, 0)
     return id
@@ -147,7 +147,7 @@ export default abstract class Actor implements IActor {
    * @see Actor#schedule
    * @see Actor#scheduleOnce
    */
-  protected cancel (cancellable: Cancellable): void {
+  protected cancel(cancellable: Cancellable): void {
     setTimeout(() => {
       const id = this.scheduled.get(cancellable) as Timer
       clearTimeout(id)
@@ -164,20 +164,20 @@ export default abstract class Actor implements IActor {
    * @param classFn Constructor of the actor to build
    * @param values Values to pass as the constructor parameters
    */
-  protected actorOf<T extends IActor> (classFn: new (...args: any[]) => T, values: any[]): T {
+  protected actorOf<T extends IActor>(classFn: new (...args: any[]) => T, values: any[]): T {
     const actor = this.system!.actorOf(classFn, values) as any
     actor.ref.supervisor = this
     return actor
   }
 
-  protected subscribeToTopic (topic: Topic<Actor>): void {
+  protected subscribeToTopic(topic: Topic<Actor>): void {
     setTimeout(async () => {
       const topicSubscription = await topic.subscribe(this)
       this.topicSubscriptions.set(topic.id, topicSubscription)
     }, 0)
   }
 
-  protected unsubscribeFromTopic (topic: Topic<Actor>): void {
+  protected unsubscribeFromTopic(topic: Topic<Actor>): void {
     const id = this.topicSubscriptions.get(topic.id)
     if (id === undefined) {
       return
@@ -187,7 +187,7 @@ export default abstract class Actor implements IActor {
     this.topicSubscriptions.delete(topic.id)
   }
 
-  private dispatchAndPromisify (actorMessage: ActorMessage): Promise<any> {
+  private dispatchAndPromisify(actorMessage: ActorMessage): Promise<any> {
     try {
       const r: any = this.constructor.prototype[actorMessage.methodName].apply(this, actorMessage.arguments)
       if (r && r.then && r.catch) {
@@ -200,7 +200,7 @@ export default abstract class Actor implements IActor {
     }
   }
 
-  private initialized (): void {
+  private initialized(): void {
     this.materializers.forEach((materializer) => materializer.onInitialize(this))
   }
 }

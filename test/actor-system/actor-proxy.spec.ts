@@ -21,7 +21,7 @@ jest.mock('../../lib/mailbox/mailbox', () => ({
 jest.mock('../../lib/mailbox/message', () => ({ __esModule: true, default: messageMock }))
 jest.mock('../../lib/actor-system/actor-message', () => ({ __esModule: true, default: actorMessageMock }))
 
-import * as faker from 'faker'
+import { faker } from '@faker-js/faker'
 import { Actor } from '../../lib'
 import ActorMessage from '../../lib/actor-system/actor-message'
 import ActorProxy from '../../lib/actor-system/actor-proxy'
@@ -60,12 +60,12 @@ describe('actor proxy', () => {
   describe('send and return', () => {
     it('should return a promise that pass and push the message to the mailbox', async () => {
       const mailbox = new Mailbox<ActorMessage>()
-      const actorId = faker.random.uuid()
-      const methodName = faker.random.uuid()
-      const resultActorMessage = faker.random.uuid()
-      const resultMessage = faker.random.uuid()
-      const expectedResult = faker.random.uuid()
-      const args = [faker.random.uuid(), faker.random.uuid()]
+      const actorId = faker.datatype.uuid()
+      const methodName = faker.datatype.uuid()
+      const resultActorMessage = faker.datatype.uuid()
+      const resultMessage = faker.datatype.uuid()
+      const expectedResult = faker.datatype.uuid()
+      const args = [faker.datatype.uuid(), faker.datatype.uuid()]
 
       actorMessageMock.of.mockImplementation((_, __, resolve, ___) => {
         resolve(expectedResult)
@@ -83,11 +83,11 @@ describe('actor proxy', () => {
 
     it('should return a promise that fails and push the message to the mailbox if fails', async () => {
       const mailbox = new Mailbox<ActorMessage>()
-      const actorId = faker.random.uuid()
-      const methodName = faker.random.uuid()
-      const resultMessage = faker.random.uuid()
-      const expectedResult = faker.random.uuid()
-      const args = [faker.random.uuid(), faker.random.uuid()]
+      const actorId = faker.datatype.uuid()
+      const methodName = faker.datatype.uuid()
+      const resultMessage = faker.datatype.uuid()
+      const expectedResult = faker.datatype.uuid()
+      const args = [faker.datatype.uuid(), faker.datatype.uuid()]
 
       actorMessageMock.of.mockImplementation((_, __, ___, reject) => {
         reject(expectedResult)

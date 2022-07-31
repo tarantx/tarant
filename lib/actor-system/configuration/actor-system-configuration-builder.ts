@@ -14,7 +14,7 @@ import NoopActorSupervisor from '../supervision/noop-supervisor'
 import ActorSystemConfiguration from './actor-system-configuration'
 
 export default class ActorSystemConfigurationBuilder {
-  public static define (): ActorSystemConfigurationBuilder {
+  public static define(): ActorSystemConfigurationBuilder {
     return new ActorSystemConfigurationBuilder()
   }
 
@@ -25,37 +25,37 @@ export default class ActorSystemConfigurationBuilder {
   public mailbox: Mailbox<ActorMessage> = Mailbox.empty()
   public supervisor: IActorSupervisor = new NoopActorSupervisor()
 
-  public withMaterializers (materializers: IMaterializer[]): ActorSystemConfigurationBuilder {
+  public withMaterializers(materializers: IMaterializer[]): ActorSystemConfigurationBuilder {
     this.materializers = materializers
     return this
   }
 
-  public withResolvers (resolvers: IResolver[]): ActorSystemConfigurationBuilder {
+  public withResolvers(resolvers: IResolver[]): ActorSystemConfigurationBuilder {
     this.resolvers = resolvers
     return this
   }
 
-  public withResources (resources: [string]): ActorSystemConfigurationBuilder {
+  public withResources(resources: [string]): ActorSystemConfigurationBuilder {
     this.resources = resources
     return this
   }
 
-  public withTickInterval (tickInterval: number): ActorSystemConfigurationBuilder {
+  public withTickInterval(tickInterval: number): ActorSystemConfigurationBuilder {
     this.tickInterval = tickInterval
     return this
   }
 
-  public withMailbox (mailbox: Mailbox<ActorMessage>): ActorSystemConfigurationBuilder {
+  public withMailbox(mailbox: Mailbox<ActorMessage>): ActorSystemConfigurationBuilder {
     this.mailbox = mailbox
     return this
   }
 
-  public withTopSupervisor (supervisor: IActorSupervisor): ActorSystemConfigurationBuilder {
+  public withTopSupervisor(supervisor: IActorSupervisor): ActorSystemConfigurationBuilder {
     this.supervisor = supervisor
     return this
   }
 
-  public done (): ActorSystemConfiguration {
+  public done(): ActorSystemConfiguration {
     return this
   }
 }
