@@ -8,6 +8,8 @@
 import Fiber from '../fiber/fiber'
 import IProcessor from '../fiber/processor'
 import Mailbox from '../mailbox/mailbox'
+import Message from '../mailbox/message'
+import Topic from '../pubsub/topic'
 import { IActor } from './actor'
 import ActorMessage from './actor-message'
 import ActorProxy from './actor-proxy'
@@ -76,6 +78,11 @@ export default class ActorSystem implements IProcessor {
     this.setupInstance(instance, proxy)
     return proxy
   }
+
+  public releaseActor(actor: IActor): void {
+    const actorProxy = actor as any
+    this.mailbox.push(Message.of(actorProxy.ref.id, ActorMessage.releaseActor()))
+  }  
 
   /**
    * Looks for an existing actor in this actor system. If none exist,
@@ -146,5 +153,22 @@ export default class ActorSystem implements IProcessor {
     instance.materializers = this.materializers
     instance.supervisor = this.supervisor
     instance.initialized()
+  }
+
+  private async releaseActorInternal(actor: IActor): Promise<void> {
+    this.actors.delete(actor.id) // first remove, we don't want more references
+
+    const actorSubscription = this.subscriptions.get(actor.id)
+    this.mailbox.removeSubscription(actorSubscription) // do not receive more messages
+
+    this.subscriptions.delete(actor.id)
+    // unsubscribe from all topics
+    const subscribedTopics = (actor as any).topicSubscriptions as Map<string, string>
+    const allUnsubs = Array.from(subscribedTopics.entries()).map(async ([value, key]) => {
+      const topic = await this.actorFor<Topic<any>>(key)
+      topic.unsubscribe(value)
+    })
+
+    await Promise.all(allUnsubs)
   }
 }

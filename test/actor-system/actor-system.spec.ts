@@ -11,6 +11,7 @@ import IMaterializer from '../../lib/actor-system/materializer/materializer'
 import NamedActor from './fixtures/named-actor'
 import SemaphoreActor from './fixtures/semaphore-actor'
 import waitFor from './fixtures/wait-for'
+import sleep from './fixtures/sleep'
 import IResolver from '../../lib/actor-system/resolver/resolver'
 import { Actor } from '../../lib'
 
@@ -30,12 +31,16 @@ describe('Actor System', () => {
       onBeforeMessage: jest.fn(),
       onError: jest.fn(),
       onInitialize: jest.fn(),
+      onBeforeRelease: jest.fn(),
+      onAfterRelease: jest.fn(),
     }
     secondMaterializer = {
       onAfterMessage: jest.fn(),
       onBeforeMessage: jest.fn(),
       onError: jest.fn(),
       onInitialize: jest.fn(),
+      onBeforeRelease: jest.fn(),
+      onAfterRelease: jest.fn(),
     }
     firstResolver = {
       resolveActorById: jest.fn(),
@@ -182,5 +187,24 @@ describe('Actor System', () => {
 
     await waitFor(() => fnActor(5, 15))
     expect(fn).toBeCalledWith(5, 15)
+  })
+
+  describe('released actors', () => {
+    test('should call materializers before releasing', async () => {
+      const actor: NamedActor = actorSystem.actorOf(NamedActor, ['myReleasedActor'])
+
+      try {
+        actorSystem.releaseActor(actor)
+        actorSystem.process()
+        await waitFor(() => sleep(10))
+      } catch (e) {
+        // expected
+      }
+
+      expect(firstMaterializer.onBeforeRelease).toHaveBeenCalled()
+      expect(secondMaterializer.onBeforeRelease).toHaveBeenCalled()
+      expect(firstMaterializer.onAfterRelease).toHaveBeenCalled()
+      expect(secondMaterializer.onAfterRelease).toHaveBeenCalled()
+    })
   })
 })
