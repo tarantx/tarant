@@ -67,10 +67,9 @@ export default abstract class Actor implements IActor {
       } else {
         this.materializers.forEach((materializer) => materializer.onBeforeMessage(this, actorMessage))
         const result = await this.dispatchAndPromisify(actorMessage)
-  
+
         actorMessage.resolve(result)
       }
-     
     } catch (ex) {
       this.materializers.forEach((materializer) => materializer.onError(this, actorMessage, ex))
       const strategy = await this.supervisor!.supervise(this.self, ex, actorMessage)
@@ -172,7 +171,7 @@ export default abstract class Actor implements IActor {
 
   /**
    * Cancel all scheduled actions created by #schedule or #scheduleOnce
-   * 
+   *
    * @see Actor#schedule
    * @see Actor#scheduleOnce
    */
@@ -230,9 +229,5 @@ export default abstract class Actor implements IActor {
 
   private initialized(): void {
     this.materializers.forEach((materializer) => materializer.onInitialize(this))
-  }
-
-  private release(): void {
-    
   }
 }

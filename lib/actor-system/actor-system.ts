@@ -82,7 +82,7 @@ export default class ActorSystem implements IProcessor {
   public releaseActor(actor: IActor): void {
     const actorProxy = actor as any
     this.mailbox.push(Message.of(actorProxy.ref.id, ActorMessage.releaseActor()))
-  }  
+  }
 
   /**
    * Looks for an existing actor in this actor system. If none exist,
