@@ -193,18 +193,33 @@ describe('Actor System', () => {
     test('should call materializers before releasing', async () => {
       const actor: NamedActor = actorSystem.actorOf(NamedActor, ['myReleasedActor'])
 
-      try {
-        actorSystem.releaseActor(actor)
-        actorSystem.process()
-        await waitFor(() => sleep(10))
-      } catch (e) {
-        // expected
-      }
+      actorSystem.releaseActor(actor)
+      actorSystem.process()
+      await waitFor(() => sleep(10))
 
       expect(firstMaterializer.onBeforeRelease).toHaveBeenCalled()
       expect(secondMaterializer.onBeforeRelease).toHaveBeenCalled()
       expect(firstMaterializer.onAfterRelease).toHaveBeenCalled()
       expect(secondMaterializer.onAfterRelease).toHaveBeenCalled()
+    })
+
+    test('should not received more messages once it has been released', async () => {
+      const actor: NamedActor = actorSystem.actorOf(NamedActor, ['myReleasedActor'])
+
+      actorSystem.releaseActor(actor)
+      actorSystem.process()
+
+      try {
+        console.log('first wait')
+        await waitFor(() => sleep(10))
+        await waitFor(() => actor.sayHi())
+      } catch (ex) {
+        expect(ex.getMessage()).toContain('has been already released, but received message')
+        expect(ex.isActorReleased).toBeTruthy()
+        return
+      }
+
+      fail('Should have not been dispatched the message')
     })
   })
 })

@@ -35,6 +35,7 @@ export default abstract class Actor implements IActor {
   private readonly scheduled: Map<Cancellable, Timer> = new Map()
   private readonly topicSubscriptions: Map<string, string> = new Map()
   private busy = false
+  private isBeingReleased = false
 
   protected constructor(id?: string) {
     this.id = id || uuid()
@@ -52,13 +53,12 @@ export default abstract class Actor implements IActor {
       return false
     }
 
-    let isBeingReleased = false
     this.busy = true
 
     const actorMessage = message.content
     try {
       if (actorMessage.isAReleaseMessage()) {
-        isBeingReleased = true
+        this.isBeingReleased = true
 
         this.materializers.forEach((materializer) => materializer.onBeforeRelease(this))
         this.cancelAll()
@@ -84,7 +84,7 @@ export default abstract class Actor implements IActor {
         return true
       }
     } finally {
-      if (!isBeingReleased) {
+      if (!this.isBeingReleased) {
         this.busy = false
         this.materializers.forEach((materializer) => materializer.onAfterMessage(this, actorMessage))
       }
