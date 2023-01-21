@@ -66,6 +66,7 @@ describe('actor proxy', () => {
       const resultMessage = faker.datatype.uuid()
       const expectedResult = faker.datatype.uuid()
       const args = [faker.datatype.uuid(), faker.datatype.uuid()]
+      const actor = { id: actorId }
 
       actorMessageMock.of.mockImplementation((_, __, resolve, ___) => {
         resolve(expectedResult)
@@ -73,7 +74,7 @@ describe('actor proxy', () => {
       })
       messageMock.of.mockReturnValue(resultMessage)
 
-      const result = await ActorProxy.sendAndReturn(mailbox, actorId, methodName, args)
+      const result = await ActorProxy.sendAndReturn(mailbox, actor, methodName, args)
 
       expect(actorMessageMock.of).toBeCalledWith(methodName, args, expect.any(Function), expect.any(Function))
       expect(messageMock.of).toBeCalledWith(actorId, resultActorMessage)
@@ -88,6 +89,7 @@ describe('actor proxy', () => {
       const resultMessage = faker.datatype.uuid()
       const expectedResult = faker.datatype.uuid()
       const args = [faker.datatype.uuid(), faker.datatype.uuid()]
+      const actor = { id: actorId }
 
       actorMessageMock.of.mockImplementation((_, __, ___, reject) => {
         reject(expectedResult)
@@ -95,7 +97,7 @@ describe('actor proxy', () => {
       messageMock.of.mockReturnValue(resultMessage)
 
       try {
-        await ActorProxy.sendAndReturn(mailbox, actorId, methodName, args)
+        await ActorProxy.sendAndReturn(mailbox, actor, methodName, args)
         fail()
       } catch (_) {
         //

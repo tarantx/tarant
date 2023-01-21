@@ -35,6 +35,7 @@ export default abstract class Actor implements IActor {
   private readonly scheduled: Map<Cancellable, Timer> = new Map()
   private readonly topicSubscriptions: Map<string, string> = new Map()
   private busy = false
+  private isBeingReleased = false
 
   protected constructor(id?: string) {
     this.id = id || uuid()
@@ -56,10 +57,19 @@ export default abstract class Actor implements IActor {
 
     const actorMessage = message.content
     try {
-      this.materializers.forEach((materializer) => materializer.onBeforeMessage(this, actorMessage))
-      const result = await this.dispatchAndPromisify(actorMessage)
+      if (actorMessage.isAReleaseMessage()) {
+        this.isBeingReleased = true
 
-      actorMessage.resolve(result)
+        this.materializers.forEach((materializer) => materializer.onBeforeRelease(this))
+        this.cancelAll()
+        await (this.system! as any).releaseActorInternal(this)
+        this.materializers.forEach((materializer) => materializer.onAfterRelease(this))
+      } else {
+        this.materializers.forEach((materializer) => materializer.onBeforeMessage(this, actorMessage))
+        const result = await this.dispatchAndPromisify(actorMessage)
+
+        actorMessage.resolve(result)
+      }
     } catch (ex) {
       this.materializers.forEach((materializer) => materializer.onError(this, actorMessage, ex))
       const strategy = await this.supervisor!.supervise(this.self, ex, actorMessage)
@@ -74,8 +84,10 @@ export default abstract class Actor implements IActor {
         return true
       }
     } finally {
-      this.busy = false
-      this.materializers.forEach((materializer) => materializer.onAfterMessage(this, actorMessage))
+      if (!this.isBeingReleased) {
+        this.busy = false
+        this.materializers.forEach((materializer) => materializer.onAfterMessage(this, actorMessage))
+      }
     }
 
     return true
@@ -155,6 +167,21 @@ export default abstract class Actor implements IActor {
 
       this.scheduled.delete(cancellable)
     }, 0)
+  }
+
+  /**
+   * Cancel all scheduled actions created by #schedule or #scheduleOnce
+   *
+   * @see Actor#schedule
+   * @see Actor#scheduleOnce
+   */
+  protected cancelAll(): void {
+    this.scheduled.forEach((value, key) => {
+      clearTimeout(value)
+      clearInterval(value)
+
+      this.scheduled.delete(key)
+    })
   }
 
   /**

@@ -13,4 +13,6 @@ export default interface IMaterializer {
   onBeforeMessage(actor: Actor, message: ActorMessage): void
   onAfterMessage(actor: Actor, message: ActorMessage): void
   onError(actor: Actor, message: ActorMessage, error: any): void
+  onBeforeRelease(actor: Actor): void
+  onAfterRelease(actor: Actor): void
 }

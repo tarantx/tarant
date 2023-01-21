@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const RELEASE_ACTOR_MESSAGE = '<release>'
+
 type AnswerFunction = (r: any) => void
 
 export default class ActorMessage {
@@ -22,5 +24,13 @@ export default class ActorMessage {
     this.arguments = args
     this.resolve = resolve
     this.reject = reject
+  }
+
+  public isAReleaseMessage(): boolean {
+    return this.methodName == RELEASE_ACTOR_MESSAGE
+  }
+
+  public static releaseActor(): ActorMessage {
+    return new ActorMessage(RELEASE_ACTOR_MESSAGE, [], null, null)
   }
 }

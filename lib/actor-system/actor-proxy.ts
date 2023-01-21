@@ -10,16 +10,35 @@ import Message from '../mailbox/message'
 import Actor, { IActor } from './actor'
 import ActorMessage from './actor-message'
 
+class ActorHasBeenReleased {
+  private readonly id: string
+  private readonly message: ActorMessage
+  public readonly isActorReleased: boolean = true
+
+  public constructor(id: string, message: ActorMessage) {
+    this.id = id
+    this.message = message
+  }
+
+  public getMessage(): string {
+    return 'Actor ' + this.id + ' has been already released, but received message ' + JSON.stringify(this.message)
+  }
+}
+
 export default class ActorProxy {
   public static sendAndReturn(
     mailbox: Mailbox<ActorMessage>,
-    actorId: string,
+    actor: any,
     methodName: string,
     args: any[],
   ): Promise<object> {
-    return new Promise((resolve, reject) =>
-      mailbox.push(Message.of(actorId, ActorMessage.of(methodName, args, resolve, reject))),
-    )
+    return new Promise((resolve, reject) => {
+      if (actor.isBeingReleased) {
+        reject(new ActorHasBeenReleased(actor.id, ActorMessage.of(methodName, args, null, null)))
+      } else {
+        return mailbox.push(Message.of(actor.id, ActorMessage.of(methodName, args, resolve, reject)))
+      }
+    })
   }
 
   public static of<T extends IActor>(mailbox: Mailbox<ActorMessage>, actor: T): T {
@@ -33,7 +52,7 @@ export default class ActorProxy {
     return allNames
       .map((name: string): [string, any] => [
         name,
-        (...args: any[]): any => ActorProxy.sendAndReturn(mailbox, actor.id, name, args),
+        (...args: any[]): any => ActorProxy.sendAndReturn(mailbox, actor, name, args),
       ])
       .reduce((result, [member, method]) => ({ ...result, [member]: method }), { ref: actor }) as any
   }
