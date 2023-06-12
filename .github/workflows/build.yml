@@ -22,7 +22,7 @@ jobs:
         run: yarn install
       - name: test
         run: yarn test:cov
-      - uses: mikeal/merge-release@master
+      - uses: kanekotic/merge-release@master
         if: github.event_name != 'pull_request'
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
